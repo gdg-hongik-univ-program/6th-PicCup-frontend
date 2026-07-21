@@ -163,7 +163,7 @@ const CameraPage = () => {
   const completeCapture = () => {
     const sessionId = sessionIdRef.current;
 
-    if (!sessionId || photos.lengh === 0) {
+    if (!sessionId || photos.length === 0) {
       return;
     }
 
