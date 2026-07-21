@@ -14,6 +14,7 @@ updatedNextRoundPhotos
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { getPhotosBySessionId } from '../libs/photoDB'; //IndexedDB의 저장소에서 같은 sessionId를 가진 사진을 가져오는 함수
+import useCategoryStore from '../store/useCategoryStore';
 
 const TournamentPage = () => {
   const { sessionId } = useParams(); //라우터에서 주소 뒷부분(변수)를 객체로 반환해서 sessionId에 저장
@@ -24,6 +25,14 @@ const TournamentPage = () => {
   const [currentMatchIndex, setCurrentMatchIndex] = useState(0); //현재 몇 번째 사진부터 대결하는지 나타냄
   const [winner, setWinner] = useState(null); //최종 우승 사진
   const [isLoading, setIsLoading] = useState(true); //IndexDB에서 사진을 불러오는 중인지
+
+  const selectedCategory = useCategoryStore(
+    (state) => state.selectedCategory,
+  );
+
+  useEffect(() => {
+    console.log('선택된 카테고리:', selectedCategory);
+  }, [selectedCategory]);
 
   useEffect(() => { //화면이 렌더링된 다음 IndexedDB 조회 작업을 실행
     const loadPhotos = async () => { //비동기 작업

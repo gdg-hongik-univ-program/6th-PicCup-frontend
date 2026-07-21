@@ -1,6 +1,7 @@
 import { Link } from 'react-router';
 
 const HomePage = () => {
+  
   return (
     <main className="min-h-screen bg-gray-100 p-8">
       <h1>PicCup 홈</h1>
@@ -10,6 +11,14 @@ const HomePage = () => {
       >
         카메라 열기
       </Link>
+
+      <Link to="/category"
+        className="bg-primary font-sans text-white"
+      >
+        카테고리 열기
+      </Link>
+
+
     </main>
   );
 };
