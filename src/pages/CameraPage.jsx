@@ -72,7 +72,7 @@ const CameraPage = () => {
 
   return (
     <main className = "relative mx-auto h-dvh w-full max-w-md overflow-hidden bg-background">
-      <header className = "absolute inset-x-0 top-0 z-20 flex h-20 items-end justify-between px-4 pb-2">
+      <header className = "absolute inset-x-0 top-0 z-20 flex h-14 items-end justify-between px-4 pb-3">
         <button
           type="button"
           className = "rounded-full bg-primary px-8 py-1.5 text-sm font-semibold text-white"
@@ -111,7 +111,7 @@ const CameraPage = () => {
 
       </section>
 
-      <section className="absolute inset-x-0 bottom-28 z-20 grid h-24 grid-cols-3 items-center px-6">
+      <section className="absolute inset-x-0 bottom-20 z-20 grid h-24 grid-cols-3 items-center px-6">
           <button
             type="button"
             onClick={changeAspectRatio} 
@@ -155,7 +155,7 @@ const CameraPage = () => {
       )} 
       
 
-      <footer className="absolute inset-x-0 bottom-0 z-20 grid h-28 grid-cols-3 items-center px-5 pb-4">
+      <footer className="absolute inset-x-0 bottom-0 z-20 grid h-20 grid-cols-3 items-center px-5 pb-3">
         <div className="justify-self-start size-12 overflow-hidden rounded-xl bg-surface">
           {latestPhoto && ( //latestPhoto가 없으면 렌더링 하지 않고
             <img //있으면 <img> 렌더링
