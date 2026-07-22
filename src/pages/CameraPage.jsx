@@ -13,7 +13,6 @@ const CameraPage = () => {
   const [aspectRatio, setAspectRatio] = useState('3/4');
 
   const navigate = useNavigate();
-
   const ratioConfig = ASPECT_RATIO_CONFIG[aspectRatio]; //비율 설정
 
   const {
