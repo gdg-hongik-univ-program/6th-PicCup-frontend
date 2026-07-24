@@ -36,6 +36,7 @@ const CameraPage = () => {
     isCameraOn,
     sessionIdRef,
     targetRatio: ratioConfig.value, //훅에 ratio 값 전달
+    aspectRatio,
   })
 
 
@@ -64,8 +65,8 @@ const CameraPage = () => {
     stopCamera();
     navigate(`/tournament/${sessionId}`);
   }
-  const aspectRatioClass = ratioConfig.className;
-  const cameraPositionClass = ratioConfig.position;
+  const aspectRatioClass = ratioConfig.camera.className;
+  const cameraPositionClass = ratioConfig.camera.position;
   const changeAspectRatio = () => {
     setAspectRatio(ratioConfig.next);
   }
@@ -75,7 +76,7 @@ const CameraPage = () => {
       <header className = "absolute inset-x-0 top-0 z-20 flex h-14 items-end justify-between px-4 pb-3">
         <button
           type="button"
-          className = "rounded-full bg-primary px-8 py-1.5 text-sm font-semibold text-white"
+          className = "rounded-full h-8 bg-background border-primary-muted border-2 px-8 py-1.5 text-sm font-semibold flex items-center text-text-primary"
           >
             풍경
           </button>
@@ -131,7 +132,7 @@ const CameraPage = () => {
             type="button"
             onClick={capturePhoto}
             disabled={!isCameraOn}
-            className="flex size-20 border-4 border-gray-300 bg-white items-center justify-center justify-self-center rounded-full shadow-lg"
+            className="flex size-20 border-4 border-primary-muted bg-white items-center justify-center justify-self-center rounded-full shadow-lg"
             aria-label="사진 촬영 버튼"
           >
           </button>
@@ -176,7 +177,7 @@ const CameraPage = () => {
         <button
           type="button"
           onClick={completeCapture}
-          className="flex w-24 h-12 items-center justify-center justify-self-end rounded-4xl bg-white/90 ring-1 ring-primary/50 hover:bg-primary/20 hover:cursor-pointer"
+          className="flex size-12 items-center justify-center justify-self-end rounded-xl bg-white/90 ring-2 ring-primary-muted"
           aria-label="촬영 완료"
         >
           <ArrowRight
