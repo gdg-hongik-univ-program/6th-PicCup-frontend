@@ -26,6 +26,8 @@ const TournamentPage = () => {
     winner,
     firstPhoto,
     secondPhoto,
+    roundPhotos,
+    matchIndex,
     startTournament, // 불러온 사진으로 토너먼트를 초기화하는 함수
     selectPhoto, //사용자 선택 사진을 처리하는  함수
   } = useTournament();
@@ -103,7 +105,7 @@ const TournamentPage = () => {
   }
 
   return (
-    <main className="relative mx-auto w-full max-w-md bg-background">
+    <main className="flex h-dvh flex-col overflow-hidden">
         {winner ? (
             <TournamentWinner //우승 페이지
                 winner={winner} //props이름={부모(토너먼트 페이지)가 가진 값}
@@ -117,6 +119,9 @@ const TournamentPage = () => {
                 firstPhoto={firstPhoto}
                 secondPhoto={secondPhoto}
                 onSelectPhoto={selectPhoto}
+                roundPhotosCount={roundPhotos.length}
+                matchIndex={matchIndex}
+                candidateCount={photos.length}
             />
         )}
     </main>

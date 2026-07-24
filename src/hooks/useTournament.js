@@ -69,6 +69,8 @@ const useTournament = () => {
     winner,
     firstPhoto,
     secondPhoto,
+    roundPhotos,
+    matchIndex,
     startTournament,
     selectPhoto,
   };

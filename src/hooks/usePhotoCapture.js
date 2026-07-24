@@ -8,6 +8,7 @@ const usePhotoCapture = ({
     isCameraOn,
     sessionIdRef,
     targetRatio,
+    aspectRatio,
 }) => {
     const [photos, setPhotos] = useState([]);
     const [captureError, setCaptureError] = useState('');
@@ -81,6 +82,7 @@ const usePhotoCapture = ({
                 id: crypto.randomUUID(), 
                 sessionId: sessionIdRef.current, //세션 ID를 photo 객체에 저장
                 blob,
+                aspectRatio,
                 status: 'active',
                 createdAt: new Date().toISOString(), //촬영한 시간을 문자열로 저장
             };

@@ -1,5 +1,5 @@
 import { Camera, House, Image, Menu, Plus } from 'lucide-react';
-import { useNavigate } from 'react-router';
+import { useNavigate, Link } from 'react-router';
 import useCategoryStore from '../store/useCategoryStore';
 
 const CategoryPage = () => {
@@ -22,7 +22,7 @@ const CategoryPage = () => {
     <main className="flex min-h-dvh flex-col">
         <div className="flex-1 px-4 pt-6">
             <header className="flex items-center justify-between px-2">
-                <h1 className="text-3xl font-bold tracking-tight">
+                <h1 className="text-3xl font-logo tracking-tight">
                 PicCup
                 </h1>
 
@@ -132,13 +132,13 @@ const CategoryPage = () => {
           <Image size={24} />
         </button>
 
-        <button
-          type="button"
+        <Link
+          to="/"
           className="pointer-events-auto flex h-14 w-28 items-center justify-center rounded-full bg-white/95 shadow-lg ring-1 ring-black/5"
           aria-label="홈"
         >
           <House size={24} />
-        </button>
+        </Link>
 
         <button
           type="button"
