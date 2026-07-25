@@ -1,4 +1,4 @@
-import { Camera, Menu, House, Image, Crown, Share2, Download } from "lucide-react"
+import { Camera, Menu, House, Image, Crown, Share2, Download, Check } from "lucide-react"
 import { Link } from "react-router"
 
 const TournamentWinner = ({ //부모 TournamentPage가 값 전달
@@ -36,7 +36,7 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
             </header>
             <section className="flex min-h-0 flex-1 flex-col items-center pt-4">
                 <Crown
-                    size={50}
+                    size={60}
                     strokeWidth={2.4}
                     className="relative z-10 -mb-1 text-primary"
                     aria-label="베스트픽 왕관"
@@ -48,6 +48,15 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
                         alt="최종 우승 사진"
                         className="block max-h-[56dvh] w-full rounded-3xl object-contain"
                     />
+                    {uploadedBestPick && (
+                        <div
+                            role="status"
+                            className="absolute inset-x-3 bottom-3 flex h-11 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-white shadow-lg"
+                        >
+                            <Check size={18} strokeWidth={2.5} />
+                            베스트픽 저장 완료
+                        </div>
+                    )}
               
                     <div className="flex h-10 mt-1 items-center justify-between"> 
                         <time
@@ -62,7 +71,7 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
                                 type="button"
                                 onClick={onUpload}
                                 disabled={isUploading || Boolean(uploadedBestPick)}
-                                className="flex size-8 items-center justify-center rounded-full transition active:bg-primary disabled:opacity-40"
+                                className="flex size-8 items-center justify-center rounded-full transition active:bg-primary-soft disabled:opacity-40"
                                 aria-label="베스트픽 저장"
                             >
                                 <Download size={24} />
@@ -70,7 +79,7 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
 
                             <button
                                 type="button"
-                                className="flex size-8 items-center justify-center rounded-full transition active:bg-primary"
+                                className="flex size-8 items-center justify-center rounded-full transition active:bg-primary-soft"
                                 aria-label="베스트픽 공유"
                             >
                                 <Share2 size={24} />
@@ -91,12 +100,6 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
                 {isUploading && (
                     <p className="mt-3 text-sm font-semibold text-primary">
                     베스트픽 저장 중...
-                    </p>
-                )}
-
-                {uploadedBestPick && (
-                    <p className="mt-3 rounded-2xl bg-primary px-5 py-2 text-xs font-semibold text-white">
-                    베스트픽 저장 완료
                     </p>
                 )}
 
