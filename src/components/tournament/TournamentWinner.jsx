@@ -61,7 +61,7 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
                     <div className="flex h-10 mt-1 items-center justify-between"> 
                         <time
                             dateTime={winner.createdAt}
-                            className="px-3 text-lg text-text-primary font-semibold"
+                            className="px-3 text-lg text-text-primary font-medium"
                         >
                             {capturedDate}
                         </time>
