@@ -34,7 +34,7 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
                 <Menu size={24} />
                 </button>
             </header>
-            <section className="flex min-h-0 flex-1 flex-col items-center pt-4">
+            <section className="flex min-h-0 flex-1 flex-col items-center">
                 <Crown
                     size={60}
                     strokeWidth={2.4}
@@ -46,7 +46,7 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
                     <img
                         src={winner.previewUrl}
                         alt="최종 우승 사진"
-                        className="block max-h-[56dvh] w-full rounded-3xl object-contain"
+                        className="block max-h-[54dvh] w-full rounded-3xl object-contain"
                     />
                     {uploadedBestPick && (
                         <div
@@ -66,12 +66,12 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
                             {capturedDate}
                         </time>
 
-                        <div className="flex items-center gap-2 px-2">
+                        <div className="flex items-center gap-3 px-2">
                             <button
                                 type="button"
                                 onClick={onUpload}
                                 disabled={isUploading || Boolean(uploadedBestPick)}
-                                className="flex size-8 items-center justify-center rounded-full transition active:bg-primary-soft disabled:opacity-40"
+                                className="flex size-8 items-center justify-center rounded-lg transition active:bg-primary-soft disabled:opacity-40"
                                 aria-label="베스트픽 저장"
                             >
                                 <Download size={24} />
@@ -79,7 +79,7 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
 
                             <button
                                 type="button"
-                                className="flex size-8 items-center justify-center rounded-full transition active:bg-primary-soft"
+                                className="flex size-8 items-center justify-center rounded-lg transition active:bg-primary-soft"
                                 aria-label="베스트픽 공유"
                             >
                                 <Share2 size={24} />
