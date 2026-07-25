@@ -23,7 +23,7 @@ const useCameraStream = () => {
         setIsCameraOn(false);
     },[]);
 
-    const startCamera = useCallback(async (facingMode = 'envirionment') => {
+    const startCamera = useCallback(async (facingMode = 'environment') => {
         try { //try 성공하면 그대로 진행, 실패하면 catch로 이동
           setCameraError('');
         

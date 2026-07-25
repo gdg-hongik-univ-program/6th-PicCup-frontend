@@ -49,10 +49,10 @@ const TournamentMatch = ({
               마음에 드는 사진을 골라주세요.
             </p>
 
-            <p className="mt-3 font-semibold">
+            <p className="mt-2 font-semibold">
               {roundLabel}
             </p>
-            <div className="mt-3 flex gap-1.5">
+            <div className="mt-2 flex gap-1.5">
               {Array.from({
                 length: totalMatchCount,
               }).map((_, index) => ( //_는 현재 배열 요소의 값(실제로 사용X)
