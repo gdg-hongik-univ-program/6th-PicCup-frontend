@@ -57,6 +57,17 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
                             베스트픽 저장 완료
                         </div>
                     )}
+                    {isUploading && (
+                        <p className="mt-3 text-sm font-semibold text-primary">
+                        베스트픽 저장 중...
+                        </p>
+                    )}
+
+                    {uploadError && (
+                        <p role="alert" className="mt-3 text-sm text-error">
+                        {uploadError}
+                        </p>
+                    )}
               
                     <div className="flex h-10 mt-1 items-center justify-between"> 
                         <time
@@ -96,18 +107,6 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
                     홈의 마이캘린더를 확인해보세요.
                     </p>
                 </div>
-
-                {isUploading && (
-                    <p className="mt-3 text-sm font-semibold text-primary">
-                    베스트픽 저장 중...
-                    </p>
-                )}
-
-                {uploadError && (
-                    <p role="alert" className="mt-3 text-sm text-error">
-                    {uploadError}
-                    </p>
-                )}
             </section>
             <nav className="pointer-events-none fixed inset-x-0 bottom-8 z-50 mx-auto flex w-full max-w-md items-center justify-between px-10">
                 <button
