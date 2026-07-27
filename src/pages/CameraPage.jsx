@@ -165,7 +165,7 @@ const CameraPage = () => {
               className="h-full w-full object-cover"
             />
           )}
-          <div className="absolute inset-x-0 bottom-0 p-1 text-white/90 font-light">
+          <div className="absolute inset-x-0 bottom-0 p-1 text-white/90 font-medium">
             <p>{photos.length}/16</p>
           </div>
         </div>
