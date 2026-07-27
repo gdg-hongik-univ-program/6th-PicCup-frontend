@@ -47,7 +47,7 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
                         <img
                             src={winner.previewUrl}
                             alt="최종 우승 사진"
-                            className="block max-h-[54dvh] w-full rounded-3xl object-contain"
+                            className="block max-h-[52dvh] w-full rounded-3xl object-contain"
                         />
                         {uploadedBestPick && (
                             <div
