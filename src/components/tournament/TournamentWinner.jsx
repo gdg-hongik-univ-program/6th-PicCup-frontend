@@ -43,32 +43,34 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
                 />
                 
                 <article className="rounded-3xl bg-white p-2 shadow-lg ring-1 ring-border">
-                    <img
-                        src={winner.previewUrl}
-                        alt="최종 우승 사진"
-                        className="block max-h-[54dvh] w-full rounded-3xl object-contain"
-                    />
-                    {uploadedBestPick && (
-                        <div
-                            role="status"
-                            className="absolute inset-x-3 bottom-3 flex h-11 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-white shadow-lg"
-                        >
-                            <Check size={18} strokeWidth={2.5} />
-                            베스트픽 저장 완료
-                        </div>
-                    )}
-                    {isUploading && (
-                        <p className="mt-3 text-sm font-semibold text-primary">
-                        베스트픽 저장 중...
-                        </p>
-                    )}
+                    <div className="relative overflow-hidden rounded-3xl">
+                        <img
+                            src={winner.previewUrl}
+                            alt="최종 우승 사진"
+                            className="block max-h-[54dvh] w-full rounded-3xl object-contain"
+                        />
+                        {uploadedBestPick && (
+                            <div
+                                role="status"
+                                className="absolute bottom-6 left-1/2 flex h-11 w-[82%] -translate-x-1/2 items-center justify-center gap-2 rounded-2xl bg-primary px-4 text-sm font-semibold text-white shadow-lg"
+                            >
+                                <Check size={18} strokeWidth={2.5} />
+                                베스트픽 저장 완료
+                            </div>
+                        )}
+                        {isUploading && (
+                            <p className="absolute bottom-6 left-1/2 flex items-center justify-center -translate-x-1/2 text-sm font-semibold text-primary">
+                            베스트픽 저장 중...
+                            </p>
+                        )}
 
-                    {uploadError && (
-                        <p role="alert" className="mt-3 text-sm text-error">
-                        {uploadError}
-                        </p>
-                    )}
-              
+                        {uploadError && (
+                            <p role="alert" className="absolute bottom-6 left-1/2 flex items-center justify-center -translate-x-1/2 text-sm font-semibold text-error">
+                            {uploadError}
+                            </p>
+                        )}
+                    </div>
+                    
                     <div className="flex h-10 mt-1 items-center justify-between"> 
                         <time
                             dateTime={winner.createdAt}
