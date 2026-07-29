@@ -20,7 +20,7 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
     
   return (
     <main className="flex min-h-dvh flex-col">
-        <div className="flex-1 px-4 pt-6">
+        <div className="flex-1 px-4 pt-4">
             <header className="flex items-center justify-between px-2">
                 <h1 className="text-3xl font-logo tracking-tight">
                 PicCup
