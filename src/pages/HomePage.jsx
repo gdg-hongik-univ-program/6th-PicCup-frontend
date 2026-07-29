@@ -35,7 +35,7 @@ const HomePage = () => {
   
   return (
     <main className="flex min-h-dvh flex-col">
-        <div className="flex-1 px-4 pt-6">
+        <div className="flex-1 px-4 pt-4">
             <header className="flex items-center justify-between px-2">
                 <h1 className="text-3xl font-logo tracking-tight">
                 PicCup
@@ -50,7 +50,7 @@ const HomePage = () => {
                 </button>
             </header>
 
-            <section className="mt-7 rounded-2xl ring-2 ring-gray-100 bg-background p-1 shadow-lg">
+            <section className="mt-6 rounded-2xl ring-2 ring-gray-100 bg-background p-1 shadow-lg">
               <div className="flex items-center justify-between">
                 <div className="flex items-end gap-2 px-3 pt-3">
                   <h2 className="text-2xl font-bold">
@@ -79,7 +79,7 @@ const HomePage = () => {
                   </button>
                 </div>
               </div>
-              <div className="mt-3 px-1">
+              <div className="mt-2 px-1">
                 <div className="grid grid-cols-7 gap-0.5">
                   {WEEKDAYS.map((weekday) => (
                     <p
