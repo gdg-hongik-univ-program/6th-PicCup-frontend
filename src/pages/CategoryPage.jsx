@@ -1,6 +1,8 @@
-import { Camera, House, Image, Menu, Plus } from 'lucide-react';
 import { useNavigate, Link } from 'react-router';
+
 import useCategoryStore from '../store/useCategoryStore';
+
+import { Camera, House, Image, Menu, Plus } from 'lucide-react';
 
 const CategoryPage = () => {
   const navigate = useNavigate();
