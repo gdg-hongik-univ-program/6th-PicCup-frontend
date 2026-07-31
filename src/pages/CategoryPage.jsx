@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import useCategoryStore from '../store/useCategoryStore';
 import useCategories from '../hooks/useCategories';
@@ -8,6 +8,7 @@ import { Plus, EllipsisVertical, } from 'lucide-react';
 import AppHeader from '../components/layout/AppHeader';
 import BottomNav from '../components/layout/BottomNav';
 import BottomSheet from '../components/layout/BottomSheet';
+
 
 const mockCategories = [ //임시 카테고리
   {
@@ -45,6 +46,21 @@ const CategoryPage = () => {
   const [editingName, setEditingName] = useState('');
   const [deleteTarget, setDeleteTarget] = useState(null); //삭제할 카테고리
   const [deletedNotice, setDeletedNotice] = useState(null); //삭제 결과 상태
+
+  const hasOverlay =
+    isCreateOpen ||
+    isEditOpen ||
+    deleteTarget !== null;
+
+  useEffect(() => {
+    document.documentElement.style.backgroundColor =
+      hasOverlay ? '#989999' : '#FDFFFF';
+
+    return () => {
+      document.documentElement.style.backgroundColor =
+        '#FDFFFF';
+    };
+  }, [hasOverlay]);
 
   const {
     categories,
