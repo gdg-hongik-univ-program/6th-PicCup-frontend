@@ -2,6 +2,8 @@ import { Trash2 } from 'lucide-react';
 
 import { useEffect } from 'react';
 
+const OVERLAY_THEME_COLOR = '#989999'; // #FDFFFF 배경 위에 bg-black/40이 겹쳤을 때의 근사색
+
 const BottomSheet = ({
   isOpen, 
   title,
@@ -21,19 +23,32 @@ const BottomSheet = ({
     if (!isOpen) return;
 
     const scrollY = window.scrollY;
-    const { body } = document;
+    const { body, documentElement: html } = document;
+    const meta = document.querySelector('meta[name="theme-color"]');
+    const originalThemeColor = meta?.getAttribute('content');
 
+    const lockScroll = () => window.scrollTo(0, 0);
+
+    html.style.overflow = 'hidden';
     body.style.position = 'fixed';
     body.style.top = `-${scrollY}px`;
     body.style.left = '0';
     body.style.right = '0';
+    body.style.width = '100%';
+    meta?.setAttribute('content', OVERLAY_THEME_COLOR);
+
+    window.addEventListener('scroll', lockScroll);
 
     return () => {
+      window.removeEventListener('scroll', lockScroll);
+      html.style.overflow = '';
       body.style.position = '';
       body.style.top = '';
       body.style.left = '';
       body.style.right = '';
+      body.style.width = '';
       window.scrollTo(0, scrollY);
+      if (originalThemeColor) meta?.setAttribute('content', originalThemeColor);
     };
   }, [isOpen]);
   return (
