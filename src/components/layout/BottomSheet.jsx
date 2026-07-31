@@ -20,29 +20,22 @@ const BottomSheet = ({
   useEffect(() => {
     if (!isOpen) return;
 
-    const html = document.documentElement;
-    const body = document.body;
-    const savedScrollY = window.scrollY; //페이지가 세로로 얼마나 내려가 있는지 저장
+    const scrollY = window.scrollY;
+    const { body } = document;
 
-    const previousHtmlOverflow = html.style.overflow;
-    const previousBodyOverflow = body.style.overflow;
-
-    html.style.overflow = 'hidden';
-    body.style.overflow = 'hidden';
+    body.style.position = 'fixed';
+    body.style.top = `-${scrollY}px`;
+    body.style.left = '0';
+    body.style.right = '0';
 
     return () => {
-        if (document.activeElement instanceof HTMLElement) {
-            document.activeElement.blur();
-        }
-
-        html.style.overflow = previousHtmlOverflow;
-        body.style.overflow = previousBodyOverflow;
-
-        requestAnimationFrame(() => {
-            window.scrollTo(0, savedScrollY);
-        });
+      body.style.position = '';
+      body.style.top = '';
+      body.style.left = '';
+      body.style.right = '';
+      window.scrollTo(0, scrollY);
     };
-    }, [isOpen]); //isOpen이 true->false일때, 바텀시트 화면에서 사라질 때
+  }, [isOpen]);
   return (
     <div
       className={`fixed inset-0 z-[60] flex items-end overscroll-none ${

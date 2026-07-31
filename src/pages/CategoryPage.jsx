@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import useCategoryStore from '../store/useCategoryStore';
 import useCategories from '../hooks/useCategories';
@@ -46,28 +46,6 @@ const CategoryPage = () => {
   const [editingName, setEditingName] = useState('');
   const [deleteTarget, setDeleteTarget] = useState(null); //삭제할 카테고리
   const [deletedNotice, setDeletedNotice] = useState(null); //삭제 결과 상태
-
-  const hasOverlay =
-    isCreateOpen ||
-    isEditOpen ||
-    deleteTarget !== null;
-
-  useEffect(() => {
-    const themeColor = document.querySelector(
-      'meta[name="theme-color"]',
-    );
-
-    if (!themeColor) return;
-
-    themeColor.setAttribute(
-      'content',
-      hasOverlay ? '#989999' : '#FDFFFF',
-    );
-
-    return () => {
-      themeColor.setAttribute('content', '#FDFFFF');
-    };
-  }, [hasOverlay]);
 
   const {
     categories,
