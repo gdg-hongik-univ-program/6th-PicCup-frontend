@@ -1,5 +1,6 @@
-import { Camera, Menu, House, Image, Crown, Share2, Download, Check } from "lucide-react"
-import { Link } from "react-router"
+import { Crown, Share2, Download, Check } from "lucide-react"
+import AppHeader from "../layout/AppHeader"
+import BottomNav from "../layout/BottomNav"
 
 const TournamentWinner = ({ //부모 TournamentPage가 값 전달
     winner,
@@ -21,19 +22,7 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
   return (
     <main className="flex min-h-dvh flex-col">
         <div className="flex-1 px-4 pt-4">
-            <header className="flex items-center justify-between px-2">
-                <h1 className="text-3xl font-logo tracking-tight">
-                PicCup
-                </h1>
-
-                <button
-                type="button"
-                className="flex size-10 items-center justify-center"
-                aria-label="메뉴 열기"
-                >
-                <Menu size={24} />
-                </button>
-            </header>
+            <AppHeader />
             <section className="flex min-h-0 flex-1 flex-col items-center">
                 <Crown
                     size={60}
@@ -110,31 +99,7 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
                     </p>
                 </div>
             </section>
-            <nav className="pointer-events-none fixed inset-x-0 bottom-8 z-50 mx-auto flex w-full max-w-md items-center justify-between px-10">
-                <button
-                type="button"
-                className="pointer-events-auto flex size-14 items-center justify-center rounded-full bg-white/95 shadow-lg ring-1 ring-black/5"
-                aria-label="앨범"
-                >
-                <Image size={24} />
-                </button>
-
-                <Link
-                to="/"
-                className="pointer-events-auto flex h-14 w-28 items-center justify-center rounded-full bg-white/95 shadow-lg ring-1 ring-black/5"
-                aria-label="홈"
-                >
-                <House size={24} />
-                </Link>
-
-                <button
-                type="button"
-                className="pointer-events-auto flex size-14 items-center justify-center rounded-full bg-white/95 shadow-lg ring-1 ring-black/5"
-                aria-label="카메라"
-                >
-                    <Camera size={24}/>
-                </button>
-            </nav>
+            <BottomNav />
         </div>
     </main>
     
