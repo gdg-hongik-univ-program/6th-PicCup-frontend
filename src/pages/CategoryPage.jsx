@@ -53,14 +53,19 @@ const CategoryPage = () => {
     deleteTarget !== null;
 
   useEffect(() => {
-    const html = document.documentElement;
+    const themeColor = document.querySelector(
+      'meta[name="theme-color"]',
+    );
 
-    html.style.backgroundColor = hasOverlay
-      ? ''
-      : '#FDFFFF';
+    if (!themeColor) return;
+
+    themeColor.setAttribute(
+      'content',
+      hasOverlay ? '#989999' : '#FDFFFF',
+    );
 
     return () => {
-      html.style.backgroundColor = '#FDFFFF';
+      themeColor.setAttribute('content', '#FDFFFF');
     };
   }, [hasOverlay]);
 
