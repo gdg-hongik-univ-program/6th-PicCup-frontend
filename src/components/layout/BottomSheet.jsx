@@ -1,29 +1,6 @@
 import { Trash2 } from 'lucide-react';
 
-import { useEffect, useState } from 'react';
-
-const useVisualViewportHeight = (isOpen) => {
-  const [height, setHeight] = useState(null); // null이면 기본 100% 높이 사용
-
-  useEffect(() => {
-    const vv = window.visualViewport;
-    if (!isOpen || !vv) return;
-
-    const update = () => setHeight(vv.height);
-    update();
-
-    vv.addEventListener('resize', update);
-    vv.addEventListener('scroll', update);
-
-    return () => {
-      vv.removeEventListener('resize', update);
-      vv.removeEventListener('scroll', update);
-      setHeight(null);
-    };
-  }, [isOpen]);
-
-  return height;
-};
+import { useEffect } from 'react';
 
 const BottomSheet = ({
   isOpen, 
@@ -40,43 +17,44 @@ const BottomSheet = ({
   onDelete,
   isSubmitDisabled = false,
 }) => {
-  const viewportHeight = useVisualViewportHeight(isOpen);
-
   useEffect(() => {
     if (!isOpen) return;
 
-    const scrollY = window.scrollY;
-    const { body, documentElement: html } = document;
+    const body = document.body;
+    const savedScrollY = window.scrollY;
 
-    const lockScroll = () => window.scrollTo(0, 0);
+    const previousStyles = {
+        position: body.style.position,
+        top: body.style.top,
+        left: body.style.left,
+        right: body.style.right,
+        width: body.style.width,
+        overflow: body.style.overflow,
+    };
 
-    html.style.overflow = 'hidden';
     body.style.position = 'fixed';
-    body.style.top = `-${scrollY}px`;
+    body.style.top = `-${savedScrollY}px`;
     body.style.left = '0';
     body.style.right = '0';
     body.style.width = '100%';
-
-    window.addEventListener('scroll', lockScroll);
+    body.style.overflow = 'hidden';
 
     return () => {
-      window.removeEventListener('scroll', lockScroll);
-      html.style.overflow = '';
-      body.style.position = '';
-      body.style.top = '';
-      body.style.left = '';
-      body.style.right = '';
-      body.style.width = '';
-      window.scrollTo(0, scrollY);
+        if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+        }
+
+        Object.assign(body.style, previousStyles);
+
+        const restoreScroll = () => {
+        window.scrollTo(0, savedScrollY);
+        };
+
+        requestAnimationFrame(restoreScroll);
+        setTimeout(restoreScroll, 350);
     };
-  }, [isOpen]);
+    }, [isOpen]);
   return (
-    <div
-      style={viewportHeight ? { height: `${viewportHeight}px` } : undefined}
-      className={`fixed inset-0 z-[60] flex items-end overscroll-none ${
-        isOpen ? 'pointer-events-auto' : 'pointer-events-none'
-      }`}
-    >
         <div
         className={`fixed inset-0 z-[60] flex items-end overscroll-none ${
             isOpen
@@ -162,7 +140,6 @@ const BottomSheet = ({
             )}
         </section>
         </div>
-    </div>
   );
 };
 
