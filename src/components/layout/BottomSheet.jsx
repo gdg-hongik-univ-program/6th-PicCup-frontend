@@ -20,38 +20,27 @@ const BottomSheet = ({
   useEffect(() => {
     if (!isOpen) return;
 
+    const html = document.documentElement;
     const body = document.body;
     const savedScrollY = window.scrollY; //페이지가 세로로 얼마나 내려가 있는지 저장
 
-    const previousStyles = { //원래 적용돼있던 body 스타일 (원상복구)
-        position: body.style.position, 
-        top: body.style.top, 
-        left: body.style.left, 
-        right: body.style.right, 
-        width: body.style.width, 
-        overflow: body.style.overflow,
-    };
+    const previousHtmlOverflow = html.style.overflow;
+    const previousBodyOverflow = body.style.overflow;
 
-    body.style.position = 'fixed';
-    body.style.top = `-${savedScrollY}px`; //현재 스크롤한 만큼
-    body.style.left = '0';
-    body.style.right = '0';
-    body.style.width = '100%';
-    body.style.overflow = 'hidden'; //화면 너비나 위치가 틀어지지 않도록 고정
+    html.style.overflow = 'hidden';
+    body.style.overflow = 'hidden';
 
     return () => {
         if (document.activeElement instanceof HTMLElement) {
-        document.activeElement.blur(); //포커스 해제
+            document.activeElement.blur();
         }
 
-        Object.assign(body.style, previousStyles); //원래 body스타일로 원상복구
+        html.style.overflow = previousHtmlOverflow;
+        body.style.overflow = previousBodyOverflow;
 
-        const restoreScroll = () => {
-        window.scrollTo(0, savedScrollY);
-        }; //처음 저장해둔 위치로 다시 스크롤
-
-        requestAnimationFrame(restoreScroll); //다음 화면을 다시 그리는 시점에
-        setTimeout(restoreScroll, 350); //안전장치
+        requestAnimationFrame(() => {
+            window.scrollTo(0, savedScrollY);
+        });
     };
     }, [isOpen]); //isOpen이 true->false일때, 바텀시트 화면에서 사라질 때
   return (
