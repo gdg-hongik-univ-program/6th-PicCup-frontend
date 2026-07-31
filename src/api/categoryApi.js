@@ -1,4 +1,4 @@
-import { del, get, patch, post } from './request';
+import { del, get, put, post } from './request';
 
 const categoryConfig = {
   headers: {
@@ -19,7 +19,7 @@ export const createCategory = async (name) => { //카테고리 생성
 };
 
 export const updateCategory = async (categoryId, name) => { //카테고리 이름 수정
-  const response = await patch(`/categories/${categoryId}`, {name}, categoryConfig);
+  const response = await put(`/categories/${categoryId}`, {name}, categoryConfig);
 
   return response.data;
 };
