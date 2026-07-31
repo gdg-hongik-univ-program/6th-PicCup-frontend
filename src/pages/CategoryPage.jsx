@@ -53,12 +53,14 @@ const CategoryPage = () => {
     deleteTarget !== null;
 
   useEffect(() => {
-    document.documentElement.style.backgroundColor =
-      hasOverlay ? '#989999' : '#FDFFFF';
+    const html = document.documentElement;
+
+    html.style.backgroundColor = hasOverlay
+      ? ''
+      : '#FDFFFF';
 
     return () => {
-      document.documentElement.style.backgroundColor =
-        '#FDFFFF';
+      html.style.backgroundColor = '#FDFFFF';
     };
   }, [hasOverlay]);
 
