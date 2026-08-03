@@ -61,8 +61,15 @@ body,
   background-color: var(--color-background);
 }
 
-body {
-  min-height: 100dvh; /* 모바일 브라우저 주소창이 열리고 닫히는 상황 고려 */
+@media (min-width: 449px) {
+  html,
+  body,
+  #root {
+    background-color: var(--color-page-background);
+  }
+}
+/*body {
+  min-height: 100dvh;  모바일 브라우저 주소창이 열리고 닫히는 상황 고려 
   color: var(--color-text-primary);
   font-family: var(--font-sans);
-}
+}*/
