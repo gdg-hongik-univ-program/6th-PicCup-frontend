@@ -5,6 +5,8 @@ import { ASPECT_RATIO_CONFIG } from '../constants/ratio';
 import useCameraStream from '../hooks/useCameraStream';
 import usePhotoCapture from '../hooks/usePhotoCapture';
 
+import useCategoryStore from '../store/useCategoryStore';
+
 import { Scan, RefreshCw, ChevronDown, ArrowRight } from 'lucide-react';
 
 const CameraPage = () => {
@@ -14,6 +16,10 @@ const CameraPage = () => {
 
   const navigate = useNavigate();
   const ratioConfig = ASPECT_RATIO_CONFIG[aspectRatio]; //비율 설정
+
+  const selectedCategory = useCategoryStore(
+    (state) => state.selectedCategory,
+  );
 
   const {
     videoRef,
@@ -76,9 +82,11 @@ const CameraPage = () => {
       <header className = "absolute inset-x-0 top-0 z-20 flex h-14 items-end justify-between px-4 pb-3">
         <button
           type="button"
-          className = "rounded-full h-8 bg-background border-primary-muted border-2 px-8 py-1.5 text-sm font-semibold flex items-center text-text-primary"
+          className = "flex h-8 max-w-[70%] items-center rounded-full border-2 border-primary-muted bg-background px-4 py-1.5 text-sm font-semibold text-text-primary"
           >
-            풍경
+            <span className="truncate">
+              {selectedCategory?.name ?? '카테고리'}
+            </span>
           </button>
 
         <button

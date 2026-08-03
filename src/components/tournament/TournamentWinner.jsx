@@ -18,6 +18,11 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
     //.replaceAll('. ', '/')
     //.replace('.', '');
 
+    console.log(
+        '우승 사진 용량:',
+        `${(winner.blob.size / 1024 / 1024).toFixed(2)} MB`,
+    );
+
     
   return (
     <main className="flex min-h-dvh flex-col">

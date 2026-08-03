@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import AppHeader from '../components/layout/AppHeader';
@@ -5,11 +6,16 @@ import BottomNav from '../components/layout/BottomNav';
 
 const WEEKDAYS = ['월', '화', '수', '목', '금', '토', '일'];
 
-const CALENDAR_DAYS = [
-  null,
-  null,
-  ...Array.from({ length: 31 }, (_, index) => index + 1),
-];
+const getCalendarDays = (year, monthIndex) => { //달력 칸 배열을 만드는 함수
+  const firstDay = new Date(year, monthIndex, 1).getDay(); //getDay는 요일을 숫자로 반환
+  const mondayBasedFirstDay = (firstDay + 6) % 7;
+  const lastDate = new Date(year, monthIndex + 1, 0).getDate();//다음 달 1일의 하루 전날
+
+  return [
+    ...Array(mondayBasedFirstDay).fill(null), //빈칸 만들기
+    ...Array.from({ length: lastDate }, (_, index) => index + 1),
+  ];
+};
 
 const CALENDAR_PHOTOS = {
   3: '/images/cat.jpg',
@@ -34,7 +40,29 @@ const BEST_PICKS = [
 ];
 
 const HomePage = () => {
-  
+  const [currentMonth, setCurrentMonth] = useState(() => { //현재 보고 있는 달
+    const today = new Date();
+
+    return new Date(today.getFullYear(), today.getMonth(), 1); //현재 시간이 포함된 달의 1일
+  });
+  const year = currentMonth.getFullYear();
+  const monthIndex = currentMonth.getMonth();
+  const calendarDays = getCalendarDays(year, monthIndex);
+
+  const handlePreviousMonth = () => {
+    setCurrentMonth(
+      (previous) =>
+        new Date(previous.getFullYear(), previous.getMonth() - 1, 1),
+    );
+  };
+
+  const handleNextMonth = () => {
+    setCurrentMonth(
+      (previous) =>
+        new Date(previous.getFullYear(), previous.getMonth() + 1, 1),
+    );
+  };
+
   return (
     <main className="flex min-h-dvh flex-col">
         <div className="flex-1 px-4 pt-4">
@@ -44,16 +72,17 @@ const HomePage = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-end gap-2 px-3 pt-3">
                   <h2 className="text-2xl font-bold">
-                    7월
+                    {monthIndex + 1}월 
                   </h2>
                   <p className="pb-1 text-sm text-text-primary">
-                    2026년
+                    {year}년
                   </p>
                 </div>
 
                 <div className="flex items-center gap-1 px-2">
                   <button
                     type="button"
+                    onClick={handlePreviousMonth}
                     className="flex size-8 items-center justify-center rounded-lg active:bg-primary-soft"
                     aria-label="이전 달"
                   >
@@ -62,6 +91,7 @@ const HomePage = () => {
 
                   <button
                     type="button"
+                    onClick={handleNextMonth}
                     className="flex size-8 items-center justify-center rounded-lg active:bg-primary-soft"
                     aria-label="다음 달"
                   >
@@ -80,7 +110,7 @@ const HomePage = () => {
                     </p>
                   ))}
 
-                  {CALENDAR_DAYS.map((day, index) => {
+                  {calendarDays.map((day, index) => {
                     const photoUrl = CALENDAR_PHOTOS[day];
 
                     return (

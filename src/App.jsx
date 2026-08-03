@@ -7,6 +7,8 @@ import CameraPage from "./pages/CameraPage";
 import HomePage from "./pages/HomePage";
 import TournamentPage from "./pages/TournamentPage";
 import CategoryPage from "./pages/CategoryPage";
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
 
 const App = () => {
   useEffect(() => {
@@ -42,8 +44,16 @@ const App = () => {
             element={<TournamentPage />}
           />
           <Route
-            path="/category" //:는 변수라는 뜻
+            path="/category" 
             element={<CategoryPage />}
+          />
+          <Route
+            path="/login"
+            element={<LoginPage />}
+          />
+          <Route
+            path="/signup"
+            element={<SignupPage />}
           />
         </Routes>
       </div>
