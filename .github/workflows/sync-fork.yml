@@ -1,0 +1,65 @@
+name: CI and Sync Fork
+
+on:
+  pull_request:
+    branches:
+      - main
+
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  quality-assurance:
+    name: QA and Build
+    if: github.repository == 'gdg-hongik-univ-program/6th-PicCup-frontend'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout organization repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linter
+        run: npm run lint
+
+      - name: Verify production build
+        run: npm run build
+
+  sync-fork:
+    name: Sync personal fork
+    needs: quality-assurance
+    if: >
+      github.repository == 'gdg-hongik-univ-program/6th-PicCup-frontend' &&
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout organization repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Push main to personal fork
+        env:
+          FORK_SYNC_TOKEN: ${{ secrets.FORK_SYNC_TOKEN }}
+        run: |
+          git remote add personal "https://x-access-token:${FORK_SYNC_TOKEN}@github.com/yoonxxo/6th-PicCup-frontend.git"
+          git push personal HEAD:main
