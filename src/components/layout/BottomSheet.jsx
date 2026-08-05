@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 import { Trash2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 
@@ -8,12 +10,30 @@ const BottomSheet = ({
   onNameChange,
   onClose,
   onSubmit,
+  submitLabel,
   isSubmitting = false,
   error = '',
   showDelete = false,
   onDelete,
   isSubmitDisabled = false,
 }) => {
+  useEffect(() => {
+        if (!isOpen) return;
+
+        const html = document.documentElement;
+        const body = document.body;
+
+        const previousHtmlOverflow = html.style.overflow; //원상복구를 위해 기억
+        const previousBodyOverflow = body.style.overflow;
+
+        html.style.overflow = 'hidden'; //스크롤 막음
+        body.style.overflow = 'hidden';
+
+        return () => { //cleanup 함수: BottomSheet가 닫힐 때 실행됨
+            html.style.overflow = previousHtmlOverflow;
+            body.style.overflow = previousBodyOverflow;
+        };
+  }, [isOpen]);  
   return (
     <AnimatePresence>
       {isOpen && (
@@ -24,7 +44,7 @@ const BottomSheet = ({
           <motion.button //검정 배경
             type="button"
             aria-label={`${title} 닫기`}
-            onClick={onClose}ㅐ
+            onClick={onClose}
             className="absolute inset-0 bg-black/40"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -92,7 +112,7 @@ const BottomSheet = ({
                 }
                 className="rounded-xl bg-primary py-3 text-background disabled:opacity-70"
               >
-                submitLabel
+                {submitLabel}
               </button>
             </div>
 
