@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router';
 
 import logoImage from '../assets/piccup-logo.png';
 import AuthButton from '../components/auth/AuthButton';
+import AuthTextField from '../components/auth/AuthTextField';
 
 import { validateSignupForm } from '../libs/authValidation';
 import { signup as signupUser } from '../api/authApi';
@@ -82,49 +83,59 @@ const SignupPage = () => {
           </div>
 
           <div className="mt-8 space-y-3">
-            <input
-              type="text"
-              value={nickname}
-              onChange={(event) => setNickname(event.target.value)}
-              placeholder="닉네임"
-              maxLength={10}
-              autoComplete="nickname"
-              className="h-12 w-full rounded-xl border border-border bg-surface px-4 outline-none focus:border-primary"
+            <AuthTextField
+                label="닉네임"
+                name="nickname"
+                value={nickname}
+                onChange={(event) => {
+                setNickname(event.target.value);
+                setSignupError('');
+                }}
+                placeholder="닉네임"
+                maxLength={10}
+                autoComplete="nickname"
             />
 
-            <input
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder="이메일"
-              autoComplete="email"
-              className="h-12 w-full rounded-xl border border-border bg-surface px-4 outline-none focus:border-primary"
+            <AuthTextField
+                label="이메일"
+                name="email"
+                type="email"
+                value={email}
+                onChange={(event) => {
+                setEmail(event.target.value);
+                setSignupError('');
+                }}
+                placeholder="이메일"
+                autoComplete="email"
             />
 
-            <div>
-              <input
+            <AuthTextField
+                label="비밀번호"
+                name="password"
                 type="password"
                 value={password}
-                onChange={(event) => setPassword(event.target.value)}
+                onChange={(event) => {
+                setPassword(event.target.value);
+                setSignupError('');
+                }}
                 placeholder="비밀번호"
                 maxLength={16}
                 autoComplete="new-password"
-                className="h-12 w-full rounded-xl border border-border bg-surface px-4 outline-none focus:border-primary"
-              />
+                helperText="10~16자 영문과 숫자를 포함해주세요."
+            />
 
-              <p className="mt-1 text-xs text-text-secondary">
-                10~16자 영문과 숫자를 포함해주세요.
-              </p>
-            </div>
-
-            <input
-              type="password"
-              value={passwordConfirm}
-              onChange={(event) => setPasswordConfirm(event.target.value)}
-              placeholder="비밀번호 확인"
-              maxLength={16}
-              autoComplete="new-password"
-              className="h-12 w-full rounded-xl border border-border bg-surface px-4 outline-none focus:border-primary"
+            <AuthTextField
+                label="비밀번호 확인"
+                name="passwordConfirm"
+                type="password"
+                value={passwordConfirm}
+                onChange={(event) => {
+                setPasswordConfirm(event.target.value);
+                setSignupError('');
+                }}
+                placeholder="비밀번호 확인"
+                maxLength={16}
+                autoComplete="new-password"
             />
           </div>
 
@@ -136,13 +147,21 @@ const SignupPage = () => {
           </Link>
         </section>
         <div className="px-4">
-            {signupError && (
-                <p className="flex justify-center items-center mb-2 text-xs text-error" role="alert">
+            <div className="mb-2 flex h-4 items-center justify-center">
+                {signupError && (
+                <p
+                    className="text-xs text-error"
+                    role="alert"
+                >
                     {signupError}
                 </p>
-            )}
-            <AuthButton 
-            type="submit" disabled={isSubmitting}>
+                )}
+            </div>
+
+            <AuthButton
+                type="submit"
+                disabled={isSubmitting}
+            >
                 가입하기
             </AuthButton>
         </div>

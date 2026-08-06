@@ -6,6 +6,7 @@ import useAuthStore from '../store/useAuthStore';
 
 import logoImage from '../assets/piccup-logo.png';
 import AuthButton from '../components/auth/AuthButton';
+import AuthTextField from '../components/auth/AuthTextField';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -59,7 +60,7 @@ const LoginPage = () => {
   };
   return (
     <main className="flex min-h-dvh flex-col px-6 py-8">
-      <section className="flex flex-1 flex-col justify-center">
+      <section className="relative flex flex-1 flex-col justify-center">
         <div className="flex flex-col items-center">
           <div className="flex size-16 items-center justify-center rounded-2xl">
             <img
@@ -77,41 +78,35 @@ const LoginPage = () => {
           className="mt-8 space-y-3 px-4"
           onSubmit={handleLogin}
         >
-          <label className="block">
-            <span className="sr-only">이메일</span>
-            <input
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder="이메일"
-              autoComplete="email"
-              className="h-12 w-full rounded-xl border border-border bg-surface px-4 outline-none focus:border-primary"
-            />
-          </label>
+          <AuthTextField
+            label="이메일"
+            name="email"
+            type="email"
+            value={email}
+            onChange={(event) =>
+              setEmail(event.target.value)
+            }
+            placeholder="이메일"
+            autoComplete="email"
+          />
+          <AuthTextField
+            label="비밀번호"
+            name="password"
+            type="password"
+            value={password}
+            onChange={(event) =>
+              setPassword(event.target.value)
+            }
+            placeholder="비밀번호"
+            autoComplete="current-password"
+          />
 
-          <label className="block">
-            <span className="sr-only">비밀번호</span>
-            <input
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              placeholder="비밀번호"
-              autoComplete="current-password"
-              className="h-12 w-full rounded-xl border border-border bg-surface px-4 outline-none focus:border-primary"
-            />
-            {loginError && (
-              <p className="text-sm text-error" role="alert">
-                {loginError}
-              </p>
-            )}
-          </label>
-
-          <AuthButton
-            type="submit"
-            disabled={isSubmitting}
-          >
-            로그인
-          </AuthButton>
+            <AuthButton
+              type="submit"
+              disabled={isSubmitting}
+            >
+              로그인
+            </AuthButton>
         </form>
 
         <Link
@@ -120,6 +115,16 @@ const LoginPage = () => {
         >
           비밀번호를 잊으셨나요?
         </Link>
+        <div className="absolute inset-x-0 bottom-4 flex h-4 items-center justify-center px-4">
+          {loginError && (
+            <p
+              className="text-xs text-error"
+              role="alert"
+            >
+              {loginError}
+            </p>
+          )}
+        </div>
       </section>
 
       <section className="border-t border-border pt-5 px-4">
