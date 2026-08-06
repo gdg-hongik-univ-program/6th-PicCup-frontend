@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { Trash2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
@@ -17,35 +17,103 @@ const BottomSheet = ({
   onDelete,
   isSubmitDisabled = false,
 }) => {
-  useEffect(() => {
-        if (!isOpen) return;
+    const layerRef = useRef(null);
+    useEffect(() => {
+    if (!isOpen) return undefined;
 
-        const html = document.documentElement;
-        const body = document.body;
+    const html = document.documentElement;
+    const body = document.body;
+    const viewport = window.visualViewport;
+    const savedScrollY = window.scrollY;
 
-        const previousHtmlOverflow = html.style.overflow; //원상복구를 위해 기억
-        const previousBodyOverflow = body.style.overflow;
+    const previousHtmlOverflow = html.style.overflow;
+    const previousHtmlOverscroll =
+        html.style.overscrollBehavior;
 
-        html.style.overflow = 'hidden'; //스크롤 막음
-        body.style.overflow = 'hidden';
+    const previousBodyStyles = {
+        position: body.style.position,
+        top: body.style.top,
+        left: body.style.left,
+        right: body.style.right,
+        width: body.style.width,
+        overflow: body.style.overflow,
+    };
 
-        return () => { //cleanup 함수: BottomSheet가 닫힐 때 실행됨
-            html.style.overflow = previousHtmlOverflow;
-            body.style.overflow = previousBodyOverflow;
-        };
-  }, [isOpen]);  
+    html.style.overflow = 'hidden';
+    html.style.overscrollBehavior = 'none';
+
+    body.style.position = 'fixed';
+    body.style.top = `-${savedScrollY}px`;
+    body.style.left = '0';
+    body.style.right = '0';
+    body.style.width = '100%';
+    body.style.overflow = 'hidden';
+
+    const syncVisualViewport = () => {
+        const offsetTop = viewport?.offsetTop ?? 0;
+
+        // 키보드가 화면을 위로 민 만큼 배경을 반대로 보정
+        body.style.top = `${offsetTop - savedScrollY}px`;
+
+        if (!viewport || !layerRef.current) return;
+
+        // 바텀시트는 실제로 보이는 키보드 위 영역에 맞춤
+        layerRef.current.style.top =
+        `${viewport.offsetTop}px`;
+        layerRef.current.style.left =
+        `${viewport.offsetLeft}px`;
+        layerRef.current.style.width =
+        `${viewport.width}px`;
+        layerRef.current.style.height =
+        `${viewport.height}px`;
+    };
+
+    syncVisualViewport();
+
+    viewport?.addEventListener(
+        'resize',
+        syncVisualViewport,
+    );
+    viewport?.addEventListener(
+        'scroll',
+        syncVisualViewport,
+    );
+
+    return () => {
+        viewport?.removeEventListener(
+        'resize',
+        syncVisualViewport,
+        );
+        viewport?.removeEventListener(
+        'scroll',
+        syncVisualViewport,
+        );
+
+        html.style.overflow = previousHtmlOverflow;
+        html.style.overscrollBehavior =
+        previousHtmlOverscroll;
+
+        Object.assign(body.style, previousBodyStyles);
+
+        requestAnimationFrame(() => {
+        window.scrollTo(0, savedScrollY);
+        });
+    };
+    }, [isOpen]);
+  
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div //Motion에서 애니메이션을 줄 수 있는 요소
-          key="bottom-sheet"
-          className="fixed inset-0 z-[60] flex items-end"
+        <motion.div //애니메이션
+            ref={layerRef}
+            key="bottom-sheet"
+            className="fixed left-0 top-0 z-[60] flex h-dvh w-full items-end overscroll-none"
         >
           <motion.button //검정 배경
             type="button"
             aria-label={`${title} 닫기`}
             onClick={onClose}
-            className="absolute inset-0 bg-black/40"
+            className="absolute inset-0 touch-none bg-black/40"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
