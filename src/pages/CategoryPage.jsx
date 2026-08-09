@@ -4,35 +4,12 @@ import { useState } from 'react';
 import useCategoryStore from '../store/useCategoryStore';
 import useCategories from '../hooks/useCategories';
 
-import { Plus, EllipsisVertical, } from 'lucide-react';
 import AppHeader from '../components/layout/AppHeader';
 import BottomNav from '../components/layout/BottomNav';
 import BottomSheet from '../components/layout/BottomSheet';
-
-
-const mockCategories = [ //임시 카테고리
-  {
-    id: 'mock-dokyo',
-    name: '도쿄 여행',
-    coverImageUrl: '/images/dokyo.webp',
-    isDefault: false,
-    isMock: true,
-  },
-  {
-    id: 'mock-landscape',
-    name: '풍경',
-    coverImageUrl: '/images/landscape.jpg',
-    isDefault: false,
-    isMock: true,
-  },
-  {
-    id: 'mock-cat',
-    name: '고양이',
-    coverImageUrl: '/images/cat.jpg',
-    isDefault: false,
-    isMock: true,
-  },
-];
+import CollectionToolbar from '../components/album/CollectionToolbar';
+import CategoryGrid from '../components/album/CategoryGrid';
+import mockCategories from '../constants/mockCategories';
 
 
 const CategoryPage = () => {
@@ -150,7 +127,7 @@ const CategoryPage = () => {
   };
   
   return (
-    <main className="flex min-h-dvh flex-col">
+    <main className="flex min-h-dvh flex-col pb-28">
         <div className="flex-1 px-4 pt-4">
           <AppHeader />
       
@@ -159,59 +136,19 @@ const CategoryPage = () => {
               카테고리 선택
             </h2>
 
-            <p className="mt-2 text-sm font-light text-text-secondary">
+            <p className="mt-2 h-5 text-sm font-light text-text-secondary">
               선택하면 바로 촬영이 시작됩니다.
             </p>
           </section>
+          <CollectionToolbar />
 
-          <section className="mt-6 grid grid-cols-3 gap-1">
-            <button
-              type="button"
-              onClick={() => setIsCreateOpen(true)}
-              className="flex aspect-square items-center justify-center rounded-2xl border-2 border-border text-text-secondary bg-gray-50"
-            >
-              <Plus size={24} />
-            </button>
-
-            {displayedCategories.map((category) => ( 
-              <div
-                key={category.id}
-                className="relative aspect-square overflow-hidden rounded-2xl bg-gray-200"
-              >
-                <button
-                  type="button"
-                  onClick={() => handleCategorySelect(category)}
-                  className="w-full h-full text-left"
-                >
-                  {category.coverImageUrl && (
-                    
-                      <img
-                        src={category.coverImageUrl}
-                        alt={category.name}
-                        className="h-full w-full object-cover"
-                      />
-                  )}
-                  <div className="absolute inset-0 bg-black/30" />
-
-                  <div className="absolute inset-x-0 bottom-0 p-3 text-background">
-                    <p className="text-lg font-semibold opacity-95">
-                      {category.name}
-                    </p>
-                  </div>
-                </button>
-                {!category.isDefault && ( //카테고리 수정 아이콘
-                  <button
-                    type="button"
-                    aria-label={`${category.name} 편집`}
-                    onClick={() => handleEditOpen(category)}
-                    className="absolute right-1 top-3 z-10 flex size-8 items-center justify-center rounded-3xl text-background/90 drop-shadow transition-colors active:bg-gray-500/50"
-                  >
-                    <EllipsisVertical size={20} />
-                  </button>
-                )}
-              </div>
-            ))}
-          </section>
+          <CategoryGrid
+            categories={displayedCategories}
+            leadingType="add"
+            onLeadingClick={() => setIsCreateOpen(true)}
+            onCategoryClick={handleCategorySelect}
+            onCategoryMenuClick={handleEditOpen}
+          />
           
         </div>
         <BottomSheet

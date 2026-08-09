@@ -9,6 +9,8 @@ import TournamentPage from "./pages/TournamentPage";
 import CategoryPage from "./pages/CategoryPage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
+import AlbumPage from './pages/AlbumPage';
+import AlbumDetailPage from './pages/AlbumDetailPage';
 
 const App = () => {
   useEffect(() => {
@@ -54,6 +56,14 @@ const App = () => {
           <Route
             path="/signup"
             element={<SignupPage />}
+          />
+          <Route
+            path="/album"
+            element={<AlbumPage />}
+          />
+          <Route
+            path="/album/:categoryId"
+            element={<AlbumDetailPage />}
           />
         </Routes>
       </div>

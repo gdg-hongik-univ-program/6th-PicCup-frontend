@@ -8,7 +8,7 @@ const activeButtonClass =
   'pointer-events-auto flex size-14 items-center justify-center rounded-full bg-primary/95 text-white shadow-lg ring-1 ring-black/5';
 
 const defaultHomeClass =
-  'pointer-events-auto flex h-14 w-28 items-center justify-center rounded-full bg-white/95 shadow-lg ring-1 ring-black/5';
+  'pointer-events-auto flex h-14 w-28 items-center justify-center rounded-full bg-white/95 shadow-lg ring-1 ring-black/5 ';
 
 const activeHomeClass =
   'pointer-events-auto flex h-14 w-28 items-center justify-center rounded-full bg-primary/95 text-white shadow-lg ring-1 ring-black/5';
@@ -16,8 +16,8 @@ const activeHomeClass =
 const BottomNav = ({ activeTab = null }) => {
   return (
     <nav className="pointer-events-none fixed inset-x-0 bottom-8 z-50 mx-auto flex w-full max-w-md items-center justify-between px-10">
-      <button
-        type="button"
+      <Link
+        to="/album"
         className={
           activeTab === 'album'
             ? activeButtonClass
@@ -26,7 +26,7 @@ const BottomNav = ({ activeTab = null }) => {
         aria-label="앨범"
       >
         <ImageIcon size={24} />
-      </button>
+      </Link>
 
       <Link
         to="/"
