@@ -20,6 +20,8 @@ import AlbumPage from './pages/AlbumPage';
 import AlbumDetailPage from './pages/AlbumDetailPage';
 import BestPickDetailPage from "./pages/BestPickDetailPage";
 import PasswordResetPage from "./pages/PasswordResetPage";
+import MyPage from "./pages/mypage/MyPage";
+import ProfileEditPage from "./pages/mypage/ProfileEditPage";
 
 
 const App = () => {
@@ -81,6 +83,14 @@ const App = () => {
                 <Route
                   path="/album/photo/:bestPickId"
                   element={<BestPickDetailPage />}
+                />
+                <Route
+                  path="/mypage"
+                  element={<MyPage />}
+                />
+                <Route
+                  path="/mypage/edit"
+                  element={<ProfileEditPage />}
                 />
               </Route>
       
