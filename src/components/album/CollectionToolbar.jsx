@@ -1,9 +1,11 @@
 import {
+  Plus,
   Search,
   SlidersHorizontal,
 } from 'lucide-react';
 
 const CollectionToolbar = ({
+  selectLabel = '선택',
   onSelectClick,
   onSortClick,
   onSearchClick,
@@ -12,11 +14,26 @@ const CollectionToolbar = ({
     <div className="mt-4 flex items-center justify-between">
       <div className="flex items-center gap-2">
         <button
-          type="button"
-          onClick={onSelectClick}
-          className="rounded-full border border-border px-3.5 py-1.5 text-sm"
-        >
-          선택
+            type="button"
+            onClick={onSelectClick}
+            className={`flex items-center justify-center rounded-full border border-border ${
+                selectLabel === '+'
+                ? 'px-4 py-2'
+                : 'px-3.5 py-1.5 text-sm'
+            }`}
+            aria-label={
+                selectLabel === '+'
+                ? '앨범 추가'
+                : selectLabel
+            }
+            >
+            {selectLabel === '+' ? (
+                <Plus
+                size={16}
+                />
+            ) : (
+                selectLabel
+            )}
         </button>
 
         <button

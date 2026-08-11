@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { Link, useNavigate, useLocation } from 'react-router';
 
 import { getMe, login as loginUser } from '../api/authApi';
 import useAuthStore from '../store/useAuthStore';
@@ -10,6 +10,21 @@ import AuthTextField from '../components/auth/AuthTextField';
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const [loginNotice, setLoginNotice] = useState(
+    () => {
+      if (location.state?.passwordResetSuccess) {
+        return '비밀번호가 변경되었습니다.';
+      }
+
+      if (location.state?.signupSuccess) {
+        return '회원가입이 완료되었습니다. 로그인해주세요.';
+      }
+
+      return '';
+    },
+  );
 
   const setAuthenticatedUser = useAuthStore(
     (state) => state.setAuthenticatedUser,
@@ -26,6 +41,7 @@ const LoginPage = () => {
 
   const handleLogin = async (event) => { //입력값 검사, 로그인 API를 호출한 뒤 성공·실패 상태 처리
     event.preventDefault(); //브라우저 새로고침 막음
+    setLoginNotice('');
 
     if (!email.trim() || !password) {
       setLoginError('이메일과 비밀번호를 입력해주세요.');
@@ -44,7 +60,14 @@ const LoginPage = () => {
       const user = await getMe();
 
       setAuthenticatedUser(user);
-      navigate('/', { replace: true }); //로그인 페이지로 안돌아감
+      const redirectPath =
+        typeof location.state?.from === 'string' //원래 가려던 페이지가 있으면
+          ? location.state.from //그 페이지로
+          : '/'; //없다면 홈으로
+
+      navigate(redirectPath, {
+        replace: true, //로그인 후 뒤로가기 눌러도 로그인으로 안감
+      });
     } catch (error) {
       console.error('로그인 실패:', error);
       setUnauthenticated();
@@ -71,7 +94,7 @@ const LoginPage = () => {
           </div>
 
           <h1 className="mt-2 font-logo text-3xl">PicCup</h1>
-          <p className="mt-2 text-xl font-semibold">로그인</p>
+          <p className="mt-2 text-xl font-medium">로그인</p>
         </div>
 
         <form
@@ -83,9 +106,11 @@ const LoginPage = () => {
             name="email"
             type="email"
             value={email}
-            onChange={(event) =>
+            onChange={(event) => {
               setEmail(event.target.value)
-            }
+              setLoginError('');
+              setLoginNotice('');
+            }}
             placeholder="이메일"
             autoComplete="email"
           />
@@ -94,9 +119,11 @@ const LoginPage = () => {
             name="password"
             type="password"
             value={password}
-            onChange={(event) =>
+            onChange={(event) => {
               setPassword(event.target.value)
-            }
+              setLoginError('');
+              setLoginNotice('');
+            }}
             placeholder="비밀번호"
             autoComplete="current-password"
           />
@@ -116,14 +143,21 @@ const LoginPage = () => {
           비밀번호를 잊으셨나요?
         </Link>
         <div className="absolute inset-x-0 bottom-4 flex h-4 items-center justify-center px-4">
-          {loginError && (
+          {loginError ? (
             <p
               className="text-xs text-error"
               role="alert"
             >
               {loginError}
             </p>
-          )}
+          ) : loginNotice ? (
+            <p
+              className="text-xs text-primary"
+              role="status"
+            >
+              {loginNotice}
+            </p>
+          ) : null}
         </div>
       </section>
 

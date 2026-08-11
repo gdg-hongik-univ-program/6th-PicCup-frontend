@@ -1,10 +1,22 @@
 import { Menu, Trash2 } from 'lucide-react';
+import { useNavigate } from 'react-router';
 
 const AppHeader = ({
   onMenuClick,
   showTrash = false,
   onTrashClick,
 }) => {
+  const navigate = useNavigate();
+
+  const handleMenuClick = () => {
+    if (onMenuClick) {
+      onMenuClick();
+      return;
+    }
+
+    navigate('/mypage');
+  };
+
   return (
     <header className="flex items-center justify-between px-2">
       <h1 className="font-logo text-3xl tracking-tight">
@@ -25,7 +37,7 @@ const AppHeader = ({
 
         <button
           type="button"
-          onClick={onMenuClick}
+          onClick={handleMenuClick}
           className="flex size-10 items-center justify-center"
           aria-label="메뉴 열기"
         >

@@ -1,4 +1,4 @@
-import { post } from './request';
+import { get, patch, post } from './request';
 
 export const uploadBestPick = async ({
   file,
@@ -23,3 +23,65 @@ export const uploadBestPick = async ({
 };
 
 //bestPick 기능에 필요한 실제 API 요청
+
+export const getBestPicks = async (categoryId) => { //사진 조회 API
+  const response = await get('/best-picks', {
+    headers: {
+      'X-User-Id': '1',
+    },
+    params:
+      categoryId === 'all'
+        ? undefined
+        : { categoryId },
+  });
+
+  return Array.isArray(response.data)
+    ? response.data
+    : [];
+};
+
+export const getBestPickDetail = async (
+  bestPickId,
+) => {
+  const response = await get(
+    `/best-picks/${bestPickId}`,
+    {
+      headers: {
+        'X-User-Id': '1',
+      },
+    },
+  );
+
+  return response.data;
+};
+
+export const updateBestPickLike = async ( //좋아요 변경 함수
+  bestPickId,
+  isLiked,
+) => {
+  const response = await patch(
+    `/best-picks/${bestPickId}/like`,
+    { isLiked },
+    {
+      headers: {
+        'X-User-Id': '1',
+      },
+    },
+  );
+
+  return response.data;
+};
+
+export const deleteBestPicks = async (ids) => { //다중삭제
+  const response = await post(
+    '/best-picks/delete',
+    { ids },
+    {
+      headers: {
+        'X-User-Id': '1',
+      },
+    },
+  );
+
+  return response.data;
+};

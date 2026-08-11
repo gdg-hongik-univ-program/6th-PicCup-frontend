@@ -3,6 +3,13 @@ import { useEffect } from "react";
 
 import { deleteExpiredTrashPhotos } from "./libs/photoDB";
 
+import useAuthBootstrap from './hooks/useAuthBootstrap';
+import useAuthStore from './store/useAuthStore';
+
+import SplashPage from "./pages/SplashPage";
+
+import ProtectedRoute from "./components/auth/ProtectRoute";
+
 import CameraPage from "./pages/CameraPage";
 import HomePage from "./pages/HomePage";
 import TournamentPage from "./pages/TournamentPage";
@@ -11,8 +18,19 @@ import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import AlbumPage from './pages/AlbumPage';
 import AlbumDetailPage from './pages/AlbumDetailPage';
+import BestPickDetailPage from "./pages/BestPickDetailPage";
+import PasswordResetPage from "./pages/PasswordResetPage";
+import MyPage from "./pages/mypage/MyPage";
+import ProfileEditPage from "./pages/mypage/ProfileEditPage";
+
 
 const App = () => {
+  useAuthBootstrap(); ///users/me 결과를 Zustand의 useAuthStore에 저장
+
+  const authStatus = useAuthStore(
+    (state) => state.authStatus,
+  ); //Zustand 안에 있는 authStatus 값을 꺼내옴
+
   useEffect(() => {
     const cleanExpiredTrash = async () => {
       try {
@@ -32,40 +50,64 @@ const App = () => {
   return (
     <main className="min-h-dvh">
       <div className="mx-auto min-h-dvh w-full max-w-md bg-background">
-        <Routes>
-          <Route 
-            path="/" 
-            element={<HomePage />} 
-          />
-          <Route 
-            path="/camera" 
-            element={<CameraPage />} 
-          />
-          <Route
-            path="/tournament/:sessionId" //:는 변수라는 뜻
-            element={<TournamentPage />}
-          />
-          <Route
-            path="/category" 
-            element={<CategoryPage />}
-          />
-          <Route
-            path="/login"
-            element={<LoginPage />}
-          />
-          <Route
-            path="/signup"
-            element={<SignupPage />}
-          />
-          <Route
-            path="/album"
-            element={<AlbumPage />}
-          />
-          <Route
-            path="/album/:categoryId"
-            element={<AlbumDetailPage />}
-          />
-        </Routes>
+          {authStatus === 'checking' ? (
+            <SplashPage />
+          ) : (
+            <Routes>
+              <Route element={<ProtectedRoute />}>
+                <Route 
+                  path="/" 
+                  element={<HomePage />} 
+                />
+                <Route 
+                  path="/camera" 
+                  element={<CameraPage />} 
+                />
+                <Route
+                  path="/tournament/:sessionId" //:는 변수라는 뜻
+                  element={<TournamentPage />}
+                />
+                <Route
+                  path="/category" 
+                  element={<CategoryPage />}
+                />
+                
+                <Route
+                  path="/album"
+                  element={<AlbumPage />}
+                />
+                <Route
+                  path="/album/:categoryId"
+                  element={<AlbumDetailPage />}
+                />
+                <Route
+                  path="/album/photo/:bestPickId"
+                  element={<BestPickDetailPage />}
+                />
+                <Route
+                  path="/mypage"
+                  element={<MyPage />}
+                />
+                <Route
+                  path="/mypage/edit"
+                  element={<ProfileEditPage />}
+                />
+              </Route>
+      
+              <Route
+                path="/login"
+                element={<LoginPage />}
+              />
+              <Route
+                path="/signup"
+                element={<SignupPage />}
+              />
+              <Route
+                path="/password-reset"
+                element={<PasswordResetPage />}
+              />
+            </Routes>
+          )}
       </div>
     </main>
     

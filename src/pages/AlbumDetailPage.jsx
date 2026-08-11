@@ -1,5 +1,6 @@
 import { ChevronLeft, Heart, SlidersHorizontal } from 'lucide-react';
 import { useState } from 'react';
+import useBestPicks from '../hooks/useBestPicks';
 import {
   useLocation,
   useNavigate,
@@ -7,7 +8,7 @@ import {
 } from 'react-router';
 
 import BottomNav from '../components/layout/BottomNav';
-import mockBestPicks from '../constants/mockPhotos';
+import useMockBestPickStore from '../store/useMockBestPickStore';
 
 const AlbumDetailPage = () => {
   const navigate = useNavigate();
@@ -15,19 +16,43 @@ const AlbumDetailPage = () => {
   const { categoryId } = useParams();
 
   const [showLikedOnly, setShowLikedOnly] = useState(false);
-
   const albumName =
     categoryId === 'all'
       ? '전체'
       : location.state?.albumName ?? '앨범';
 
-  const albumPhotos =
+  const allMockBestPicks =
+    useMockBestPickStore(
+        (state) => state.photos,
+    );
+
+  const mockBestPicks =
+    allMockBestPicks.filter(
+        (photo) => !photo.deletedAt,
+    );
+
+  const mockAlbumPhotos =
     categoryId === 'all'
         ? mockBestPicks
         : mockBestPicks.filter(
             (photo) =>
             String(photo.categoryId) === categoryId,
         );
+
+  const isMockCategory =
+    categoryId?.startsWith('mock-');
+
+  const {
+    bestPicks: serverBestPicks,
+  } = useBestPicks(
+    categoryId,
+    !isMockCategory,
+  );
+
+  const albumPhotos = [
+    ...mockAlbumPhotos,
+    ...serverBestPicks,
+  ];
 
   const visiblePhotos = showLikedOnly
     ? albumPhotos.filter((photo) => photo.isLiked)
@@ -94,23 +119,31 @@ const AlbumDetailPage = () => {
         <section className="mt-5 columns-3 gap-1">
             {visiblePhotos.map((photo) => (
                 <button
-                key={photo.id}
-                type="button"
-                className="relative mb-1 block w-full break-inside-avoid overflow-hidden rounded-xl"
-                >
-                <img
-                    src={photo.imageUrl}
-                    alt={`${photo.categoryName} 베스트픽`}
-                    className="block h-auto w-full object-cover"
-                />
-                {photo.isLiked && (
-                    <span className="absolute bottom-3 left-3 text-white/90">
-                        <Heart 
-                        size={17}
-                        fill='currentColor'
+                    key={photo.id}
+                    type="button"
+                    onClick={() =>
+                        navigate(`/album/photo/${photo.id}`, {
+                        state: {
+                            photo,
+                        },
+                        })
+                    }
+                    className="relative mb-1 block w-full break-inside-avoid overflow-hidden rounded-xl"
+                    >
+                    <img
+                        src={photo.imageUrl}
+                        alt={`${photo.categoryName} 베스트픽`}
+                        className="block h-auto w-full object-cover"
+                    />
+
+                    {photo.isLiked && (
+                        <span className="pointer-events-none absolute bottom-3 left-3 text-white/90">
+                        <Heart
+                            size={17}
+                            fill="currentColor"
                         />
-                    </span>
-                )}
+                        </span>
+                    )}
                 </button>
             ))}
         </section>
