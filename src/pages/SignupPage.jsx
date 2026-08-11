@@ -79,7 +79,7 @@ const SignupPage = () => {
             />
 
             <h1 className="mt-2 font-logo text-3xl">PicCup</h1>
-            <p className="mt-2 text-xl font-semibold">회원가입</p>
+            <p className="mt-2 text-xl font-medium">회원가입</p>
           </div>
 
           <div className="mt-8 space-y-3">
