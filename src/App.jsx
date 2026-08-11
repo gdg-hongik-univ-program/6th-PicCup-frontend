@@ -11,6 +11,7 @@ import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import AlbumPage from './pages/AlbumPage';
 import AlbumDetailPage from './pages/AlbumDetailPage';
+import BestPickDetailPage from "./pages/BestPickDetailPage";
 
 const App = () => {
   useEffect(() => {
@@ -64,6 +65,10 @@ const App = () => {
           <Route
             path="/album/:categoryId"
             element={<AlbumDetailPage />}
+          />
+          <Route
+            path="/album/photo/:bestPickId"
+            element={<BestPickDetailPage />}
           />
         </Routes>
       </div>
