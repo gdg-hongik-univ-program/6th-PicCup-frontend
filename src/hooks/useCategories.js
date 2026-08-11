@@ -18,6 +18,10 @@ const useCategories = () => {
   const [categoryError, setCategoryError] = useState('');
   const [fetchError, setFetchError] = useState('');
 
+  const clearCategoryError = () => {
+    setCategoryError('');
+  };
+
   const fetchCategories = useCallback(() => { //카테고리 목록 가져오기
     return getCategories() //카테고리 조회 API를 호출 및 promise 반환, return은 await fetchCategories();를 하기 위함
         .then((result) => {
@@ -211,6 +215,7 @@ const useCategories = () => {
     renameCategory,
     addCategory,
     fetchCategories,
+    clearCategoryError,
   };
 };
 

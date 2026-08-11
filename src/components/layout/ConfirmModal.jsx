@@ -34,19 +34,19 @@ const ConfirmModal = ({
         aria-label={title}
         className="relative w-full max-w-sm rounded-2xl bg-background p-5 text-center"
       >
-        <h2 className="font-semibold">
+        <h2 className="pt-4 text-lg font-semibold">
           {title}
         </h2>
 
         {description && (
-          <p className="mt-3 text-sm text-text-secondary">
+          <p className="mt-4 text-sm text-text-secondary">
             {description}
           </p>
         )}
 
         <p
           role="alert"
-          className="mt-2 h-5 text-xs text-error"
+          className="mt-1 h-2 text-xs text-error"
         >
           {error}
         </p>

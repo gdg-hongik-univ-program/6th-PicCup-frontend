@@ -6,6 +6,7 @@ import {
 const CategoryGrid = ({
   categories,
   leadingType,
+  showBestPickCount = false,
   onLeadingClick,
   onCategoryClick,
   onCategoryMenuClick,
@@ -48,9 +49,11 @@ const CategoryGrid = ({
           <div className="absolute inset-0 bg-black/30" />
 
           <div className="absolute inset-x-0 bottom-0 p-3 text-white">
-            <p className="text-xs opacity-80">
-              {totalBestPickCount}장
-            </p>
+            {showBestPickCount && (
+                <p className="text-xs opacity-80">
+                    {totalBestPickCount}장
+                </p>
+            )}
 
             <p className="text-lg font-semibold">
               전체
@@ -80,11 +83,12 @@ const CategoryGrid = ({
             <div className="absolute inset-0 bg-black/30" />
 
             <div className="absolute inset-x-0 bottom-0 p-3 text-white">
-              {category.bestPickCount != null && (
-                <p className="text-xs opacity-80">
-                  {category.bestPickCount}장
-                </p>
-              )}
+              {showBestPickCount &&
+                category.bestPickCount != null && (
+                    <p className="text-xs opacity-80">
+                    {category.bestPickCount}장
+                    </p>
+                )}
 
               <p className="truncate text-lg font-semibold">
                 {category.name}

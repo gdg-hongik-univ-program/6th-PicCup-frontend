@@ -1,6 +1,10 @@
 import { useNavigate } from 'react-router';
-import useCategories from '../hooks/useCategories';
+
+import useMockBestPickStore from '../store/useMockBestPickStore';
 import BottomNav from '../components/layout/BottomNav';
+
+import useCategoryManagement from '../hooks/useCategoryManagement';
+import CategoryManagementOverlays from '../components/category/CategoryManagementOverlays';
 
 import CollectionToolbar from '../components/album/CollectionToolbar';
 import CategoryGrid from '../components/album/CategoryGrid';
@@ -10,10 +14,35 @@ import AppHeader from '../components/layout/AppHeader';
 
 const AlbumPage = () => {
   const navigate = useNavigate();
-  const { categories } = useCategories();
+  const categoryManagement =
+    useCategoryManagement();
+
+  const {
+    categories,
+    openCreateSheet,
+    openEditSheet,
+  } = categoryManagement;
+
+  const allMockPhotos = useMockBestPickStore(
+    (state) => state.photos,
+  );
+
+  const activeMockPhotos = allMockPhotos.filter(
+    (photo) => !photo.deletedAt,
+  );
+
+  const mockAlbumCategories = mockCategories.map(
+    (category) => ({
+        ...category,
+        bestPickCount: activeMockPhotos.filter(
+        (photo) =>
+            photo.categoryId === category.id,
+        ).length,
+    }),
+  );
 
   const displayedCategories = [
-    ...mockCategories,
+    ...mockAlbumCategories,
     ...categories,
   ];
 
@@ -32,18 +61,17 @@ const AlbumPage = () => {
                 앨범
             </h2>
 
-            <p
-                className="mt-2 h-5"
-                aria-hidden="true"
-            >
-                &nbsp;
-            </p>
+            
         </section>
 
-        <CollectionToolbar />
+        <CollectionToolbar
+            selectLabel="+"
+            onSelectClick={openCreateSheet}
+        />
         <CategoryGrid
             categories={displayedCategories}
             leadingType="all"
+            showBestPickCount
             onLeadingClick={() => { //전체 앨범으로 이동
                 navigate('/album/all', {
                 state: {
@@ -58,8 +86,13 @@ const AlbumPage = () => {
                 },
                 });
             }}
+            onCategoryMenuClick={openEditSheet}
         />
       </div>
+
+      <CategoryManagementOverlays
+        management={categoryManagement}
+      />
 
       <BottomNav activeTab="album" />
     </main>
