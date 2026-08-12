@@ -13,11 +13,7 @@ export const uploadBestPick = async ({
   formData.append('capturedDate', capturedDate);
   formData.append('candidateCount', candidateCount);//백엔드쪽에서 int로 변환해서 받음
 
-  const response = await post('/best-picks', formData, {
-    headers: {
-      'X-User-Id': '1',
-    },
-  });
+  const response = await post('/best-picks', formData);
 
   return response.data; //실제 응답 데이터만 반환
 };
@@ -26,9 +22,6 @@ export const uploadBestPick = async ({
 
 export const getBestPicks = async (categoryId) => { //사진 조회 API
   const response = await get('/best-picks', {
-    headers: {
-      'X-User-Id': '1',
-    },
     params:
       categoryId === 'all'
         ? undefined
@@ -45,11 +38,6 @@ export const getBestPickDetail = async (
 ) => {
   const response = await get(
     `/best-picks/${bestPickId}`,
-    {
-      headers: {
-        'X-User-Id': '1',
-      },
-    },
   );
 
   return response.data;
@@ -62,11 +50,6 @@ export const updateBestPickLike = async ( //좋아요 변경 함수
   const response = await patch(
     `/best-picks/${bestPickId}/like`,
     { isLiked },
-    {
-      headers: {
-        'X-User-Id': '1',
-      },
-    },
   );
 
   return response.data;
@@ -76,11 +59,6 @@ export const deleteBestPicks = async (ids) => { //다중삭제
   const response = await post(
     '/best-picks/delete',
     { ids },
-    {
-      headers: {
-        'X-User-Id': '1',
-      },
-    },
   );
 
   return response.data;
@@ -93,9 +71,6 @@ export const getCalendarBestPicks = async (
   const response = await get(
     '/best-picks/calendar',
     {
-      headers: {
-        'X-User-Id': '1',
-      },
       params: {
         yearMonth,
       },

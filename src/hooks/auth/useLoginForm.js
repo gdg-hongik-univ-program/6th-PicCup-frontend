@@ -56,13 +56,8 @@ const useLoginForm = () => {
       const user = await getMe();
 
       setAuthenticatedUser(user);
-      const redirectPath =
-        typeof location.state?.from === 'string' //원래 가려던 페이지가 있으면
-          ? location.state.from //그 페이지로
-          : '/'; //없다면 홈으로
-
-      navigate(redirectPath, {
-        replace: true, //로그인 후 뒤로가기 눌러도 로그인으로 안감
+      navigate('/', {
+        replace: true,
       });
     } catch (error) {
       console.error('로그인 실패:', error);
