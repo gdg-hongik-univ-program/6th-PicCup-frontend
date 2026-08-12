@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router';
-import { useState } from 'react';
 import {
   ChevronRight,
   FileText,
@@ -8,71 +7,24 @@ import {
   UserPen,
 } from 'lucide-react';
 
-import useAuthStore from '../../store/useAuthStore';
 import BottomNav from '../../components/layout/BottomNav';
 import ProfileAvatar from '../../components/profile/ProfileAvatar';
 
-import { logout as logoutUser } from '../../api/authApi';
 import ConfirmModal from '../../components/layout/ConfirmModal';
+import useMyPage from '../../hooks/profile/useMyPage';
 
 const MyPage = () => {
   const navigate = useNavigate();
 
-  const user = useAuthStore(
-    (state) => state.user,
-  );
-
-  const setUnauthenticated = useAuthStore(
-    (state) => state.setUnauthenticated,
-    );
-
-  const [isLogoutOpen, setIsLogoutOpen] = useState(false);
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [logoutError, setLogoutError] = useState('');
-
-  const finishLogout = () => { //로그아웃 후처리
-    setUnauthenticated();
-    setIsLogoutOpen(false);
-
-    navigate('/login', {
-        replace: true,//로그아웃 후 마이페이지로 돌아가지 못하게
-    });
-    };
-
-  const handleLogout = async () => { //로그아웃 처리
-    const isPreviewMode = //개발미리보기인가
-        import.meta.env.DEV &&
-        import.meta.env.VITE_AUTH_PREVIEW ===
-        'true';
-
-    if (isPreviewMode) {
-        finishLogout();
-        return; //서버요청 안보냄
-    }
-
-    try { //실제환경이면
-        setIsLoggingOut(true);
-        setLogoutError('');
-
-        await logoutUser();
-
-        finishLogout();
-    } catch (error) {
-        console.error('로그아웃 실패:', error);
-
-        if (error.response?.status === 401) { //시간지나 만료된경우
-        finishLogout();
-        return;
-        }
-
-        setLogoutError(
-        error.response?.data?.message ??
-            '로그아웃하지 못했습니다.',
-        );
-    } finally {
-        setIsLoggingOut(false);
-    }
-  };
+  const {
+    user,
+    isLogoutOpen,
+    isLoggingOut,
+    logoutError,
+    openLogout,
+    closeLogout,
+    handleLogout,
+  } = useMyPage();
 
   const menuItems = [
     {
@@ -83,7 +35,7 @@ const MyPage = () => {
     {
       label: '비밀번호 재설정',
       icon: KeyRound,
-      path: '/password-reset',
+      path: '/mypage/password-reset',
     },
     {
       label: '서비스 약관',
@@ -150,10 +102,7 @@ const MyPage = () => {
 
             <button
               type="button"
-              onClick={() => {
-                setLogoutError('');
-                setIsLogoutOpen(true);
-              }}
+              onClick={openLogout}
               className="flex w-full items-center gap-3 border-border px-4 py-6 text-left active:bg-gray-100"
             >
               <LogOut
@@ -185,10 +134,7 @@ const MyPage = () => {
         confirmingLabel="로그아웃 중..."
         isConfirming={isLoggingOut}
         variant="primary"
-        onClose={() => {
-            setLogoutError('');
-            setIsLogoutOpen(false);
-        }}
+        onClose={closeLogout}
         onConfirm={handleLogout}
       />
     </main>

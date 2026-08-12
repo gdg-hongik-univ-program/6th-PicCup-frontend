@@ -1,79 +1,23 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router';
-
-import { resetPassword } from '../api/authApi';
-import { validatePasswordResetForm } from '../libs/authValidation';
+import { Link } from 'react-router';
 
 import logoImage from '../assets/piccup-logo.png';
 import AuthButton from '../components/auth/AuthButton';
 import AuthTextField from '../components/auth/AuthTextField';
+import { AUTH_FIELD_LIMITS } from '../constants/auth';
+import usePasswordResetForm from '../hooks/auth/usePasswordResetForm';
 
 const PasswordResetPage = () => {
-  const navigate = useNavigate();
-
-  const [email, setEmail] = useState('');
-  const [newPassword, setNewPassword] =
-    useState('');
-  const [passwordConfirm, setPasswordConfirm] =
-    useState('');
-
-  const [resetError, setResetError] = useState('');
-  const [isSubmitting, setIsSubmitting] =
-    useState(false);
-
-  const handleResetPassword = async (event) => {
-    event.preventDefault();
-
-    const validationError =
-      validatePasswordResetForm({
-        email,
-        newPassword,
-        passwordConfirm,
-      });
-
-    setResetError(validationError);
-
-    if (validationError) return;
-
-    try {
-      setIsSubmitting(true);
-      setResetError('');
-
-      await resetPassword({
-        email: email.trim(),
-        newPassword,
-      });
-
-      navigate('/login', {
-        replace: true,
-        state: {
-          passwordResetSuccess: true,
-        },
-      });
-    } catch (error) {
-      console.error(
-        '비밀번호 재설정 실패:',
-        error,
-      );
-
-      if (error.response?.status === 400) {
-        setResetError(
-          '입력한 이메일과 비밀번호를 확인해주세요.',
-        );
-      } else {
-        setResetError(
-          error.response?.data?.message ??
-            '비밀번호 재설정 중 오류가 발생했습니다.',
-        );
-      }
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const clearError = () => {
-    setResetError('');
-  };
+  const {
+    email,
+    newPassword,
+    passwordConfirm,
+    resetError,
+    isSubmitting,
+    handleResetPassword,
+    handleEmailChange,
+    handleNewPasswordChange,
+    handlePasswordConfirmChange,
+  } = usePasswordResetForm();
 
   return (
     <main className="min-h-dvh px-6 py-8">
@@ -104,10 +48,7 @@ const PasswordResetPage = () => {
               name="email"
               type="email"
               value={email}
-              onChange={(event) => {
-                setEmail(event.target.value);
-                clearError();
-              }}
+              onChange={handleEmailChange}
               placeholder="이메일"
               autoComplete="email"
             />
@@ -117,12 +58,9 @@ const PasswordResetPage = () => {
               name="newPassword"
               type="password"
               value={newPassword}
-              onChange={(event) => {
-                setNewPassword(event.target.value);
-                clearError();
-              }}
+              onChange={handleNewPasswordChange}
               placeholder="새 비밀번호"
-              maxLength={16}
+              maxLength={AUTH_FIELD_LIMITS.passwordMax}
               autoComplete="new-password"
               helperText="10~16자 영문과 숫자를 포함해주세요."
             />
@@ -132,14 +70,9 @@ const PasswordResetPage = () => {
               name="passwordConfirm"
               type="password"
               value={passwordConfirm}
-              onChange={(event) => {
-                setPasswordConfirm(
-                  event.target.value,
-                );
-                clearError();
-              }}
+              onChange={handlePasswordConfirmChange}
               placeholder="비밀번호 확인"
-              maxLength={16}
+              maxLength={AUTH_FIELD_LIMITS.passwordMax}
               autoComplete="new-password"
             />
           </div>

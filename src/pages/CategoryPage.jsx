@@ -1,13 +1,13 @@
 import { useNavigate } from 'react-router';
 
 import useCategoryStore from '../store/useCategoryStore';
-import useCategoryManagement from '../hooks/useCategoryManagement';
+import useCategoryManagement from '../hooks/category/useCategoryManagement';
 
 import AppHeader from '../components/layout/AppHeader';
 import BottomNav from '../components/layout/BottomNav';
 import CategoryManagementOverlays from '../components/category/CategoryManagementOverlays';
-import CollectionToolbar from '../components/album/CollectionToolbar';
-import CategoryGrid from '../components/album/CategoryGrid';
+import CollectionToolbar from '../components/layout/CollectionToolbar';
+import CategoryGrid from '../components/layout/CategoryGrid';
 import mockCategories from '../constants/mockCategories';
 
 

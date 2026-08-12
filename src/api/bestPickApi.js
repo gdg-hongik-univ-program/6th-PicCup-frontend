@@ -85,3 +85,73 @@ export const deleteBestPicks = async (ids) => { //다중삭제
 
   return response.data;
 };
+
+//홈화면
+export const getCalendarBestPicks = async ( 
+  yearMonth,
+) => {
+  const response = await get(
+    '/best-picks/calendar',
+    {
+      headers: {
+        'X-User-Id': '1',
+      },
+      params: {
+        yearMonth,
+      },
+    },
+  );
+
+  return Array.isArray(response.data)
+    ? response.data
+    : [];
+};
+
+//여기서부터는 휴지통 화면 
+export const getDeletedBestPicks = async () => {
+  const response = await get(
+    '/best-picks/trash',
+  );
+
+  return Array.isArray(response.data)
+    ? response.data
+    : [];
+};
+
+export const restoreDeletedBestPicks = async (
+  ids,
+) => {
+  if (!Array.isArray(ids) || ids.length === 0) {
+    throw new Error(
+      '복구할 베스트픽을 선택해주세요.',
+    );
+  }
+
+  const response = await post(
+    '/best-picks/trash/restore',
+    { ids },
+  );
+
+  return response.data;
+};
+
+export const permanentlyDeleteBestPicks =
+  async (ids) => {
+    if (
+      !Array.isArray(ids) ||
+      ids.length === 0
+    ) {
+      throw new Error(
+        '영구 삭제할 베스트픽을 선택해주세요.',
+      );
+    }
+
+    const response = await post(
+      '/best-picks/trash/permanent',
+      { ids },
+    );
+
+    return response.data;
+  };
+
+  

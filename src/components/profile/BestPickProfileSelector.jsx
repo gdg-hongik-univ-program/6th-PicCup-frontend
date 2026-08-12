@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Check } from 'lucide-react';
 
-import useBestPicks from '../../hooks/useBestPicks';
+import useBestPicks from '../../hooks/album/useBestPicks';
 import useMockBestPickStore from '../../store/useMockBestPickStore';
 
 import BackHeader from '../layout/BackHeader';

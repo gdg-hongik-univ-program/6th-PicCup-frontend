@@ -1,22 +1,15 @@
-import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { 
-    getPhotosBySessionId,
-    losersToTrash,
- } from '../libs/photoDB';
 
 import useCategoryStore from '../store/useCategoryStore';
-import useBestPickUpload from '../hooks/useBestPickUplaod';
-import useTournament from '../hooks/useTournament';
+import useBestPickUpload from '../hooks/tournament/useBestPickUpload';
+import useTournament from '../hooks/tournament/useTournament';
+import useTournamentPhotos from '../hooks/tournament/useTournamentPhotos';
 
 import TournamentWinner from '../components/tournament/TournamentWinner';
 import TournamentMatch from '../components/tournament/TournamentMatch';
 
 const TournamentPage = () => {
   const { sessionId } = useParams(); //라우터에서 주소 뒷부분(변수)를 객체로 반환해서 sessionId에 저장
-  
-  const [photos, setPhotos] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   const selectedCategory = useCategoryStore(
     (state) => state.selectedCategory,
@@ -32,6 +25,16 @@ const TournamentPage = () => {
     selectPhoto, //사용자 선택 사진을 처리하는  함수
   } = useTournament();
 
+  const {
+    photos,
+    isLoading,
+  } = useTournamentPhotos({
+    sessionId,
+    startTournament,
+    winner,
+    selectedCategory,
+  });
+
   const { 
     handleUploadBestPick, //커스텀 훅에서 전달받음
     isUploading,
@@ -42,52 +45,6 @@ const TournamentPage = () => {
     selectedCategory,
     candidateCount: photos.length, //커스텀 훅으로 전달함
   })
-
-  useEffect(() => { //화면이 렌더링된 다음 IndexedDB 조회 작업을 실행
-    const loadPhotos = async () => { //비동기 작업
-        try {
-            const sessionPhotos = 
-                await getPhotosBySessionId(sessionId);
-            const photosWithPreview = 
-                sessionPhotos.map((photo) => ({
-                    ...photo,
-                    previewUrl: URL.createObjectURL(photo.blob), //각 사진에 previewUrl추가. <img>의 src에는 Blob객체를 그대로 넣을 수 없기 때문
-            }));
-            setPhotos(photosWithPreview);
-            startTournament(photosWithPreview);
-            
-        } catch (error) {
-            console.error('토너먼트 사진 불러오기 실패:', error);
-        } finally { //성공하든 실패하든 무조건 실행. 로딩상태 끔
-            setIsLoading(false);
-        }
-    };
-    loadPhotos();
-  }, [sessionId, startTournament]); //페이지 첨 렌더링 될 때, sessionId가 바뀔때 실행
-
-  useEffect(() => { //winner가 정해졌을 때 탈락사진을 휴지통으로 옮김
-    if (!winner) {
-        return;
-    }
-
-    const trashLosers = async () => {
-        try {
-            const trashedCount = await losersToTrash(
-                sessionId,
-                winner.id,
-        );
-
-        if (trashedCount > 0) {
-            console.log(`${trashedCount}장의 탈락 사진을 휴지통으로 이동했습니다.`);
-        }
-        } catch (error) {
-        console.error('탈락 사진 휴지통 이동 실패:', error);
-        }
-    };
-
-    trashLosers();
-  }, [winner, sessionId]);
-
 
   if (isLoading) {
     return (

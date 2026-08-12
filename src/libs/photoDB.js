@@ -1,4 +1,6 @@
 import { openDB } from 'idb';
+import { TRASH_RETENTION_DAYS } from '../constants/trash';
+import { getLocalDateString } from '../utils/date';
 
 const DB_NAME = 'piccup-db'; // IndexedDB 데이터베이스 이름
 const DB_VERSION = 1; 
@@ -35,13 +37,16 @@ export const getPhotosBySessionId = async (sessionId) => {
   ); //sessionId만 반환하는게 아니라 사진 객체 자체를 반환
 }
 
-const TRASH_RETENTION_DAYS = 7;
-
-
 export const losersToTrash = async ( //탈락 사진 trash로 상태 변경 함수
   sessionId,
   winnerId, //winnerId와 다른 걸 보고 loser판단
+  category,
 ) => {
+  if (!category?.id) {
+    throw new Error(
+      '탈락 사진의 원래 카테고리 정보가 없습니다.',
+    );
+  }
   const db = await dbPromise; //IndexedDB 받아옴
 
   const transaction = db.transaction(
@@ -54,11 +59,12 @@ export const losersToTrash = async ( //탈락 사진 trash로 상태 변경 함�
       .index('sessionId') //sessionId 인덱스 사용하겠다.
       .getAll(sessionId); //해당 sessionId와 같은 사진 객체를 모두 가져오기
 
+  const candidateCount = sessionPhotos.length;
   const trashedAt = new Date(); //휴지통 이동 시각
 
   const expiresAt = new Date(
     trashedAt.getTime() + //trashedAt 시간을 밀리초 숫자로 바꾼 후
-      TRASH_RETENTION_DAYS * //7일 x 24시간, 60분, 60초, 1초 =>밀리초로 바꾸는 계산
+      TRASH_RETENTION_DAYS.rejected * //7일 x 24시간, 60분, 60초, 1초 =>밀리초로 바꾸는 계산
         24 *
         60 *
         60 *
@@ -81,6 +87,15 @@ export const losersToTrash = async ( //탈락 사진 trash로 상태 변경 함�
         status: 'trash',
         trashedAt: trashedAt.toISOString(),
         expiresAt: expiresAt.toISOString(),
+
+        categoryId: category.id,
+        categoryName: category.name,
+
+        capturedDate: getLocalDateString(
+          new Date(photo.createdAt), //서버 날짜형식이랑 맞춤
+        ),
+
+        candidateCount,
       }),
   );
 
@@ -119,4 +134,41 @@ export const deleteExpiredTrashPhotos = async () => {
   await transaction.done; 
 
   return expiredPhotos.length;
+};
+
+export const getTrashPhotos = async () => { //탈락사진 휴지통 조회
+  const db = await dbPromise;
+
+  const trashPhotos = await db.getAllFromIndex(
+    PHOTO_STORE,
+    'status',
+    'trash',
+  );
+
+  return trashPhotos.sort( //최근에 삭제된 순으로 정렬
+    (firstPhoto, secondPhoto) =>
+      new Date(secondPhoto.trashedAt).getTime() -
+      new Date(firstPhoto.trashedAt).getTime(),
+  );
+};
+
+export const deletePhotosByIds = async ( //탈락사진 영구 삭제 및 앨범으로 추가 시 indexedDB에서 삭제
+  photoIds,
+) => {
+  if (photoIds.length === 0) return;
+
+  const db = await dbPromise;
+
+  const transaction = db.transaction(
+    PHOTO_STORE,
+    'readwrite', //조회 + 추가 + 수정 + 삭제 가능
+  );
+
+  await Promise.all(
+    photoIds.map((photoId) =>
+      transaction.store.delete(photoId),
+    ),
+  );
+
+  await transaction.done;
 };
