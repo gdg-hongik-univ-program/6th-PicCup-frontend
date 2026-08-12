@@ -75,6 +75,7 @@ const TournamentPage = () => {
             const trashedCount = await losersToTrash(
                 sessionId,
                 winner.id,
+                selectedCategory,
         );
 
         if (trashedCount > 0) {
@@ -86,7 +87,7 @@ const TournamentPage = () => {
     };
 
     trashLosers();
-  }, [winner, sessionId]);
+  }, [winner, sessionId, selectedCategory]);
 
 
   if (isLoading) {

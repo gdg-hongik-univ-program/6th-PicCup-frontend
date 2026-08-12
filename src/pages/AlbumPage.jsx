@@ -52,7 +52,7 @@ const AlbumPage = () => {
         <AppHeader
             showTrash
             onTrashClick={()=>{
-                //나중에 휴지통 화면으로 이동
+                navigate('/album/trash');
             }}
         />
 
