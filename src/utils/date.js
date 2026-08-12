@@ -6,14 +6,35 @@ export const getLocalDateString = (date = new Date()) => {
   return `${year}-${month}-${day}`;
 };
 
-export const getCalendarDays = (year, monthIndex) => { //달력 칸 배열을 만드는 함수
-  const firstDay = new Date(year, monthIndex, 1).getDay(); //getDay는 요일을 숫자로 반환
-  const mondayBasedFirstDay = (firstDay + 6) % 7;
-  const lastDate = new Date(year, monthIndex + 1, 0).getDate();//다음 달 1일의 하루 전날
+export const getCalendarDays = (
+  year,
+  monthIndex,
+) => { //달력 칸 배열을 만드는 함수
+  const firstDay = new Date(
+    year,
+    monthIndex,
+    1,
+  ).getDay(); //일요일 0, 토요일 6
+
+  const lastDate = new Date(
+    year,
+    monthIndex + 1,
+    0,
+  ).getDate(); //다음 달 1일의 하루 전날
+
+  const calendarDays = [
+    ...Array(firstDay).fill(null), //첫째 날 이전 빈칸
+    ...Array.from(
+      { length: lastDate },
+      (_, index) => index + 1,
+    ),
+  ];
 
   return [
-    ...Array(mondayBasedFirstDay).fill(null), //빈칸 만들기
-    ...Array.from({ length: lastDate }, (_, index) => index + 1),
+    ...calendarDays,
+    ...Array(
+      42 - calendarDays.length,
+    ).fill(null), //항상 6주, 42칸 유지
   ];
 };
 

@@ -86,6 +86,27 @@ export const deleteBestPicks = async (ids) => { //다중삭제
   return response.data;
 };
 
+//홈화면
+export const getCalendarBestPicks = async ( 
+  yearMonth,
+) => {
+  const response = await get(
+    '/best-picks/calendar',
+    {
+      headers: {
+        'X-User-Id': '1',
+      },
+      params: {
+        yearMonth,
+      },
+    },
+  );
+
+  return Array.isArray(response.data)
+    ? response.data
+    : [];
+};
+
 //여기서부터는 휴지통 화면 
 export const getDeletedBestPicks = async () => {
   const response = await get(
@@ -132,3 +153,5 @@ export const permanentlyDeleteBestPicks =
 
     return response.data;
   };
+
+  
