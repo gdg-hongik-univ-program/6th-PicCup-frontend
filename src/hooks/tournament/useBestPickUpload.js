@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-import { uploadBestPick } from '../api/bestPickApi';
-import { getLocalDateString } from '../libs/date';
+import { uploadBestPick } from '../../api/bestPickApi';
+import { getLocalDateString } from '../../utils/date';
 
 const useBestPickUpload = ({
   winner,

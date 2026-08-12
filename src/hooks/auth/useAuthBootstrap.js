@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
-import { getMe } from '../api/authApi';
-import useAuthStore from '../store/useAuthStore';
+import { getMe } from '../../api/authApi';
+import useAuthStore from '../../store/useAuthStore';
 
 const useAuthBootstrap = () => {
   const setAuthenticatedUser = useAuthStore(

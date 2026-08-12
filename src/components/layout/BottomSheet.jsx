@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 
 import { Trash2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
+import { CATEGORY_NAME_MAX_LENGTH } from '../../constants/category';
 
 const BottomSheet = ({
   isOpen,
@@ -100,7 +101,7 @@ const BottomSheet = ({
               <input
                 type="text"
                 value={name}
-                maxLength={50}
+                maxLength={CATEGORY_NAME_MAX_LENGTH}
                 placeholder="카테고리 이름"
                 onChange={(event) =>
                   onNameChange(event.target.value)
@@ -110,7 +111,7 @@ const BottomSheet = ({
             </div>
 
             <p className="mt-2 px-1 text-right text-xs text-text-secondary">
-              {name.length}/50
+              {name.length}/{CATEGORY_NAME_MAX_LENGTH}
             </p>
 
             {error && (

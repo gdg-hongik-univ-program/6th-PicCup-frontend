@@ -3,7 +3,7 @@ import { useEffect } from "react";
 
 import { deleteExpiredTrashPhotos } from "./libs/photoDB";
 
-import useAuthBootstrap from './hooks/useAuthBootstrap';
+import useAuthBootstrap from './hooks/auth/useAuthBootstrap';
 import useAuthStore from './store/useAuthStore';
 
 import SplashPage from "./pages/SplashPage";

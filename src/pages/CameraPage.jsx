@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 
+import CameraActions from '../components/camera/CameraActions';
+import CameraViewport from '../components/camera/CameraViewport';
 import { ASPECT_RATIO_CONFIG } from '../constants/ratio';
-import useCameraStream from '../hooks/useCameraStream';
-import usePhotoCapture from '../hooks/usePhotoCapture';
+import useCameraStream from '../hooks/camera/useCameraStream';
+import usePhotoCapture from '../hooks/camera/usePhotoCapture';
 
 import useCategoryStore from '../store/useCategoryStore';
-
-import { Scan, RefreshCw, ChevronDown, ArrowRight } from 'lucide-react';
 
 const CameraPage = () => {
   const sessionIdRef = useRef(null); //세션 ID를 보관
@@ -78,123 +78,27 @@ const CameraPage = () => {
   }
 
   return (
-    <main className = "relative mx-auto h-dvh w-full max-w-md overflow-hidden">
-      <header className = "absolute inset-x-0 top-0 z-20 flex h-14 items-end justify-between px-4 pb-3">
-        <button
-          type="button"
-          className = "flex h-8 max-w-[70%] items-center rounded-full border-2 border-primary-muted bg-background px-4 py-1.5 text-sm font-semibold text-text-primary"
-          >
-            <span className="truncate">
-              {selectedCategory?.name ?? '카테고리'}
-            </span>
-          </button>
+    <main className="relative mx-auto h-dvh w-full max-w-md overflow-hidden">
+      <CameraViewport
+        selectedCategory={selectedCategory}
+        cameraPositionClass={cameraPositionClass}
+        aspectRatioClass={aspectRatioClass}
+        videoRef={videoRef}
+        facingMode={facingMode}
+      />
 
-        <button
-          type="button"
-          className="flex size-9 items-center justify-center rounded-xl bg-gray-100/90 text-lg"
-          aria-label="카메라 설정 열기"
-        >
-          <ChevronDown
-            size={20}
-            strokeWidth={2.3}
-          />
-        </button>
-      </header>
-
-      <section 
-        className = {`absolute left-0 z-0 ${cameraPositionClass} w-full overflow-hidden bg-black ${aspectRatioClass}`}
-        >
-          <video
-          ref={videoRef} //videoRef 연결
-          autoPlay
-          playsInline //전체화면으로 열리는 것을 방지
-          muted //음소거
-          className = "h-full w-full object-cover"
-          style={{
-            transform:
-              facingMode === 'user' //전면 카메라일 경우
-                ? 'scaleX(-1)' //좌우반전(거울처럼 보이게)
-                : 'none',
-          }}
-          />
-
-      </section>
-
-      <section className="absolute inset-x-0 bottom-[calc(6rem+env(safe-area-inset-bottom))] z-20 grid h-24 grid-cols-3 items-center px-6">
-          <button
-            type="button"
-            onClick={changeAspectRatio} 
-            className="relative flex size-12 items-center justify-center rounded-full bg-gray-100/90 ring-1 ring-black/5"
-          >
-            <Scan
-              size={28}
-              strokeWidth={2.2}
-              aria-hidden="true"
-            />
-            <span className="absolute text-xs font-semibold">
-              {aspectRatio.replace('/', ':')}
-            </span>
-          </button>
-      
-          <button
-            type="button"
-            onClick={capturePhoto}
-            disabled={!isCameraOn}
-            className="flex size-20 border-4 border-primary-muted bg-white items-center justify-center justify-self-center rounded-full shadow-lg"
-            aria-label="사진 촬영 버튼"
-          >
-          </button>
-
-        <button
-          type="button"
-          onClick={switchCamera}
-          className="flex size-12 items-center justify-center justify-self-end rounded-full bg-gray-100/90 ring-1 ring-black/5"
-          aria-label="카메라 방향 전환"
-        >
-          <RefreshCw
-            size={24}
-            strokeWidth={2}
-            aria-hidden="true"
-          />
-        </button>
-      </section>
-
-      {(cameraError || captureError) && (
-        <p>{cameraError || captureError}</p>
-      )} 
-      
-
-      <footer className="absolute inset-x-0 bottom-0 z-20 grid h-[calc(6rem+env(safe-area-inset-bottom))] grid-cols-3 items-center px-6 pb-[env(safe-area-inset-bottom)]">
-        <div className="relative justify-self-start size-12 overflow-hidden rounded-xl bg-surface text-right">
-          {latestPhoto && ( //latestPhoto가 없으면 렌더링 하지 않고
-            <img //있으면 <img> 렌더링
-              src={latestPhoto.previewUrl} 
-              alt="최근 촬영한 사진"
-              className="h-full w-full object-cover"
-            />
-          )}
-          <div className="absolute inset-x-0 bottom-0 p-1 text-white/90 font-medium">
-            <p>{photos.length}/16</p>
-          </div>
-        </div>
-
-        <p className="self-end pb-6 text-center text-sm font-medium">
-          {16-photos.length}장 남았어요.
-        </p>
-
-        <button
-          type="button"
-          onClick={completeCapture}
-          className="flex size-12 items-center justify-center justify-self-end rounded-xl bg-white/90 ring-2 ring-primary-muted"
-          aria-label="촬영 완료"
-        >
-          <ArrowRight
-            size={28}
-            strokeWidth={2}
-          />
-        </button>
-      </footer>
-      
+      <CameraActions
+        aspectRatio={aspectRatio}
+        isCameraOn={isCameraOn}
+        latestPhoto={latestPhoto}
+        photoCount={photos.length}
+        cameraError={cameraError}
+        captureError={captureError}
+        onChangeAspectRatio={changeAspectRatio}
+        onCapture={capturePhoto}
+        onSwitchCamera={switchCamera}
+        onComplete={completeCapture}
+      />
     </main>
   );
 };

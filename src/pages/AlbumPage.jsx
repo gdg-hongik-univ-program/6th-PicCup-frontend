@@ -3,11 +3,11 @@ import { useNavigate } from 'react-router';
 import useMockBestPickStore from '../store/useMockBestPickStore';
 import BottomNav from '../components/layout/BottomNav';
 
-import useCategoryManagement from '../hooks/useCategoryManagement';
+import useCategoryManagement from '../hooks/category/useCategoryManagement';
 import CategoryManagementOverlays from '../components/category/CategoryManagementOverlays';
 
-import CollectionToolbar from '../components/album/CollectionToolbar';
-import CategoryGrid from '../components/album/CategoryGrid';
+import CollectionToolbar from '../components/layout/CollectionToolbar';
+import CategoryGrid from '../components/layout/CategoryGrid';
 
 import mockCategories from '../constants/mockCategories';
 import AppHeader from '../components/layout/AppHeader';

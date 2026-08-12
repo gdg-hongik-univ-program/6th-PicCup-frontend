@@ -1,6 +1,8 @@
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PASSWORD_PATTERN =
-  /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{10,16}$/;
+import {
+  AUTH_FIELD_LIMITS,
+  EMAIL_PATTERN,
+  PASSWORD_PATTERN,
+} from '../constants/auth';
 
 export const isValidPassword = (password) => {
   return PASSWORD_PATTERN.test(password);
@@ -24,8 +26,11 @@ export const validateSignupForm = ({
     return '모든 항목을 입력해주세요.';
   }
 
-  if (trimmedNickname.length > 10) {
-    return '닉네임은 1~10자로 입력해주세요.';
+  if (
+    trimmedNickname.length >
+    AUTH_FIELD_LIMITS.nickname
+  ) {
+    return `닉네임은 1~${AUTH_FIELD_LIMITS.nickname}자로 입력해주세요.`;
   }
 
   if (!EMAIL_PATTERN.test(trimmedEmail)) {
@@ -33,7 +38,7 @@ export const validateSignupForm = ({
   }
 
   if (!isValidPassword(password)) {
-    return '비밀번호는 10~16자 영문과 숫자로 입력해주세요.';
+    return `비밀번호는 ${AUTH_FIELD_LIMITS.passwordMin}~${AUTH_FIELD_LIMITS.passwordMax}자 영문과 숫자로 입력해주세요.`;
   }
 
   if (password !== passwordConfirm) {
@@ -63,7 +68,7 @@ export const validatePasswordResetForm = ({
   }
 
   if (!isValidPassword(newPassword)) {
-    return '비밀번호는 10~16자 영문과 숫자로 입력해주세요.';
+    return `비밀번호는 ${AUTH_FIELD_LIMITS.passwordMin}~${AUTH_FIELD_LIMITS.passwordMax}자 영문과 숫자로 입력해주세요.`;
   }
 
   if (newPassword !== passwordConfirm) {

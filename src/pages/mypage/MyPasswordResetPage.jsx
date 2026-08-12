@@ -1,95 +1,20 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
-
-import { resetPassword } from '../../api/authApi';
-import { validatePasswordResetForm } from '../../libs/authValidation';
-import useAuthStore from '../../store/useAuthStore';
-
 import AuthButton from '../../components/auth/AuthButton';
 import AuthTextField from '../../components/auth/AuthTextField';
 import BackHeader from '../../components/layout/BackHeader';
+import { AUTH_FIELD_LIMITS } from '../../constants/auth';
+import useMyPasswordResetForm from '../../hooks/profile/useMyPasswordResetForm';
 
 const MyPasswordResetPage = () => {
-  const navigate = useNavigate();
-
-  const user = useAuthStore(
-    (state) => state.user,
-  );
-
-  const [newPassword, setNewPassword] = useState('');
-  const [passwordConfirm, setPasswordConfirm] = useState('');
-  const [resetError, setResetError] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleResetPassword = async (event) => {
-    event.preventDefault();
-
-    const validationError =
-      validatePasswordResetForm({
-        email: user?.email ?? '',
-        newPassword,
-        passwordConfirm,
-      });
-
-    setResetError(validationError);
-
-    if (validationError) return;
-
-    const isPreviewMode =
-      import.meta.env.DEV &&
-      import.meta.env.VITE_AUTH_PREVIEW ===
-        'true';
-
-    if (isPreviewMode) {
-      navigate('/mypage', {
-        replace: true,
-        state: {
-          passwordResetSuccess: true,
-        },
-      });
-
-      return;
-    }
-
-    try {
-      setIsSubmitting(true);
-      setResetError('');
-
-      await resetPassword({
-        email: user.email,
-        newPassword,
-      });
-
-      navigate('/mypage', {
-        replace: true,
-        state: {
-          passwordResetSuccess: true, 
-        },
-      });
-    } catch (error) {
-      console.error(
-        '비밀번호 재설정 실패:',
-        error,
-      );
-
-      if (error.response?.status === 400) {
-        setResetError(
-          '새 비밀번호를 확인해주세요.',
-        );
-      } else {
-        setResetError(
-          error.response?.data?.message ??
-            '비밀번호를 재설정하지 못했습니다.',
-        );
-      }
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const clearError = () => {
-    setResetError('');
-  };
+  const {
+    user,
+    newPassword,
+    passwordConfirm,
+    resetError,
+    isSubmitting,
+    handleResetPassword,
+    handleNewPasswordChange,
+    handlePasswordConfirmChange,
+  } = useMyPasswordResetForm();
 
   return (
     <main className="min-h-dvh px-4 py-4">
@@ -115,14 +40,9 @@ const MyPasswordResetPage = () => {
               name="newPassword"
               type="password"
               value={newPassword}
-              onChange={(event) => {
-                setNewPassword(
-                  event.target.value,
-                );
-                clearError();
-              }}
+              onChange={handleNewPasswordChange}
               placeholder="새 비밀번호"
-              maxLength={16}
+              maxLength={AUTH_FIELD_LIMITS.passwordMax}
               autoComplete="new-password"
               helperText="10~16자 영문과 숫자를 포함해주세요."
             />
@@ -132,14 +52,9 @@ const MyPasswordResetPage = () => {
               name="passwordConfirm"
               type="password"
               value={passwordConfirm}
-              onChange={(event) => {
-                setPasswordConfirm(
-                  event.target.value,
-                );
-                clearError();
-              }}
+              onChange={handlePasswordConfirmChange}
               placeholder="비밀번호 확인"
-              maxLength={16}
+              maxLength={AUTH_FIELD_LIMITS.passwordMax}
               autoComplete="new-password"
             />
           </div>

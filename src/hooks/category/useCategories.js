@@ -5,7 +5,8 @@ import { createCategory,
          updateCategory,
          deleteCategory,
          restoreCategory,
-} from '../api/categoryApi';
+} from '../../api/categoryApi';
+import { CATEGORY_NAME_MAX_LENGTH } from '../../constants/category';
 
 const useCategories = () => {
   const [categories, setCategories] = useState([]);
@@ -87,9 +88,12 @@ const useCategories = () => {
   const renameCategory = async (categoryId, name) => { //카테고리 이름 수정
     const trimmedName = name.trim();
 
-    if (!trimmedName || trimmedName.length > 50) {
+    if (
+      !trimmedName ||
+      trimmedName.length > CATEGORY_NAME_MAX_LENGTH
+    ) {
       setCategoryError(
-        '카테고리 이름은 1자 이상 50자 이하로 입력해주세요.',
+        `카테고리 이름은 1자 이상 ${CATEGORY_NAME_MAX_LENGTH}자 이하로 입력해주세요.`,
       );
 
       return null;

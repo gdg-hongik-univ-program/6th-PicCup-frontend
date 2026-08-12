@@ -1,5 +1,6 @@
 import { openDB } from 'idb';
-import { getLocalDateString } from './date';
+import { TRASH_RETENTION_DAYS } from '../constants/trash';
+import { getLocalDateString } from '../utils/date';
 
 const DB_NAME = 'piccup-db'; // IndexedDB 데이터베이스 이름
 const DB_VERSION = 1; 
@@ -36,9 +37,6 @@ export const getPhotosBySessionId = async (sessionId) => {
   ); //sessionId만 반환하는게 아니라 사진 객체 자체를 반환
 }
 
-const TRASH_RETENTION_DAYS = 7;
-
-
 export const losersToTrash = async ( //탈락 사진 trash로 상태 변경 함수
   sessionId,
   winnerId, //winnerId와 다른 걸 보고 loser판단
@@ -66,7 +64,7 @@ export const losersToTrash = async ( //탈락 사진 trash로 상태 변경 함�
 
   const expiresAt = new Date(
     trashedAt.getTime() + //trashedAt 시간을 밀리초 숫자로 바꾼 후
-      TRASH_RETENTION_DAYS * //7일 x 24시간, 60분, 60초, 1초 =>밀리초로 바꾸는 계산
+      TRASH_RETENTION_DAYS.rejected * //7일 x 24시간, 60분, 60초, 1초 =>밀리초로 바꾸는 계산
         24 *
         60 *
         60 *

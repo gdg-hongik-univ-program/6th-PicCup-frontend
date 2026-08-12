@@ -1,6 +1,4 @@
 import { ChevronLeft, Heart, SlidersHorizontal } from 'lucide-react';
-import { useState } from 'react';
-import useBestPicks from '../hooks/useBestPicks';
 import {
   useLocation,
   useNavigate,
@@ -8,55 +6,24 @@ import {
 } from 'react-router';
 
 import BottomNav from '../components/layout/BottomNav';
-import useMockBestPickStore from '../store/useMockBestPickStore';
+import useAlbumPhotos from '../hooks/album/useAlbumPhotos';
 
 const AlbumDetailPage = () => {
   const navigate = useNavigate();
   const location = useLocation(); //이전 페이지에서 전달된 상태를 가져오기 위해 useLocation 사용
   const { categoryId } = useParams();
 
-  const [showLikedOnly, setShowLikedOnly] = useState(false);
   const albumName =
     categoryId === 'all'
       ? '전체'
       : location.state?.albumName ?? '앨범';
 
-  const allMockBestPicks =
-    useMockBestPickStore(
-        (state) => state.photos,
-    );
-
-  const mockBestPicks =
-    allMockBestPicks.filter(
-        (photo) => !photo.deletedAt,
-    );
-
-  const mockAlbumPhotos =
-    categoryId === 'all'
-        ? mockBestPicks
-        : mockBestPicks.filter(
-            (photo) =>
-            String(photo.categoryId) === categoryId,
-        );
-
-  const isMockCategory =
-    categoryId?.startsWith('mock-');
-
   const {
-    bestPicks: serverBestPicks,
-  } = useBestPicks(
-    categoryId,
-    !isMockCategory,
-  );
-
-  const albumPhotos = [
-    ...mockAlbumPhotos,
-    ...serverBestPicks,
-  ];
-
-  const visiblePhotos = showLikedOnly
-    ? albumPhotos.filter((photo) => photo.isLiked)
-    : albumPhotos;
+    albumPhotos,
+    visiblePhotos,
+    showLikedOnly,
+    setShowLikedOnly,
+  } = useAlbumPhotos(categoryId);
 
   return (
     <main className="flex min-h-dvh flex-col pb-28">

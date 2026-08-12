@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { getBestPickDetail } from '../api/bestPickApi';
+import { getBestPickDetail } from '../../api/bestPickApi';
 
 const useBestPickDetail = (
   bestPickId, //URL의 사진 ID

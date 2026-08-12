@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { getBestPicks } from '../api/bestPickApi';
+import { getBestPicks } from '../../api/bestPickApi';
 
 const useBestPicks = (
     categoryId,

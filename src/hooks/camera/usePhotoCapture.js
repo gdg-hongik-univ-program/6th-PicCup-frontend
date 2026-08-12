@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react"
 
-import { savePhoto } from "../libs/photoDB"
-import { calculateCropArea } from "../libs/cropArea.js"
+import { savePhoto } from "../../libs/photoDB"
+import { calculateCropArea } from "../../utils/cropArea.js"
 
 const usePhotoCapture = ({
     videoRef,

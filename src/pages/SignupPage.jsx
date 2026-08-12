@@ -1,68 +1,26 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { Link } from 'react-router';
 
 import logoImage from '../assets/piccup-logo.png';
 import AuthButton from '../components/auth/AuthButton';
 import AuthTextField from '../components/auth/AuthTextField';
+import { AUTH_FIELD_LIMITS } from '../constants/auth';
 
-import { validateSignupForm } from '../libs/authValidation';
-import { signup as signupUser } from '../api/authApi';
+import useSignupForm from '../hooks/auth/useSignupForm';
 
 const SignupPage = () => {
-  const navigate = useNavigate();
-  const [nickname, setNickname] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordConfirm, setPasswordConfirm] = useState('');
-  const [signupError, setSignupError] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleSignup = async (event) => {
-    event.preventDefault();
-
-    const validationError = validateSignupForm({
-        nickname,
-        email,
-        password,
-        passwordConfirm,
-    });
-
-    setSignupError(validationError);
-
-    if (validationError) {
-        return;
-    }
-
-    setIsSubmitting(true);
-    setSignupError('');
-
-    try {
-        await signupUser({
-        nickname: nickname.trim(),
-        email: email.trim(),
-        password,
-        });
-
-        navigate('/login', {
-        replace: true,
-        state: {
-            signupSuccess: true,
-        },
-        });
-    } catch (error) {
-        console.error('회원가입 실패:', error);
-
-        if (error.response?.status === 409) {
-        setSignupError('이미 사용 중인 이메일입니다.');
-        } else if (error.response?.status === 400) {
-        setSignupError('입력한 회원정보를 확인해주세요.');
-        } else {
-        setSignupError('회원가입 중 오류가 발생했습니다.');
-        }
-    } finally {
-        setIsSubmitting(false);
-    }
-    };
+  const {
+    nickname,
+    email,
+    password,
+    passwordConfirm,
+    signupError,
+    isSubmitting,
+    handleSignup,
+    handleNicknameChange,
+    handleEmailChange,
+    handlePasswordChange,
+    handlePasswordConfirmChange,
+  } = useSignupForm();
 
   return (
     <main className="min-h-dvh px-6 py-8">
@@ -87,12 +45,9 @@ const SignupPage = () => {
                 label="닉네임"
                 name="nickname"
                 value={nickname}
-                onChange={(event) => {
-                setNickname(event.target.value);
-                setSignupError('');
-                }}
+                onChange={handleNicknameChange}
                 placeholder="닉네임"
-                maxLength={10}
+                maxLength={AUTH_FIELD_LIMITS.nickname}
                 autoComplete="nickname"
             />
 
@@ -101,10 +56,7 @@ const SignupPage = () => {
                 name="email"
                 type="email"
                 value={email}
-                onChange={(event) => {
-                setEmail(event.target.value);
-                setSignupError('');
-                }}
+                onChange={handleEmailChange}
                 placeholder="이메일"
                 autoComplete="email"
             />
@@ -114,12 +66,9 @@ const SignupPage = () => {
                 name="password"
                 type="password"
                 value={password}
-                onChange={(event) => {
-                setPassword(event.target.value);
-                setSignupError('');
-                }}
+                onChange={handlePasswordChange}
                 placeholder="비밀번호"
-                maxLength={16}
+                maxLength={AUTH_FIELD_LIMITS.passwordMax}
                 autoComplete="new-password"
                 helperText="10~16자 영문과 숫자를 포함해주세요."
             />
@@ -129,12 +78,9 @@ const SignupPage = () => {
                 name="passwordConfirm"
                 type="password"
                 value={passwordConfirm}
-                onChange={(event) => {
-                setPasswordConfirm(event.target.value);
-                setSignupError('');
-                }}
+                onChange={handlePasswordConfirmChange}
                 placeholder="비밀번호 확인"
-                maxLength={16}
+                maxLength={AUTH_FIELD_LIMITS.passwordMax}
                 autoComplete="new-password"
             />
           </div>
