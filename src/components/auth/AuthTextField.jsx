@@ -26,7 +26,7 @@ const AuthTextField = ({
         id={inputId}
         type={type}
         aria-describedby={helperId}
-        className="h-12 w-full rounded-xl border border-border bg-surface px-4 outline-none focus:border-primary"
+        className="h-12 w-full rounded-xl border border-border bg-surface px-4 outline-none focus:border-primary read-only:bg-gray-100 read-only:text-text-primary"
       />
 
       {helperText && (

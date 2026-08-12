@@ -83,7 +83,7 @@ const MyPage = () => {
     {
       label: '비밀번호 재설정',
       icon: KeyRound,
-      path: '/password-reset',
+      path: '/mypage/password-reset',
     },
     {
       label: '서비스 약관',

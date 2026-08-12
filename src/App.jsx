@@ -22,7 +22,8 @@ import BestPickDetailPage from "./pages/BestPickDetailPage";
 import PasswordResetPage from "./pages/PasswordResetPage";
 import MyPage from "./pages/mypage/MyPage";
 import ProfileEditPage from "./pages/mypage/ProfileEditPage";
-
+import TermsPage from './pages/mypage/TermsPage';
+import MyPasswordResetPage from './pages/mypage/MyPasswordResetPage';
 
 const App = () => {
   useAuthBootstrap(); ///users/me 결과를 Zustand의 useAuthStore에 저장
@@ -91,6 +92,14 @@ const App = () => {
                 <Route
                   path="/mypage/edit"
                   element={<ProfileEditPage />}
+                />
+                <Route
+                  path="/terms"
+                  element={<TermsPage />}
+                />
+                <Route
+                  path="/mypage/password-reset"
+                  element={<MyPasswordResetPage />}
                 />
               </Route>
       
