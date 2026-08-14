@@ -2,18 +2,12 @@ import { useEffect, useState } from 'react';
 
 import { getBestPicks } from '../../api/bestPickApi';
 
-const useBestPicks = (
-    categoryId,
-    isEnabled = true,
-) => {
+const useBestPicks = (categoryId) => {
   const [bestPicks, setBestPicks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [fetchError, setFetchError] = useState('');
 
   useEffect(() => {
-    if (!isEnabled) {
-        return undefined;
-    }
     let isCancelled = false; 
     //조회가 끝나기 전에 다른 화면으로 이동했을 때, 이미 사라진 화면의 상태를 변경하지 않게 막아주는 역할
 
@@ -43,12 +37,12 @@ const useBestPicks = (
     return () => { //cleanup 함수. useEffect가 끝나기 전에 실행됨. 즉, 화면이 사라지기 전에 실행됨
       isCancelled = true;
     };
-  }, [categoryId, isEnabled]);
+  }, [categoryId]);
 
   return {
-    bestPicks: isEnabled ? bestPicks : [],
-    isLoading: isEnabled ? isLoading : false,
-    fetchError: isEnabled ? fetchError : '',
+    bestPicks,
+    isLoading,
+    fetchError,
 };
 };
 

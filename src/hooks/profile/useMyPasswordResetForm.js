@@ -31,22 +31,6 @@ const useMyPasswordResetForm = () => {
 
     if (validationError) return;
 
-    const isPreviewMode =
-      import.meta.env.DEV &&
-      import.meta.env.VITE_AUTH_PREVIEW ===
-        'true';
-
-    if (isPreviewMode) {
-      navigate('/mypage', {
-        replace: true,
-        state: {
-          passwordResetSuccess: true,
-        },
-      });
-
-      return;
-    }
-
     try {
       setIsSubmitting(true);
       setResetError('');

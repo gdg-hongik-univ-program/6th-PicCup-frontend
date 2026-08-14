@@ -8,7 +8,6 @@ import BottomNav from '../components/layout/BottomNav';
 import CategoryManagementOverlays from '../components/category/CategoryManagementOverlays';
 import CollectionToolbar from '../components/layout/CollectionToolbar';
 import CategoryGrid from '../components/layout/CategoryGrid';
-import mockCategories from '../constants/mockCategories';
 
 
 const CategoryPage = () => {
@@ -23,24 +22,12 @@ const CategoryPage = () => {
     openEditSheet,
   } = categoryManagement;
 
-  const displayedCategories = [
-    ...mockCategories,
-    ...categories,
-  ];
-
   const setSelectedCategory = useCategoryStore(
     (state) => state.setSelectedCategory,
   );
 
   const handleCategorySelect = (category) => {
-    if (category.isMock) {
-      setSelectedCategory({ //임시 카테고리
-        id: 1,
-        name: category.name,
-      });
-    } else { //카테고리 추가
-      setSelectedCategory(category);
-    }
+    setSelectedCategory(category);
 
     navigate('/camera');
   };
@@ -62,7 +49,7 @@ const CategoryPage = () => {
           <CollectionToolbar />
 
           <CategoryGrid
-            categories={displayedCategories}
+            categories={categories}
             leadingType="add"
             showBestPickCount={false}
             onLeadingClick={openCreateSheet}

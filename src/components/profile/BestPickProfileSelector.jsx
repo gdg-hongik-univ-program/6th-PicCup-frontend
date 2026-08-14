@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Check } from 'lucide-react';
 
 import useBestPicks from '../../hooks/album/useBestPicks';
-import useMockBestPickStore from '../../store/useMockBestPickStore';
 
 import BackHeader from '../layout/BackHeader';
 
@@ -10,35 +9,11 @@ const BestPickProfileSelector = ({
   onClose,
   onSelect,
 }) => {
-  const isPreviewMode =
-    import.meta.env.DEV &&
-    import.meta.env.VITE_AUTH_PREVIEW ===
-      'true';
-
   const {
-    bestPicks: serverBestPicks,
+    bestPicks: photos,
     isLoading,
     fetchError,
-  } = useBestPicks(
-    'all',
-    !isPreviewMode,
-  );
-
-  const mockBestPicks = useMockBestPickStore(
-    (state) => state.photos,
-  );
-
-  const activeMockBestPicks =
-    mockBestPicks
-      .filter((photo) => !photo.deletedAt)
-      .map((photo) => ({
-        ...photo,
-        isMock: true,
-      }));
-
-  const photos = isPreviewMode
-    ? activeMockBestPicks
-    : serverBestPicks;
+  } = useBestPicks('all');
 
   const [selectedPhoto, setSelectedPhoto] =
     useState(null);
@@ -81,7 +56,7 @@ const BestPickProfileSelector = ({
 
             return (
               <button
-                key={`${photo.isMock ? 'mock' : 'server'}-${photo.id}`}
+                key={photo.id}
                 type="button"
                 onClick={() =>
                   setSelectedPhoto(photo)

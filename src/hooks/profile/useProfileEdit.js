@@ -82,12 +82,10 @@ const useProfileEdit = () => {
   const handleBestPickSelected = (photo) => { //프로필 베스트픽 선택완료
     if (!photo) return;
 
-    setProfileImage({ //개발중엔 목업사진으로
+    setProfileImage({
       preview: photo.imageUrl,
       file: null,
-      bestPickId: photo.isMock
-        ? null
-        : photo.id,
+      bestPickId: photo.id,
     });
 
     setProfileError('');
@@ -103,26 +101,6 @@ const useProfileEdit = () => {
       setProfileError(
         '닉네임을 입력해주세요.',
       );
-      return;
-    }
-
-    const isPreviewMode =
-      import.meta.env.DEV &&
-      import.meta.env.VITE_AUTH_PREVIEW ===
-        'true';
-
-    if (isPreviewMode) {
-      setAuthenticatedUser({
-        ...user,
-        nickname: trimmedNickname,
-        profileImageUrl:
-          profileImage.preview,
-      });
-
-      navigate('/mypage', {
-        replace: true,
-      });
-
       return;
     }
 

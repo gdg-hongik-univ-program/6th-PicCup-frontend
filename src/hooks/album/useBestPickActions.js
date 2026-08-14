@@ -8,22 +8,12 @@ import {
   downloadImage,
   shareImage,
 } from '../../libs/imageActions';
-import useMockBestPickStore from '../../store/useMockBestPickStore';
 
 const useBestPickActions = ({
   photo,
   setPhoto,
   navigate,
 }) => {
-  const toggleMockLike = useMockBestPickStore(
-    (state) => state.toggleLike,
-  );
-
-  const moveMockPhotoToTrash =
-    useMockBestPickStore(
-      (state) => state.moveToTrash,
-    );
-
   const [isUpdatingLike, setIsUpdatingLike] = useState(false);
   const [likeError, setLikeError] = useState('');
   const [actionError, setActionError] = useState('');
@@ -41,19 +31,6 @@ const useBestPickActions = ({
     if (!photo || isUpdatingLike) return;
 
     const nextIsLiked = !photo.isLiked;
-    const isMockPhoto =
-      String(photo.id).startsWith('mock-');
-
-    if (isMockPhoto) {
-      toggleMockLike(photo.id);
-
-      setPhoto((previousPhoto) => ({
-        ...previousPhoto,
-        isLiked: nextIsLiked,
-      }));
-
-      return;
-    }
 
     try {
       setIsUpdatingLike(true);
@@ -131,17 +108,6 @@ const useBestPickActions = ({
 
   const handleDeleteConfirm = async () => {
     if (!photo || isDeleting) return;
-
-    const isMockPhoto =
-      String(photo.id).startsWith('mock-');
-
-    if (isMockPhoto) {
-      moveMockPhotoToTrash(photo.id);
-      setIsDeleteConfirmOpen(false);
-      navigate(-1);
-
-      return;
-    }
 
     try {
       setIsDeleting(true);

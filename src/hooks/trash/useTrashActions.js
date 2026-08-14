@@ -6,7 +6,6 @@ import {
   uploadBestPick,
 } from '../../api/bestPickApi';
 import { deletePhotosByIds } from '../../libs/photoDB';
-import useMockBestPickStore from '../../store/useMockBestPickStore';
 
 const useTrashActions = ({
   activeTab,
@@ -28,15 +27,6 @@ const useTrashActions = ({
 
   const [actionMessage, setActionMessage] =
     useState('');
-
-  const restoreMockPhotos = useMockBestPickStore(
-    (state) => state.restoreFromTrash,
-  );
-
-  const permanentlyDeleteMockPhotos =
-    useMockBestPickStore(
-      (state) => state.permanentlyDelete,
-    );
 
   const clearActionNotice = () => {
     setActionError('');
@@ -136,13 +126,9 @@ const useTrashActions = ({
     setIsProcessing(true);
     clearActionNotice();
 
-    const mockPhotoIds = selectedPhotos
-      .filter((photo) => photo.isMock)
-      .map((photo) => photo.id);
-
-    const serverPhotoIds = selectedPhotos
-      .filter((photo) => !photo.isMock)
-      .map((photo) => photo.id);
+    const serverPhotoIds = selectedPhotos.map(
+      (photo) => photo.id,
+    );
 
     try {
       let restoredCount = 0;
@@ -179,11 +165,6 @@ const useTrashActions = ({
 
         restoredCount += restoredIds.length;
         skippedCount += skippedIds.length;
-      }
-
-      if (mockPhotoIds.length > 0) {
-        restoreMockPhotos(mockPhotoIds);
-        restoredCount += mockPhotoIds.length;
       }
 
       clearSelection();
@@ -260,15 +241,9 @@ const useTrashActions = ({
           deletedCount =
             rejectedPhotoIds.length;
         } else {
-          const mockPhotoIds =
-            selectedPhotos
-              .filter((photo) => photo.isMock)
-              .map((photo) => photo.id);
-
-          const serverPhotoIds =
-            selectedPhotos
-              .filter((photo) => !photo.isMock)
-              .map((photo) => photo.id);
+          const serverPhotoIds = selectedPhotos.map(
+            (photo) => photo.id,
+          );
 
           if (serverPhotoIds.length > 0) {
             const result =
@@ -289,13 +264,6 @@ const useTrashActions = ({
             deletedCount += purgedIds.length;
           }
 
-          if (mockPhotoIds.length > 0) {
-            permanentlyDeleteMockPhotos(
-              mockPhotoIds,
-            );
-
-            deletedCount += mockPhotoIds.length;
-          }
         }
 
         setIsPermanentDeleteOpen(false);
