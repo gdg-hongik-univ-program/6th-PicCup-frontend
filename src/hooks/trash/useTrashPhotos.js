@@ -158,6 +158,27 @@ const useTrashPhotos = () => {
     ...serverDeletedBestPicks,
   ];
 
+  const removeRejectedPhotos = (photoIds) => {
+    setRejectedPhotos((previousPhotos) =>
+      previousPhotos.filter(
+        (photo) =>
+          !photoIds.includes(photo.id),
+      ),
+    );
+  }; //앨범에 추가된 사진 휴지통에서 삭제
+
+  const removeServerDeletedBestPicks = (
+    photoIds,
+  ) => {
+    setServerDeletedBestPicks(
+      (previousPhotos) =>
+        previousPhotos.filter(
+          (photo) =>
+            !photoIds.includes(photo.id),
+        ),
+    );
+  }; //서버 영구삭제된 베스트픽 휴지통에서 삭제
+
   return {
     rejectedPhotos,
     deletedBestPicks,
@@ -165,6 +186,8 @@ const useTrashPhotos = () => {
     isServerLoading,
     rejectedError,
     serverError,
+    removeRejectedPhotos,
+    removeServerDeletedBestPicks,
   };
 };
 

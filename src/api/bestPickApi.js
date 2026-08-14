@@ -8,7 +8,9 @@ export const uploadBestPick = async ({
 }) => {
   const formData = new FormData();
 
-  formData.append('file', file, 'best-pick.jpg'); //file = winner.blob
+  const fileName = file.name ?? 'best-pick.jpg'; //불러온 이미지는 원래 파일명으로
+  formData.append('file', file, fileName); //file = winner.blob
+
   formData.append('categoryId', categoryId); //백엔드쪽에서 Long으로 변환해서 받음
   formData.append('capturedDate', capturedDate);
   formData.append('candidateCount', candidateCount);//백엔드쪽에서 int로 변환해서 받음

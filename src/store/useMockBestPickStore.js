@@ -32,6 +32,32 @@ const useMockBestPickStore = create(
             ),
         }));
       },
+      restoreFromTrash: (photoIds) => { //복구하기
+        set((state) => ({
+          photos: state.photos.map((photo) => {
+            if (!photoIds.includes(photo.id)) {
+              return photo;
+            }
+
+            const restoredPhoto = {
+              ...photo,
+            };
+
+            delete restoredPhoto.deletedAt;
+
+            return restoredPhoto;
+          }),
+        }));
+      },
+
+      permanentlyDelete: (photoIds) => { //영구삭제
+        set((state) => ({
+          photos: state.photos.filter(
+            (photo) =>
+              !photoIds.includes(photo.id),
+          ),
+        }));
+      },
     }),
     {
       name: 'piccup-mock-best-picks',

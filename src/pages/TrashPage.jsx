@@ -2,6 +2,7 @@ import { Trash2 } from 'lucide-react';
 
 import useTrashPhotos from '../hooks/trash/useTrashPhotos';
 import useTrashSelection from '../hooks/trash/useTrashSelection';
+import useTrashActions from '../hooks/trash/useTrashActions';
 
 import BackHeader from '../components/layout/BackHeader';
 import TrashActionBar from '../components/trash/TrashActionBar';
@@ -9,6 +10,9 @@ import TrashPhotoGrid from '../components/trash/TrashPhotoGrid';
 import TrashTabs from '../components/trash/TrashTabs';
 import TrashToolbar from '../components/trash/TrashToolbar';
 import { TRASH_RETENTION_DAYS } from '../constants/trash';
+import ConfirmModal from '../components/layout/ConfirmModal';
+
+
 
 const TrashPage = () => {
   const {
@@ -18,6 +22,8 @@ const TrashPage = () => {
     isServerLoading,
     rejectedError,
     serverError,
+    removeRejectedPhotos,
+    removeServerDeletedBestPicks,
   } = useTrashPhotos();
 
   const {
@@ -31,10 +37,36 @@ const TrashPage = () => {
     changeTab,
     toggleSelectionMode,
     togglePhoto,
+    clearSelection,
     } = useTrashSelection({
     rejectedPhotos,
     deletedBestPicks,
   });
+
+  const {
+    isProcessing,
+    isPermanentDeleteOpen,
+    actionError,
+    actionMessage,
+    handleAddToAlbum,
+    handleRestoreBestPicks,
+    handlePermanentDeleteOpen,
+    handlePermanentDeleteConfirm,
+    closePermanentDelete,
+    clearActionNotice,
+  } = useTrashActions({
+    activeTab,
+    selectedPhotos,
+    removeRejectedPhotos,
+    removeServerDeletedBestPicks,
+    clearSelection,
+  });
+
+  const handleTabChange = (nextTab) => {
+    clearActionNotice();
+    changeTab(nextTab);
+  }; //탭 변경 시 이전 메시지도 지우기
+
   const isLoading =
     activeTab === 'rejected'
       ? isRejectedLoading
@@ -44,6 +76,8 @@ const TrashPage = () => {
     activeTab === 'rejected'
       ? rejectedError
       : serverError;
+  const displayedError =
+    actionError || currentError;
 
   const emptyMessage =
     activeTab === 'rejected'
@@ -65,7 +99,7 @@ const TrashPage = () => {
 
       <TrashTabs
         activeTab={activeTab}
-        onChange={changeTab}
+        onChange={handleTabChange}
       />
 
       <TrashToolbar
@@ -76,12 +110,21 @@ const TrashPage = () => {
         onToggleSelectionMode={toggleSelectionMode}
       />
 
-      {currentError && (
+      {displayedError && (
         <p
           className="mt-4 text-center text-xs text-error"
           role="alert"
         >
-          {currentError}
+          {displayedError}
+        </p>
+      )}
+
+      {actionMessage && (
+        <p
+          className="mt-4 text-center text-xs text-primary"
+          role="status"
+        >
+          {actionMessage}
         </p>
       )}
 
@@ -120,8 +163,28 @@ const TrashPage = () => {
           <TrashActionBar
             activeTab={activeTab}
             selectedCount={selectedPhotos.length}
+            isProcessing={isProcessing}
+            onPrimaryAction={
+              activeTab === 'rejected'
+                ? handleAddToAlbum
+                : handleRestoreBestPicks
+            }
+            onPermanentDelete={handlePermanentDeleteOpen}
           />
         )}
+        <ConfirmModal
+          isOpen={isPermanentDeleteOpen}
+          title={`선택한 ${selectedPhotos.length}장을 영구 삭제할까요?`}
+          description="영구 삭제한 사진은 다시 복구할 수 없어요."
+          error={actionError}
+          confirmLabel="영구 삭제"
+          confirmingLabel="삭제 중..."
+          isConfirming={isProcessing}
+          onClose={closePermanentDelete}
+          onConfirm={
+            handlePermanentDeleteConfirm
+          }
+        />
     </main>
   );
 };

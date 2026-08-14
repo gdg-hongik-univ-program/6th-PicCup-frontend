@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router';
 import {
   ChevronRight,
   FileText,
+  Images,
   KeyRound,
   LogOut,
   UserPen,
@@ -31,6 +32,11 @@ const MyPage = () => {
       label: '내 정보 수정',
       icon: UserPen,
       path: '/mypage/edit',
+    },
+    {
+      label: '이미지 불러오기',
+      icon: Images,
+      path: '/mypage/import',
     },
     {
       label: '비밀번호 재설정',
