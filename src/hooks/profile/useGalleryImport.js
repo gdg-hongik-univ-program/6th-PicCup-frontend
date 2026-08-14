@@ -9,6 +9,11 @@ import { useNavigate } from 'react-router';
 import { uploadBestPick } from '../../api/bestPickApi';
 import { getLocalDateString } from '../../utils/date';
 
+import {
+  isSupportedImageFile,
+  normalizeImageFile,
+} from '../../utils/imageFile';
+
 const useGalleryImport = () => {
   const navigate = useNavigate();
   const imageInputRef = useRef(null); //실제 <input type="file"> DOM
@@ -51,13 +56,12 @@ const useGalleryImport = () => {
   const openGallery = () => {
     imageInputRef.current?.click();
   }; //실제 <input type="file"> DOM
-
   const handleImageChange = (event) => {
     const files = Array.from(
-      event.target.files ?? [],
-    ).filter((file) =>
-      file.type.startsWith('image/'), //이미지 아닌 사진 제외
-    );
+        event.target.files ?? [],
+    )
+        .filter(isSupportedImageFile)
+        .map(normalizeImageFile);
 
     event.target.value = ''; //같은 사진 재선택할경우를 대비
 

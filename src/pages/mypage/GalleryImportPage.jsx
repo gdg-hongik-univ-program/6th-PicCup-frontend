@@ -38,13 +38,13 @@ const GalleryImportPage = () => {
   } = useGalleryImport();
 
   return (
-    <main className="min-h-dvh px-4 pb-32 pt-4">
+    <main className="min-h-dvh px-4 pt-2 pb-32">
       <BackHeader title="이미지 불러오기" />
 
       <input
         ref={imageInputRef}
         type="file"
-        accept="image/*"
+        accept="image/*,.heic,.heif,image/heic,image/heif"
         multiple
         onChange={handleImageChange}
         className="hidden"

@@ -39,9 +39,9 @@ const HomeCalendar = ({
   ).padStart(2, '0'); //08월
 
   return (
-    <section className="mt-6 rounded-2xl bg-background p-1 shadow-lg ring-2 ring-gray-100">
+    <section className="mt-4 rounded-2xl bg-background p-1 shadow-lg ring-2 ring-gray-100">
       <div className="flex items-center justify-between">
-        <div className="flex items-end gap-2 px-3 pt-3">
+        <div className="flex items-end gap-2 px-3 pt-2">
           <h2 className="text-2xl font-bold">
             {monthIndex + 1}월
           </h2>
@@ -75,12 +75,14 @@ const HomeCalendar = ({
       <div className="mt-2 px-1">
         <div className="grid grid-cols-7 gap-0.5">
           {WEEKDAYS.map((weekday) => (
-            <p
-              key={weekday}
-              className="py-1 text-center text-sm font-semibold text-text-secondary"
-            >
-              {weekday}
-            </p>
+            <div className="border-b border-border">
+              <p
+                key={weekday}
+                className="py-1 text-center text-sm font-semibold text-text-secondary"
+              >
+                {weekday}
+              </p>
+            </div>
           ))}
 
           {calendarDays.map((day, index) => {
@@ -88,7 +90,7 @@ const HomeCalendar = ({
               return (
                 <div
                   key={`empty-${index}`}
-                  className="aspect-[3/4]"
+                  className="aspect-[4/5]"
                 />
               );
             }
@@ -152,7 +154,7 @@ const HomeCalendar = ({
       </div>
 
       <p
-        className={`flex p-2 items-center overflow-hidden px-2 text-[14px] font-medium ${
+        className={`flex pt-1 items-center overflow-hidden px-2 text-[13px] font-medium ${
           calendarError
             ? 'text-error'
             : 'text-text-secondary'
