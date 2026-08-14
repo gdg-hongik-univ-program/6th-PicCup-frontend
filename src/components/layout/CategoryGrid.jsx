@@ -1,4 +1,5 @@
 import {
+  Check,
   EllipsisVertical,
   Plus,
 } from 'lucide-react';
@@ -7,6 +8,8 @@ const CategoryGrid = ({
   categories,
   leadingType,
   showBestPickCount = false,
+  selectedCategoryId = null,
+  className='',
   onLeadingClick,
   onCategoryClick,
   onCategoryMenuClick,
@@ -22,7 +25,7 @@ const CategoryGrid = ({
   )?.coverImageUrl;
 
   return (
-    <section className="mt-4 grid grid-cols-3 gap-1">
+    <section className={`mt-4 grid grid-cols-3 gap-1 ${className}`}>
       {leadingType === 'add' ? (
         <button
           type="button"
@@ -62,54 +65,73 @@ const CategoryGrid = ({
         </button>
       )}
 
-      {categories.map((category) => (
-        <div
-          key={category.id}
-          className="relative aspect-square overflow-hidden rounded-2xl bg-gray-200"
-        >
-          <button
-            type="button"
-            onClick={() => onCategoryClick(category)}
-            className="h-full w-full text-left"
+      {categories.map((category) => {
+        const isSelected =
+          String(selectedCategoryId) === String(category.id);
+
+        return (
+          <div
+            key={category.id}
+            className="relative aspect-square overflow-hidden rounded-2xl bg-white"
           >
-            {category.coverImageUrl && (
-              <img
-                src={category.coverImageUrl}
-                alt=""
-                className="h-full w-full object-cover"
-              />
-            )}
-
-            <div className="absolute inset-0 bg-black/30" />
-
-            <div className="absolute inset-x-0 bottom-0 p-3 text-white">
-              {showBestPickCount &&
-                category.bestPickCount != null && (
-                    <p className="text-xs opacity-80">
-                    {category.bestPickCount}장
-                    </p>
-                )}
-
-              <p className="truncate text-lg font-semibold">
-                {category.name}
-              </p>
-            </div>
-          </button>
-
-          {!category.isDefault && (
             <button
               type="button"
-              onClick={() =>
-                onCategoryMenuClick?.(category)
-              }
-              className="absolute right-1.5 top-3 z-10 flex size-8 items-center justify-center rounded-full text-white active:bg-gray-500/50"
-              aria-label={`${category.name} 메뉴`}
+              onClick={() => onCategoryClick(category)}
+              className="h-full w-full text-left"
+              aria-pressed={isSelected}
             >
-              <EllipsisVertical size={20} />
+              {category.coverImageUrl && (
+                <img
+                  src={category.coverImageUrl}
+                  alt=""
+                  className="h-full w-full object-cover"
+                />
+              )}
+
+              <div className="absolute inset-0 bg-black/30" />
+
+              {isSelected && (
+                <div className="absolute inset-0 bg-background/40" />
+              )}
+
+              <div className="absolute inset-x-0 bottom-0 z-10 p-3 text-background">
+                {showBestPickCount &&
+                  category.bestPickCount != null && (
+                    <p className="text-xs opacity-80">
+                      {category.bestPickCount}장
+                    </p>
+                  )}
+
+                <p className="truncate text-lg font-semibold">
+                  {category.name}
+                </p>
+              </div>
+
+              {isSelected && (
+                <span className="absolute right-2.5 top-2.5 z-20 flex size-5 items-center justify-center rounded-full bg-primary text-white">
+                  <Check
+                    size={12}
+                    strokeWidth={4}
+                  />
+                </span>
+              )}
             </button>
-          )}
-        </div>
-      ))}
+
+            {!category.isDefault && onCategoryMenuClick && (
+              <button
+                type="button"
+                onClick={() =>
+                  onCategoryMenuClick(category)
+                }
+                className="absolute right-1.5 top-3 z-10 flex size-8 items-center justify-center rounded-full text-white active:bg-gray-500/50"
+                aria-label={`${category.name} 메뉴`}
+              >
+                <EllipsisVertical size={20} />
+              </button>
+            )}
+          </div>
+        );
+      })}
     </section>
   );
 };
