@@ -29,7 +29,7 @@ const ProfileEditPage = () => {
   } = useProfileEdit();
 
   return (
-    <main className="min-h-dvh px-4 py-4">
+    <main className="min-h-dvh px-4 pt-2 pb-4">
       <form
         className="flex min-h-[calc(100dvh-2rem)] flex-col"
         onSubmit={handleSubmit}

@@ -19,14 +19,14 @@ const HomeBestPicks = ({
   const isToday = selectedDate === getLocalDateString();
 
   return (
-    <section className="mt-4">
-      <div className="flex items-center justify-between px-1">
+    <section className="mt-3">
+      <div className="flex items-center justify-between px-2">
         <h2 className="text-base font-bold">
           Best Picks
         </h2>
 
         {selectedDate && (
-          <p className="text-[14px] text-text-primary">
+          <p className="text-[14px] font-medium text-text-primary">
             {formattedDate}
           </p>
         )}
@@ -59,7 +59,12 @@ const HomeBestPicks = ({
           ))}
         </div>
       ) : (
-        <div className="mt-3 flex h-28 flex-col items-center justify-center gap-3 rounded-2xl bg-surface">
+        <div className="mt-3 flex h-28 items-center justify-center p-5 gap-3 rounded-2xl bg-surface">
+          <p className="text-sm text-text-secondary">
+            {isToday
+              ? '오늘 촬영된 베스트픽이 아직 없어요.'
+              : '이 날짜에 기록된 베스트픽이 없어요.'}
+          </p>
           <p className="text-sm text-text-secondary">
             {isToday
               ? '오늘 촬영된 베스트픽이 아직 없어요.'
@@ -70,7 +75,7 @@ const HomeBestPicks = ({
             <button
               type="button"
               onClick={() => navigate('/category')}
-              className="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-white"
+              className="rounded-2xl bg-primary px-4 py-4 text-sm font-semibold text-white"
             >
               사진 촬영하기
             </button>

@@ -3,7 +3,7 @@ import { terms } from '../../constants/terms';
 
 const TermsPage = () => {
   return (
-    <main className="min-h-dvh px-4 py-4">
+    <main className="min-h-dvh px-4 pt-2 pb-4">
       <BackHeader title="서비스 약관" />
 
       <article className="mt-5 rounded-2xl bg-gray-50 px-5 py-6">
