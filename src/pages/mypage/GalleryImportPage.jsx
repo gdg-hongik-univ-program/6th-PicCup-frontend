@@ -159,7 +159,7 @@ const GalleryImportPage = () => {
           value={capturedDate}
           max={todayDate}
           onChange={handleDateChange}
-          className="mt-3 h-12 w-full rounded-xl border border-border bg-surface px-4 outline-none focus:border-primary"
+          className="mt-3 block h-12 w-56 max-w-full rounded-xl border border-border bg-surface px-4 outline-none focus:border-primary"
         />
 
         <p className="mt-2 px-2 text-xs text-text-secondary">
@@ -167,7 +167,7 @@ const GalleryImportPage = () => {
         </p>
       </section>
 
-      <div className="fixed inset-x-0 bottom-0 z-40 mx-auto w-full max-w-md px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2">
+      <div className="fixed inset-x-0 bottom-4 z-40 mx-auto w-full max-w-md px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2">
         <div className="mb-2 flex min-h-5 items-center justify-center">
             {uploadError && (
             <p

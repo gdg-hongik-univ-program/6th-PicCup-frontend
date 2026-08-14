@@ -13,20 +13,6 @@ const useAuthBootstrap = () => {
   );
 
   useEffect(() => {
-    if (
-        import.meta.env.DEV &&
-        import.meta.env.VITE_AUTH_PREVIEW === 'true'
-    ) {
-        setAuthenticatedUser({
-        id: 0,
-        email: 'preview@piccup.com',
-        nickname: '정민주',
-        profileImageUrl: null,
-        });
-
-        return undefined;
-    }
-
     let isActive = true;
     //늦게 서버 응답이 도착해서 Zustand 상태를 변경하는 것을 방지
 

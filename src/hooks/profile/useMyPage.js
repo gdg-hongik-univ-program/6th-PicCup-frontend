@@ -29,17 +29,7 @@ const useMyPage = () => {
   };
 
   const handleLogout = async () => { //로그아웃 처리
-    const isPreviewMode = //개발미리보기인가
-      import.meta.env.DEV &&
-      import.meta.env.VITE_AUTH_PREVIEW ===
-      'true';
-
-    if (isPreviewMode) {
-      finishLogout();
-      return; //서버요청 안보냄
-    }
-
-    try { //실제환경이면
+    try {
       setIsLoggingOut(true);
       setLogoutError('');
 

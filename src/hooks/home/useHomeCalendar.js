@@ -5,12 +5,10 @@ import {
 } from 'react';
 
 import { getCalendarBestPicks } from '../../api/bestPickApi';
-import homeMockBestPicks from '../../constants/homeMockBestPicks';
 import {
   getCalendarPhotoByDate,
   getLatestCapturedDate,
   getYearMonth,
-  mergeHomeBestPicks,
 } from '../../utils/homeCalendar';
 import { getLocalDateString } from '../../utils/date';
 
@@ -83,16 +81,9 @@ const useHomeCalendar = () => {
   }, [yearMonth]);
 
   const calendarBestPicks = useMemo(() => {
-    const serverBestPicks =
-        calendarResponse.yearMonth === yearMonth
-        ? calendarResponse.bestPicks
-        : [];
-
-    return mergeHomeBestPicks({
-        yearMonth,
-        mockBestPicks: homeMockBestPicks,
-        serverBestPicks,
-    });
+    return calendarResponse.yearMonth === yearMonth
+      ? calendarResponse.bestPicks
+      : [];
   }, [
     yearMonth,
     calendarResponse.yearMonth,

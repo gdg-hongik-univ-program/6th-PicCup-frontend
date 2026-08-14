@@ -1,5 +1,3 @@
-import { HOME_MOCK_CUTOFF_DATE } from '../constants/homeMockBestPicks';
-
 export const getYearMonth = (date) => {
   const year = date.getFullYear();
   const month = String(
@@ -8,31 +6,6 @@ export const getYearMonth = (date) => {
 
   return `${year}-${month}`;
 }; //날짜를 API 쿼리 형식으로 변경
-
-export const mergeHomeBestPicks = ({
-  yearMonth,
-  mockBestPicks,
-  serverBestPicks,
-}) => {
-  const monthlyMockBestPicks =
-    mockBestPicks.filter(
-      (photo) =>
-        photo.capturedDate.startsWith(yearMonth),
-    );
-
-  const monthlyServerBestPicks =
-    serverBestPicks.filter(
-      (photo) =>
-        photo.capturedDate.startsWith(yearMonth) &&
-        photo.capturedDate >
-          HOME_MOCK_CUTOFF_DATE,
-    );
-
-  return [
-    ...monthlyMockBestPicks,
-    ...monthlyServerBestPicks,
-  ];
-};
 
 export const getCalendarPhotoByDate = ( //캘린더 섬네일 선택
   bestPicks,

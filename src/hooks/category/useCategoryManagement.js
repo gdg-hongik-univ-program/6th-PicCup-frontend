@@ -68,12 +68,7 @@ const useCategoryManagement = () => {
   };
 
   const submitEdit = async () => {
-    if (
-      !editingCategory ||
-      editingCategory.isMock
-    ) {
-      return;
-    }
+    if (!editingCategory) return;
 
     const updatedCategory = await renameCategory(
       editingCategory.id,
@@ -86,12 +81,7 @@ const useCategoryManagement = () => {
   };
 
   const openDeleteModal = () => {
-    if (
-      !editingCategory ||
-      editingCategory.isMock
-    ) {
-      return;
-    }
+    if (!editingCategory) return;
 
     setDeleteTarget(editingCategory);
     closeEditSheet();

@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router';
 
-import useMockBestPickStore from '../store/useMockBestPickStore';
 import BottomNav from '../components/layout/BottomNav';
 
 import useCategoryManagement from '../hooks/category/useCategoryManagement';
@@ -9,7 +8,6 @@ import CategoryManagementOverlays from '../components/category/CategoryManagemen
 import CollectionToolbar from '../components/layout/CollectionToolbar';
 import CategoryGrid from '../components/layout/CategoryGrid';
 
-import mockCategories from '../constants/mockCategories';
 import AppHeader from '../components/layout/AppHeader';
 
 const AlbumPage = () => {
@@ -22,29 +20,6 @@ const AlbumPage = () => {
     openCreateSheet,
     openEditSheet,
   } = categoryManagement;
-
-  const allMockPhotos = useMockBestPickStore(
-    (state) => state.photos,
-  );
-
-  const activeMockPhotos = allMockPhotos.filter(
-    (photo) => !photo.deletedAt,
-  );
-
-  const mockAlbumCategories = mockCategories.map(
-    (category) => ({
-        ...category,
-        bestPickCount: activeMockPhotos.filter(
-        (photo) =>
-            photo.categoryId === category.id,
-        ).length,
-    }),
-  );
-
-  const displayedCategories = [
-    ...mockAlbumCategories,
-    ...categories,
-  ];
 
   return (
     <main className="flex min-h-dvh flex-col pb-28">
@@ -69,7 +44,7 @@ const AlbumPage = () => {
             onSelectClick={openCreateSheet}
         />
         <CategoryGrid
-            categories={displayedCategories}
+            categories={categories}
             leadingType="all"
             showBestPickCount
             onLeadingClick={() => { //전체 앨범으로 이동

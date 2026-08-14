@@ -15,7 +15,6 @@ const CategoryManagementOverlays = ({
     submitCreate,
 
     isEditOpen,
-    editingCategory,
     editingName,
     setEditingName,
     isUpdating,
@@ -57,13 +56,8 @@ const CategoryManagementOverlays = ({
         onDelete={openDeleteModal}
         submitLabel="수정하기"
         isSubmitting={isUpdating}
-        isSubmitDisabled={editingCategory?.isMock}
-        error={
-          editingCategory?.isMock
-            ? ''
-            : categoryError
-        }
-        showDelete={!editingCategory?.isMock}
+        error={categoryError}
+        showDelete
       />
 
       <ConfirmModal

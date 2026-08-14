@@ -10,28 +10,14 @@ import ConfirmModal from '../components/layout/ConfirmModal';
 import { TRASH_RETENTION_DAYS } from '../constants/trash';
 import useBestPickActions from '../hooks/album/useBestPickActions';
 import useBestPickDetail from '../hooks/album/useBestPickDetail';
-import useMockBestPickStore from '../store/useMockBestPickStore';
 
 const BestPickDetailPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { bestPickId } = useParams();
 
-  const storedMockPhoto = useMockBestPickStore(
-    (state) =>
-      state.photos.find(
-        (item) =>
-          String(item.id) === bestPickId,
-      ),
-  );
-
-  const isMockPhotoId =
-    String(bestPickId).startsWith('mock-');
-
   const initialPhoto =
-    location.state?.photo ??
-    storedMockPhoto ??
-    null;
+    location.state?.photo ?? null;
 
   const {
     photo,
@@ -41,7 +27,6 @@ const BestPickDetailPage = () => {
   } = useBestPickDetail(
     bestPickId,
     initialPhoto,
-    !isMockPhotoId,
   );
 
   const {

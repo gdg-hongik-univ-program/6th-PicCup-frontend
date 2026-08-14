@@ -38,7 +38,5 @@ export const getTrashPhotoKey = (
     return `rejected-${photo.id}`;
   }
 
-  return `${
-    photo.isMock ? 'mock' : 'server'
-  }-${photo.id}`;
+  return `server-${photo.id}`;
 };
