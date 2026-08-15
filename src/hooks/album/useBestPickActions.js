@@ -141,6 +141,20 @@ const useBestPickActions = ({
     setIsDeleteConfirmOpen(false);
   };
 
+  const handleMoveOpen = () => { //다른 앨범으로 이동
+    if (!photo) return;
+
+    setIsMenuOpen(false);
+
+    navigate('/album/move', {
+      state: {
+        ids: [photo.id],
+        sourceCategoryId:
+          photo.categoryId,
+      },
+    });
+  };
+
   return {
     isUpdatingLike,
     likeError,
@@ -152,6 +166,7 @@ const useBestPickActions = ({
     handleToggleLike,
     handleDownload,
     handleShare,
+    handleMoveOpen,
     handleDeleteOpen,
     handleDeleteConfirm,
     toggleMenu,

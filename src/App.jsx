@@ -26,6 +26,7 @@ import TermsPage from './pages/mypage/TermsPage';
 import MyPasswordResetPage from './pages/mypage/MyPasswordResetPage';
 import TrashPage from './pages/TrashPage';
 import GalleryImportPage from './pages/mypage/GalleryImportPage';
+import MoveAlbumPage from './pages/MoveAlbumPage';
 
 const App = () => {
   useAuthBootstrap(); ///users/me 결과를 Zustand의 useAuthStore에 저장
@@ -78,6 +79,10 @@ const App = () => {
                 <Route
                   path="/album"
                   element={<AlbumPage />}
+                />
+                <Route
+                  path="/album/move"
+                  element={<MoveAlbumPage />}
                 />
                 <Route
                   path="/album/:categoryId"

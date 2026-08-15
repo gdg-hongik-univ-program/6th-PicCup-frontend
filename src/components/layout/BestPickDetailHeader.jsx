@@ -10,6 +10,7 @@ const BestPickDetailHeader = ({
   onBack,
   onToggleMenu,
   onCloseMenu,
+  onMove,
   onDelete,
 }) => {
   return (
@@ -40,11 +41,11 @@ const BestPickDetailHeader = ({
           </button>
 
           {isMenuOpen && (
-            <div className="absolute right-0 top-14 w-32 overflow-hidden rounded-2xl border border-border bg-white shadow-lg">
+            <div className="absolute right-0 top-14 w-36 overflow-hidden rounded-2xl border border-border bg-white shadow-lg">
               <button
                 type="button"
-                disabled
-                className="w-full px-4 py-3 text-left text-sm"
+                onClick={onMove}
+                className="w-full px-4 py-3 text-left text-sm active:bg-gray-100"
               >
                 다른 앨범으로 이동
               </button>
