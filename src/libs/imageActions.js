@@ -36,32 +36,42 @@ export const shareImage = async ({
   fileName,
   title = 'PicCup Best Pick',
 }) => {
-  const imageBlob = await fetchImageBlob(imageUrl);
+  if (navigator.share) {
+    try {
+      const imageBlob =
+        await fetchImageBlob(imageUrl);
+      
+      const imageFile = new File( //Blob을 File 객체로 바꾸기
+        [imageBlob],
+        fileName,
+        {
+          type: imageBlob.type || 'image/jpeg',
+        },
+      );
 
-  const imageFile = new File( //Blob을 File 객체로 바꾸기
-    [imageBlob],
-    fileName,
-    {
-      type: imageBlob.type || 'image/jpeg',
-    },
-  );
+      if (//OS 기본 공유창을 열어주는 Web Share API
+        navigator.canShare?.({//이미지 파일 자체를 공유할 수 있나?
+          files: [imageFile],
+        })
+      ) {
+        await navigator.share({
+          title,
+          files: [imageFile],
+        });
 
-  if (//OS 기본 공유창을 열어주는 Web Share API
-    navigator.share && //공유 API 자체를 지원하나?
-    navigator.canShare?.({//이미지 파일 자체를 공유할 수 있나?
-      files: [imageFile],
-    })
-  ) {
-    await navigator.share({
-      title,
-      files: [imageFile],
-    });
+        return;
+      }
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        throw error;
+      }
+      console.warn(
+        '파일 공유 실패, 링크 공유로 전환:',
+        error,
+      );
+    }
 
-    return;
-  }
-
-  if (navigator.share) { //사진 파일 대신 링크만 공유
-    await navigator.share({
+    await navigator.share({//사진 파일 대신 링크만 공유
       title,
       url: imageUrl,
     });

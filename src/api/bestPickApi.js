@@ -45,6 +45,21 @@ export const getBestPickDetail = async (
   return response.data;
 };
 
+export const moveBestPicks = async ({ //다른 앨범으로 이동 
+  ids,
+  targetCategoryId,
+}) => {
+  const response = await patch(
+    '/best-picks/move',
+    {
+      ids,
+      targetCategoryId,
+    },
+  );
+
+  return response.data;
+};
+
 export const updateBestPickLike = async ( //좋아요 변경 함수
   bestPickId,
   isLiked,

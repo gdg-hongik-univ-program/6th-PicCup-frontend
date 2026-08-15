@@ -40,6 +40,7 @@ const BestPickDetailPage = () => {
     handleToggleLike,
     handleDownload,
     handleShare,
+    handleMoveOpen,
     handleDeleteOpen,
     handleDeleteConfirm,
     toggleMenu,
@@ -88,6 +89,7 @@ const BestPickDetailPage = () => {
         onBack={() => navigate(-1)}
         onToggleMenu={toggleMenu}
         onCloseMenu={closeMenu}
+        onMove={handleMoveOpen}
         onDelete={handleDeleteOpen}
       />
 
