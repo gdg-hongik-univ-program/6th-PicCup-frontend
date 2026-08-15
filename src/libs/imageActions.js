@@ -1,5 +1,11 @@
 const fetchImageBlob = async (imageUrl) => {
-  const response = await fetch(imageUrl);
+  const response = await fetch(
+    imageUrl,
+    {
+      mode: 'cors',
+      cache: 'no-store',
+    },//브라우저에 저장된 이미지 응답을 재사용하지 않고, CORS 설정이 적용된 최신 S3 응답을 다시 받기
+  );
 
   if (!response.ok) {
     throw new Error('이미지 요청에 실패했습니다.');

@@ -14,7 +14,7 @@ const SplashPage = () => {
       </h1>
 
       <p className="mt-8 text-sm text-text-secondary">
-        당신의 픽을 픽하세요
+        당신의 사진을 Pick하세요.
       </p>
     </section>
   );
