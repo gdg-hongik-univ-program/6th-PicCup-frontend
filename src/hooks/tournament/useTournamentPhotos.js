@@ -17,8 +17,10 @@ const useTournamentPhotos = ({
   useEffect(() => { //화면이 렌더링된 다음 IndexedDB 조회 작업을 실행
     const loadPhotos = async () => { //비동기 작업
       try {
-        const sessionPhotos =
-          await getPhotosBySessionId(sessionId);
+        const sessionPhotos = (
+          await getPhotosBySessionId(sessionId)
+        ).filter((photo) => photo.status !== 'trash');
+        
         const photosWithPreview =
           sessionPhotos.map((photo) => ({
             ...photo,

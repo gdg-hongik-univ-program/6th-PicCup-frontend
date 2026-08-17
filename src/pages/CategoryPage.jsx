@@ -14,8 +14,21 @@ import CategoryGrid from '../components/layout/CategoryGrid';
 const CategoryPage = () => {
   const navigate = useNavigate();
 
+  const setSelectedCategory = useCategoryStore(
+    (state) => state.setSelectedCategory,
+  );
+
+  // 기존 카테고리 선택과 생성 직후 이동에서 함께 사용
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category);
+
+    navigate('/camera');
+  };
+
   const categoryManagement =
-    useCategoryManagement();
+    useCategoryManagement({
+      onCategoryCreated: handleCategorySelect,
+    });
 
   const {
     categories,
@@ -33,16 +46,6 @@ const CategoryPage = () => {
     openSearch,
     closeSearch,
   } = useCategorySearch(categories);
-
-  const setSelectedCategory = useCategoryStore(
-    (state) => state.setSelectedCategory,
-  );
-
-  const handleCategorySelect = (category) => {
-    setSelectedCategory(category);
-
-    navigate('/camera');
-  };
   
   return (
     <main className="flex min-h-dvh flex-col pb-28">

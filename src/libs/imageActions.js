@@ -14,12 +14,32 @@ const fetchImageBlob = async (imageUrl) => {
   return response.blob();
 };
 
+// 서버 URL 또는 로컬 Blob을 이미지 Blob으로 통일
+const resolveImageBlob = async ({
+  imageUrl,
+  imageBlob,
+}) => {
+  if (imageBlob instanceof Blob) {
+    return imageBlob;
+  }
+
+  if (!imageUrl) {
+    throw new Error('이미지 정보가 없습니다.');
+  }
+
+  return fetchImageBlob(imageUrl);
+};
+
 export const downloadImage = async ({
   imageUrl,
+  imageBlob,
   fileName,
 }) => {
-  const imageBlob = await fetchImageBlob(imageUrl);
-  const objectUrl = URL.createObjectURL(imageBlob);
+  const resolvedBlob = await resolveImageBlob({
+    imageUrl,
+    imageBlob,
+  });
+  const objectUrl = URL.createObjectURL(resolvedBlob);
   //브라우저가 임시로 접근할 수 있는 URL
 
   try {
@@ -39,19 +59,23 @@ export const downloadImage = async ({
 
 export const shareImage = async ({ // 이미지 공유 1장
   imageUrl,
+  imageBlob,
   fileName,
   title = 'PicCup Best Pick',
 }) => {
   if (navigator.share) {
     try {
-      const imageBlob =
-        await fetchImageBlob(imageUrl);
+      const resolvedBlob =
+        await resolveImageBlob({
+          imageUrl,
+          imageBlob,
+        });
       
       const imageFile = new File( //Blob을 File 객체로 바꾸기
-        [imageBlob],
+        [resolvedBlob],
         fileName,
         {
-          type: imageBlob.type || 'image/jpeg',
+          type: resolvedBlob.type || 'image/jpeg',
         },
       );
 
@@ -72,7 +96,7 @@ export const shareImage = async ({ // 이미지 공유 1장
         throw error;
       }
       console.warn(
-        '파일 공유 실패, 링크 공유로 전환:',
+        '이미지 파일 공유 실패:',
         error,
       );
     }
@@ -82,10 +106,24 @@ export const shareImage = async ({ // 이미지 공유 1장
       url: imageUrl,
     });
 
+    // 서버 이미지 주소가 있을 때만 링크 공유
+    if (imageUrl) {
+      await navigator.share({
+        title,
+        url: imageUrl,
+      });
+
+      return;
+    }
+  }
+  if (imageUrl) {
+    //공유 API가 아예 없는 브라우저라면 이미지 URL을 클립보드에 복사
+    await navigator.clipboard.writeText(imageUrl);
     return;
   }
-  //공유 API가 아예 없는 브라우저라면 이미지 URL을 클립보드에 복사
-  await navigator.clipboard.writeText(imageUrl);
+  throw new Error(
+    '이 브라우저에서는 이미지 공유를 지원하지 않습니다.',
+  );
 };
 
 export const shareImages = async ({ //다중 공유
