@@ -33,7 +33,7 @@ const CameraActions = ({
         <button
           type="button"
           onClick={onCapture}
-          disabled={!isCameraOn}
+          disabled={!isCameraOn || photoCount >= 16}
           className="flex size-20 border-4 border-primary-muted bg-white items-center justify-center justify-self-center rounded-full shadow-lg"
           aria-label="사진 촬영 버튼"
         >

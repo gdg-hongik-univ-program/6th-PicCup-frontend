@@ -19,7 +19,13 @@ const ConfirmModal = ({
       : 'bg-primary text-white';
 
   return (
-    <div className="fixed inset-0 z-[70] flex items-center justify-center px-6">
+    <div className="fixed inset-0 z-[70] flex items-center justify-center px-10">
+      <p
+          role="alert"
+          className="mt-1 h-2 text-xs text-error"
+        >
+          {error}
+      </p>
       <button
         type="button"
         onClick={onClose}
@@ -34,22 +40,15 @@ const ConfirmModal = ({
         aria-label={title}
         className="relative w-full max-w-sm rounded-2xl bg-background p-5 text-center"
       >
-        <h2 className="pt-4 text-lg font-semibold">
+        <h2 className="pt-3 px-1 text-lg font-semibold">
           {title}
         </h2>
 
         {description && (
-          <p className="mt-4 text-sm text-text-secondary">
+          <p className="mt-3 text-sm text-text-secondary">
             {description}
           </p>
         )}
-
-        <p
-          role="alert"
-          className="mt-1 h-2 text-xs text-error"
-        >
-          {error}
-        </p>
 
         <div className="mt-4 grid grid-cols-2 gap-2">
           <button
@@ -65,7 +64,7 @@ const ConfirmModal = ({
             type="button"
             onClick={onConfirm}
             disabled={isConfirming}
-            className={`rounded-xl py-3 disabled:opacity-50 ${confirmColor}`}
+            className={`rounded-xl py-2 disabled:opacity-50 ${confirmColor}`}
           >
             {isConfirming
               ? confirmingLabel

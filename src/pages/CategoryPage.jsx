@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router';
 
 import useCategoryStore from '../store/useCategoryStore';
 import useCategoryManagement from '../hooks/category/useCategoryManagement';
+import useCategorySearch from '../hooks/category/useCategorySearch';
 
 import AppHeader from '../components/layout/AppHeader';
 import BottomNav from '../components/layout/BottomNav';
@@ -13,8 +14,21 @@ import CategoryGrid from '../components/layout/CategoryGrid';
 const CategoryPage = () => {
   const navigate = useNavigate();
 
+  const setSelectedCategory = useCategoryStore(
+    (state) => state.setSelectedCategory,
+  );
+
+  // 기존 카테고리 선택과 생성 직후 이동에서 함께 사용
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category);
+
+    navigate('/camera');
+  };
+
   const categoryManagement =
-    useCategoryManagement();
+    useCategoryManagement({
+      onCategoryCreated: handleCategorySelect,
+    });
 
   const {
     categories,
@@ -22,15 +36,16 @@ const CategoryPage = () => {
     openEditSheet,
   } = categoryManagement;
 
-  const setSelectedCategory = useCategoryStore(
-    (state) => state.setSelectedCategory,
-  );
-
-  const handleCategorySelect = (category) => {
-    setSelectedCategory(category);
-
-    navigate('/camera');
-  };
+  const {
+    searchQuery,
+    setSearchQuery,
+    isSearchOpen,
+    filteredCategories,
+    sortOption,
+    setSortOption,
+    openSearch,
+    closeSearch,
+  } = useCategorySearch(categories);
   
   return (
     <main className="flex min-h-dvh flex-col pb-28">
@@ -46,10 +61,19 @@ const CategoryPage = () => {
               선택하면 바로 촬영이 시작됩니다.
             </p>
           </section>
-          <CollectionToolbar />
+          <CollectionToolbar
+            searchQuery={searchQuery}
+            isSearchOpen={isSearchOpen}
+            searchPlaceholder="카테고리를 검색해 보세요!"
+            sortOption={sortOption}
+            onSortChange={setSortOption}
+            onSearchClick={openSearch}
+            onSearchChange={setSearchQuery}
+            onSearchClose={closeSearch}
+          />
 
           <CategoryGrid
-            categories={categories}
+            categories={filteredCategories}
             leadingType="add"
             showBestPickCount={false}
             onLeadingClick={openCreateSheet}

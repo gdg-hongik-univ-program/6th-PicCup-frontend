@@ -54,8 +54,15 @@ const MyPage = () => {
     <main className="flex min-h-dvh flex-col pb-28">
       <div className="flex-1 px-4 pt-5">
         <header className="px-2">
-          <h1 className="font-logo text-3xl tracking-tight">
-            PicCup
+          <h1>
+            <button
+              type="button"
+              onClick={() => navigate('/')}
+              className="font-logo text-3xl tracking-tight active:opacity-60"
+              aria-label="홈으로 이동"
+            >
+              PicCup
+            </button>
           </h1>
         </header>
 

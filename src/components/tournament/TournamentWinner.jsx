@@ -2,13 +2,97 @@ import { Crown, Share2, Download, Check } from "lucide-react"
 import AppHeader from "../layout/AppHeader"
 import BottomNav from "../layout/BottomNav"
 
+import {
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+
+import {
+  downloadImage,
+  shareImage,
+} from '../../libs/imageActions';
+
+import { getLocalDateString } from '../../utils/date';
+
 const TournamentWinner = ({ //부모 TournamentPage가 값 전달
     winner,
-    onUpload, //부모의 handleUploadBestPick 함수
-    isUploading,
     uploadError,
-    uploadedBestPick,
 }) => {
+  const [imageActionError, setImageActionError] = useState('');
+
+  const [
+    isDownloadComplete,
+    setIsDownloadComplete,
+    ] = useState(false);
+
+  const downloadMessageTimerRef = useRef(null);
+
+  const fileName = `piccup-${getLocalDateString(
+    new Date(winner.createdAt),
+    )}-${winner.id}.jpg`;
+
+    // 로컬 우승 사진 다운로드
+  const handleDownload = async () => {
+    try {
+        setImageActionError('');
+        setIsDownloadComplete(false);
+
+        await downloadImage({
+        imageBlob: winner.blob,
+        fileName,
+        });
+
+        // 다운로드 요청 성공 후 완료 메시지 표시
+        setIsDownloadComplete(true);
+
+        if (downloadMessageTimerRef.current) {
+        window.clearTimeout(
+            downloadMessageTimerRef.current,
+        );
+        }
+
+        downloadMessageTimerRef.current =
+        window.setTimeout(() => {
+            setIsDownloadComplete(false);
+        }, 5000);//5초 후 제거
+    } catch (error) {
+        console.error(
+        '우승 사진 다운로드 실패:',
+        error,
+        );
+
+        setIsDownloadComplete(false);
+        setImageActionError(
+        '사진을 다운로드하지 못했습니다.',
+        );
+    }
+  };
+
+    // 로컬 우승 사진 공유
+  const handleShare = async () => {
+    try {
+        setImageActionError('');
+
+        await shareImage({
+        imageBlob: winner.blob,
+        fileName,
+        title: 'PicCup Best Pick',
+        });
+    } catch (error) {
+        if (error.name === 'AbortError') return;
+
+        console.error(
+        '우승 사진 공유 실패:',
+        error,
+        );
+
+        setImageActionError(
+        '사진을 공유하지 못했습니다.',
+        );
+    }
+  };
+  
   const capturedDate = new Date(winner.createdAt)
     .toLocaleDateString('ko-KR', {
         year: 'numeric',
@@ -22,6 +106,17 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
         '우승 사진 용량:',
         `${(winner.blob.size / 1024 / 1024).toFixed(2)} MB`,
     );
+
+  // 다운로드 완료 메시지 타이머 정리
+  useEffect(() => {
+    return () => {
+        if (downloadMessageTimerRef.current) {
+        window.clearTimeout(
+            downloadMessageTimerRef.current,
+        );
+        }
+    };
+  }, []);
 
     
   return (
@@ -43,25 +138,36 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
                             alt="최종 우승 사진"
                             className="block max-h-[52dvh] w-full rounded-3xl object-contain"
                         />
-                        {uploadedBestPick && (
+                        {isDownloadComplete && (
                             <div
                                 role="status"
-                                className="absolute bottom-6 left-1/2 flex h-11 w-[82%] -translate-x-1/2 items-center justify-center gap-2 rounded-2xl bg-primary px-4 text-sm font-semibold text-white shadow-lg"
+                                aria-live="polite"
+                                className="absolute bottom-6 left-1/2 flex h-11 w-[82%] -translate-x-1/2 items-center justify-center rounded-2xl bg-primary px-4 text-sm font-semibold text-white shadow-lg"
                             >
-                                <Check size={18} strokeWidth={2.5} />
-                                베스트픽 저장 완료
+                                <Check/>
+                                이미지 다운로드 완료
                             </div>
                         )}
-                        {isUploading && (
-                            <p className="absolute bottom-6 left-1/2 flex items-center justify-center -translate-x-1/2 text-sm font-semibold text-primary">
-                            베스트픽 저장 중...
-                            </p>
-                        )}
 
-                        {uploadError && (
-                            <p role="alert" className="absolute bottom-6 left-1/2 flex items-center justify-center -translate-x-1/2 text-sm font-semibold text-error">
-                            {uploadError}
-                            </p>
+                        {!isDownloadComplete &&
+                            imageActionError && (
+                                <p
+                                role="alert"
+                                className="absolute bottom-6 left-1/2 w-[82%] -translate-x-1/2 text-center text-sm font-semibold text-error"
+                                >
+                                {imageActionError}
+                                </p>
+                            )}
+
+                        {!isDownloadComplete &&
+                            !imageActionError &&
+                            uploadError && (
+                                <p
+                                role="alert"
+                                className="absolute bottom-6 left-1/2 w-[82%] -translate-x-1/2 text-center text-sm font-semibold text-error"
+                                >
+                                {uploadError}
+                                </p>
                         )}
                     </div>
                     
@@ -76,17 +182,17 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
                         <div className="flex items-center gap-3 px-2">
                             <button
                                 type="button"
-                                onClick={onUpload}
-                                disabled={isUploading || Boolean(uploadedBestPick)}
-                                className="flex size-8 items-center justify-center rounded-lg transition active:bg-primary-soft disabled:opacity-40"
-                                aria-label="베스트픽 저장"
+                                onClick={handleDownload}
+                                className="flex size-8 items-center justify-center rounded-lg transition active:bg-gray-100 disabled:opacity-40"
+                                aria-label="베스트픽 다운로드"
                             >
                                 <Download size={24} />
                             </button>
 
                             <button
                                 type="button"
-                                className="flex size-8 items-center justify-center rounded-lg transition active:bg-primary-soft"
+                                onClick={handleShare}
+                                className="flex size-8 items-center justify-center rounded-lg transition active:bg-gray-100 disabled:opacity-40"
                                 aria-label="베스트픽 공유"
                             >
                                 <Share2 size={24} />

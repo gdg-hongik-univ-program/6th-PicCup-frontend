@@ -36,10 +36,7 @@ const TournamentPage = () => {
   });
 
   const { 
-    handleUploadBestPick, //커스텀 훅에서 전달받음
-    isUploading,
     uploadError,
-    uploadedBestPick,
   } = useBestPickUpload({ //커스텀 hook 호출
     winner,
     selectedCategory,
@@ -66,10 +63,7 @@ const TournamentPage = () => {
         {winner ? (
             <TournamentWinner //우승 페이지
                 winner={winner} //props이름={부모(토너먼트 페이지)가 가진 값}
-                onUpload={handleUploadBestPick}
-                isUploading={isUploading}
                 uploadError={uploadError}
-                uploadedBestPick={uploadedBestPick}
             />
         ) : (
             <TournamentMatch 

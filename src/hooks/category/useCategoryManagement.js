@@ -2,7 +2,9 @@ import { useState } from 'react';
 
 import useCategories from './useCategories';
 
-const useCategoryManagement = () => {
+const useCategoryManagement = ({
+  onCategoryCreated, //카테고리 생성완료 콜백
+} = {}) => {
   const {
     categories,
     isLoading,
@@ -49,6 +51,9 @@ const useCategoryManagement = () => {
     if (!createdCategory) return;
 
     closeCreateSheet();
+
+    // 생성된 카테고리를 선택하고 다음 화면으로 이동
+    onCategoryCreated?.(createdCategory);
   };
 
   const openEditSheet = (category) => {
@@ -126,6 +131,8 @@ const useCategoryManagement = () => {
 
     setDeletedNotice(null);
   };
+
+  
 
   return {
     categories,

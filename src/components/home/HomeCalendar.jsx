@@ -75,11 +75,11 @@ const HomeCalendar = ({
       <div className="mt-2 px-1">
         <div className="grid grid-cols-7 gap-0.5">
           {WEEKDAYS.map((weekday) => (
-            <div className="border-b border-border">
-              <p
-                key={weekday}
-                className="py-1 text-center text-sm font-semibold text-text-secondary"
-              >
+            <div
+              key={weekday}
+              className="border-b border-border"
+            >
+              <p className="py-1 text-center text-sm font-semibold text-text-secondary">
                 {weekday}
               </p>
             </div>

@@ -11,10 +11,16 @@ import TrashTabs from '../components/trash/TrashTabs';
 import TrashToolbar from '../components/trash/TrashToolbar';
 import { TRASH_RETENTION_DAYS } from '../constants/trash';
 import ConfirmModal from '../components/layout/ConfirmModal';
+import Snackbar from '../components/layout/Snackbar';
+
+import { useNavigate, useLocation } from 'react-router';
 
 
 
 const TrashPage = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const {
     rejectedPhotos,
     deletedBestPicks,
@@ -48,12 +54,16 @@ const TrashPage = () => {
     isPermanentDeleteOpen,
     actionError,
     actionMessage,
-    handleAddToAlbum,
-    handleRestoreBestPicks,
+    isRestoreConfirmOpen,
+    restoredAlbum,
+    didPermanentlyDelete,
     handlePermanentDeleteOpen,
     handlePermanentDeleteConfirm,
     closePermanentDelete,
     clearActionNotice,
+    handleRestoreOpen,
+    handleRestoreConfirm,
+    closeRestoreConfirm,
   } = useTrashActions({
     activeTab,
     selectedPhotos,
@@ -62,10 +72,51 @@ const TrashPage = () => {
     clearSelection,
   });
 
+  const returnedSnackbarMessage =
+    location.state?.snackbarMessage ?? '';
+
+  const snackbarMessage =
+    actionMessage || returnedSnackbarMessage;
+
+  const returnedSnackbarAlbum =
+    location.state?.snackbarAlbum ?? null;
+
+  const snackbarAlbum =
+    restoredAlbum || returnedSnackbarAlbum;
+
+  const returnedHomeAction =
+    location.state?.snackbarHomeAction ?? false;
+
+  const showHomeAction =
+    didPermanentlyDelete || returnedHomeAction;
+
   const handleTabChange = (nextTab) => {
     clearActionNotice();
     changeTab(nextTab);
   }; //탭 변경 시 이전 메시지도 지우기
+
+  const handlePhotoOpen = (photo) => {
+    navigate(
+      `/album/trash/${activeTab}/${photo.id}`,
+      {
+        state: {
+          photo,
+        },
+      },
+    );
+  };
+
+  const handlePhotoLongPress = (photo) => {
+    // 일반 모드라면 선택 모드로 전환
+    if (!isSelectionMode) {
+      toggleSelectionMode();
+    }
+
+    // 길게 누른 사진을 바로 선택
+    if (!isPhotoSelected(photo)) {
+      togglePhoto(photo);
+    }
+  };
 
   const isLoading =
     activeTab === 'rejected'
@@ -91,9 +142,9 @@ const TrashPage = () => {
 
   return (
     <main
-        className={`min-h-dvh px-4 py-4 ${
-            isSelectionMode ? 'pb-24' : ''
-        }`}
+      className={`min-h-dvh px-4 py-4 ${
+        isSelectionMode ? 'pb-28' : ''
+      }`}
     >
       <BackHeader title="휴지통" />
 
@@ -119,15 +170,6 @@ const TrashPage = () => {
         </p>
       )}
 
-      {actionMessage && (
-        <p
-          className="mt-4 text-center text-xs text-primary"
-          role="status"
-        >
-          {actionMessage}
-        </p>
-      )}
-
       {isLoading ? (
         <p className="py-16 text-center text-sm text-text-secondary">
           사진을 불러오는 중입니다.
@@ -149,29 +191,54 @@ const TrashPage = () => {
         </section>
       ) : (
         <TrashPhotoGrid
-          activeTab={activeTab}
           photos={visiblePhotos}
           isSelectionMode={isSelectionMode}
           getPhotoKey={getPhotoKey}
           isPhotoSelected={isPhotoSelected}
           onTogglePhoto={togglePhoto}
+          onOpenPhoto={handlePhotoOpen}
+          onLongPressPhoto={handlePhotoLongPress}
         />
       )}
 
-      {isSelectionMode &&
-        visiblePhotos.length > 0 && (
-          <TrashActionBar
-            activeTab={activeTab}
-            selectedCount={selectedPhotos.length}
-            isProcessing={isProcessing}
-            onPrimaryAction={
-              activeTab === 'rejected'
-                ? handleAddToAlbum
-                : handleRestoreBestPicks
-            }
-            onPermanentDelete={handlePermanentDeleteOpen}
-          />
-        )}
+      {isSelectionMode && visiblePhotos.length > 0 && (
+        <TrashActionBar
+          activeTab={activeTab}
+          selectedCount={selectedPhotos.length}
+          isProcessing={isProcessing}
+          onPrimaryAction={handleRestoreOpen}
+          onPermanentDelete={handlePermanentDeleteOpen}
+        />
+      )}
+
+      <ConfirmModal
+          isOpen={isRestoreConfirmOpen}
+          title={
+            activeTab === 'rejected'
+              ? `선택한 ${selectedPhotos.length}장을 앨범에 추가할까요?`
+              : `선택한 ${selectedPhotos.length}장을 복구할까요?`
+          }
+          description={
+            activeTab === 'rejected'
+              ? '사진은 원래 카테고리의 앨범에 추가돼요.'
+              : '복구한 사진은 앨범에서 다시 확인할 수 있어요.'
+          }
+          error={actionError}
+          variant="primary"
+          confirmLabel={
+            activeTab === 'rejected'
+              ? '추가'
+              : '복구'
+          }
+          confirmingLabel={
+            activeTab === 'rejected'
+              ? '추가 중...'
+              : '복구 중...'
+          }
+          isConfirming={isProcessing}
+          onClose={closeRestoreConfirm}
+          onConfirm={handleRestoreConfirm}
+        />
         <ConfirmModal
           isOpen={isPermanentDeleteOpen}
           title={`선택한 ${selectedPhotos.length}장을 영구 삭제할까요?`}
@@ -184,6 +251,45 @@ const TrashPage = () => {
           onConfirm={
             handlePermanentDeleteConfirm
           }
+        />
+        <Snackbar
+          message={snackbarMessage}
+          positionClassName={
+            isSelectionMode ? 'bottom-28' : 'bottom-6'
+          }
+          actionLabel={
+            showHomeAction
+              ? '홈으로'
+              : snackbarAlbum
+                ? '앨범 가기'
+                : ''
+          }
+          onAction={
+            showHomeAction
+              ? () => {
+                  clearActionNotice();
+                  navigate('/');
+                }
+              : snackbarAlbum
+                ? () => {
+                    clearActionNotice();
+                    navigate('/album');
+                  }
+                : undefined
+          }
+          onClose={() => {
+            clearActionNotice();
+
+            // 상세 화면에서 전달된 문구 제거
+            if (returnedSnackbarMessage) {
+              navigate('/album/trash', {
+                replace: true,
+                state: {
+                  activeTab,
+                },
+              });
+            }
+          }}
         />
     </main>
   );

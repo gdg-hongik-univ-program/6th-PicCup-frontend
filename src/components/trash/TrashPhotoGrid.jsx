@@ -1,44 +1,74 @@
 import { Check } from 'lucide-react';
+import { useRef } from 'react';
 
 const TrashPhotoGrid = ({
-  activeTab,
   photos,
   isSelectionMode,
   getPhotoKey,
+  onOpenPhoto,
   isPhotoSelected,
   onTogglePhoto,
+  onLongPressPhoto,
 }) => {
+  const longPressTimerRef = useRef(null);
+  const didLongPressRef = useRef(false);
+
+  // 0.5초 이상 누르면 길게 누르기로 처리
+  const startLongPress = (photo) => {
+    didLongPressRef.current = false;
+
+    longPressTimerRef.current = window.setTimeout(() => {
+      didLongPressRef.current = true;
+      onLongPressPhoto(photo);
+    }, 500);
+  };
+  //길게 누르기로 판정하기 전에 손을 떼면 예약해둔 타이머를 취소
+  const cancelLongPress = () => {
+    if (!longPressTimerRef.current) return;
+
+    window.clearTimeout(longPressTimerRef.current);
+    longPressTimerRef.current = null;
+  };
+
   return (
     <section className="mt-4 grid grid-cols-3 gap-1">
       {photos.map((photo) => {
         const photoKey = getPhotoKey(photo);
 
-        const isSelected =
-          isPhotoSelected(photo);
+        const isSelected = isPhotoSelected(photo);
+
+        const imageSource =
+          photo.previewUrl ?? photo.imageUrl ?? '';
 
         return (
           <button
             key={photoKey}
             type="button"
+            onPointerDown={() => startLongPress(photo)}
+            onPointerUp={cancelLongPress}
+            onPointerLeave={cancelLongPress}
+            onPointerCancel={cancelLongPress}
+            onContextMenu={(event) => event.preventDefault()}
             onClick={() => {
-              if (!isSelectionMode) return;
+              // 길게 누른 뒤 발생하는 click은 무시
+              if (didLongPressRef.current) {
+                didLongPressRef.current = false;
+                return;
+              }
 
-              onTogglePhoto(photo);
+              if (isSelectionMode) {
+                onTogglePhoto(photo);
+                return;
+              }
+              //사진 상세 화면으로
+              onOpenPhoto(photo);
             }}
-            aria-pressed={
-              isSelectionMode
-                ? isSelected
-                : undefined
-            }
-            className="relative aspect-square overflow-hidden rounded-xl bg-gray-200"
+            className="relative aspect-square select-none overflow-hidden rounded-xl touch-pan-y"
           >
             <img
-              src={
-                activeTab === 'rejected'
-                  ? photo.previewUrl
-                  : photo.imageUrl
-              }
+              src={imageSource}
               alt=""
+              draggable={false}
               className="h-full w-full object-cover"
             />
 
