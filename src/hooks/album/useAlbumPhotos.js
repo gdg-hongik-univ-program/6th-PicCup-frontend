@@ -7,6 +7,7 @@ const useAlbumPhotos = (categoryId) => {
 
   const {
     bestPicks: albumPhotos,
+    removeBestPicks,
   } = useBestPicks(categoryId);
 
   const visiblePhotos = showLikedOnly
@@ -18,6 +19,7 @@ const useAlbumPhotos = (categoryId) => {
     visiblePhotos,
     showLikedOnly,
     setShowLikedOnly,
+    removeBestPicks,
   };
 };
 

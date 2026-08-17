@@ -27,6 +27,7 @@ import MyPasswordResetPage from './pages/mypage/MyPasswordResetPage';
 import TrashPage from './pages/TrashPage';
 import GalleryImportPage from './pages/mypage/GalleryImportPage';
 import MoveAlbumPage from './pages/MoveAlbumPage';
+import TrashPhotoDetailPage from './pages/TrashPhotoDetailPage';
 
 const App = () => {
   useAuthBootstrap(); ///users/me 결과를 Zustand의 useAuthStore에 저장
@@ -111,6 +112,10 @@ const App = () => {
                 <Route
                   path="/album/trash"
                   element={<TrashPage />}
+                />
+                <Route
+                  path="/album/trash/:trashType/:photoId"
+                  element={<TrashPhotoDetailPage />}
                 />
                 <Route
                   path="/mypage/import"

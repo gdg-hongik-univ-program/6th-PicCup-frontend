@@ -39,10 +39,24 @@ const useBestPicks = (categoryId) => {
     };
   }, [categoryId]);
 
+  // 삭제 성공한 사진을 현재 목록에서 제거
+  const removeBestPicks = (photoIds) => {
+    setBestPicks(
+      (previousPhotos) =>
+        previousPhotos.filter(
+          (photo) =>
+            !photoIds.includes(
+              photo.id,
+            ),
+        ),
+    );
+  };
+
   return {
     bestPicks,
     isLoading,
     fetchError,
+    removeBestPicks,
 };
 };
 

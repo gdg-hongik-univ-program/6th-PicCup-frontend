@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router';
 
 import useCategoryStore from '../store/useCategoryStore';
 import useCategoryManagement from '../hooks/category/useCategoryManagement';
+import useCategorySearch from '../hooks/category/useCategorySearch';
 
 import AppHeader from '../components/layout/AppHeader';
 import BottomNav from '../components/layout/BottomNav';
@@ -21,6 +22,17 @@ const CategoryPage = () => {
     openCreateSheet,
     openEditSheet,
   } = categoryManagement;
+
+  const {
+    searchQuery,
+    setSearchQuery,
+    isSearchOpen,
+    filteredCategories,
+    sortOption,
+    setSortOption,
+    openSearch,
+    closeSearch,
+  } = useCategorySearch(categories);
 
   const setSelectedCategory = useCategoryStore(
     (state) => state.setSelectedCategory,
@@ -46,10 +58,19 @@ const CategoryPage = () => {
               선택하면 바로 촬영이 시작됩니다.
             </p>
           </section>
-          <CollectionToolbar />
+          <CollectionToolbar
+            searchQuery={searchQuery}
+            isSearchOpen={isSearchOpen}
+            searchPlaceholder="카테고리를 검색해 보세요!"
+            sortOption={sortOption}
+            onSortChange={setSortOption}
+            onSearchClick={openSearch}
+            onSearchChange={setSearchQuery}
+            onSearchClose={closeSearch}
+          />
 
           <CategoryGrid
-            categories={categories}
+            categories={filteredCategories}
             leadingType="add"
             showBestPickCount={false}
             onLeadingClick={openCreateSheet}

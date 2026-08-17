@@ -1,18 +1,38 @@
-import { ChevronLeft, Heart, SlidersHorizontal } from 'lucide-react';
+import { Check, ChevronLeft, Heart, SlidersHorizontal } from 'lucide-react';
 import {
   useLocation,
   useNavigate,
   useParams,
 } from 'react-router';
 
+import { useState } from 'react';
+
+import AlbumViewOptionsMenu from '../components/category/AlbumViewOptionsMenu';
+import {
+  ALBUM_VIEW,
+  ALBUM_VIEW_GRID_CLASS,
+} from '../constants/album';
+
 import BottomNav from '../components/layout/BottomNav';
 import useAlbumPhotos from '../hooks/album/useAlbumPhotos';
+import useAlbumSelection from '../hooks/album/useAlbumSelection';
+
+import AlbumSelectionActionBar from '../components/layout/AlbumSelectionActionBar';
+import ConfirmModal from '../components/layout/ConfirmModal';
+import { TRASH_RETENTION_DAYS } from '../constants/trash';
 
 const AlbumDetailPage = () => {
   const navigate = useNavigate();
   const location = useLocation(); //이전 페이지에서 전달된 상태를 가져오기 위해 useLocation 사용
   const { categoryId } = useParams();
 
+  // 현재 사진 뷰 크기
+  const [viewOption, setViewOption] = useState(ALBUM_VIEW.DEFAULT);
+  // 뷰 옵션 메뉴 표시 여부
+  const [isViewMenuOpen, setIsViewMenuOpen] = useState(false);
+  // 작게 뷰에서는 사진을 정사각형으로 표시
+  const isSmallView = viewOption === ALBUM_VIEW.SMALL;
+  
   const albumName =
     categoryId === 'all'
       ? '전체'
@@ -23,7 +43,49 @@ const AlbumDetailPage = () => {
     visiblePhotos,
     showLikedOnly,
     setShowLikedOnly,
+    removeBestPicks,
   } = useAlbumPhotos(categoryId);
+
+  const {
+    isSelectionMode,
+    selectedPhotoIds,
+    isPhotoSelected,
+    isDeleteConfirmOpen,
+    isProcessing,
+    actionError,
+    togglePhoto,
+    toggleSelectionMode,
+    handleMoveSelected,
+    handleShareSelected,
+    handleDeleteOpen,
+    handleDeleteConfirm,
+    closeDeleteConfirm,
+  } = useAlbumSelection({
+    photos: albumPhotos,
+    categoryId,
+    navigate,
+    removePhotos: removeBestPicks,
+  });
+
+  const handlePhotoClick = (
+    photo,
+    ) => {
+    // 선택 모드에서는 상세 화면 대신 선택 처리
+    if (isSelectionMode) {
+        togglePhoto(photo.id);
+        return;
+    }
+
+    // 일반 모드에서는 사진 상세로 이동
+    navigate(
+        `/album/photo/${photo.id}`,
+        {
+        state: {
+            photo,
+        },
+        },
+    );
+  };
 
   return (
     <main className="flex min-h-dvh flex-col pb-28">
@@ -48,6 +110,7 @@ const AlbumDetailPage = () => {
                 </span>
             </div>
         </section>
+
         <div className="mt-4 flex items-center justify-between">
             <button
                 type="button"
@@ -67,56 +130,160 @@ const AlbumDetailPage = () => {
             </button>
 
             <div className="flex items-center gap-2">
-                <button
-                type="button"
-                className="flex px-4 py-2 items-center justify-center rounded-full border border-border"
-                aria-label="뷰 옵션"
-                >
-                <SlidersHorizontal size={17} />
-                </button>
+                <div className="relative">
+                    <button
+                        type="button"
+                        onClick={() =>
+                        setIsViewMenuOpen(
+                            (previous) => !previous,
+                        )
+                        }
+                        className="flex items-center justify-center rounded-full border border-border px-4 py-2"
+                        aria-label="뷰 옵션"
+                        aria-expanded={isViewMenuOpen}
+                    >
+                        <SlidersHorizontal size={17} />
+                    </button>
+
+                    {isViewMenuOpen && (
+                        <AlbumViewOptionsMenu
+                        selectedOption={viewOption}
+                        onSelect={(option) => {
+                            // 사진 크기 변경 후 메뉴 닫기
+                            setViewOption(option);
+                            setIsViewMenuOpen(false);
+                        }}
+                        onClose={() =>
+                            setIsViewMenuOpen(false)
+                        }
+                        />
+                    )}
+                </div>
 
                 <button
-                type="button"
-                className="rounded-full border border-border px-3.5 py-1.5 text-sm"
+                    type="button"
+                    onClick={toggleSelectionMode}
+                    aria-pressed={isSelectionMode}
+                    className={`rounded-full border border-border px-3.5 py-1.5 text-sm ${
+                        isSelectionMode
+                        ? 'bg-primary text-white'
+                        : 'bg-white'
+                    }`}
                 >
-                선택
+                    {isSelectionMode
+                        ? '선택 해제'
+                        : '선택'}
                 </button>
             </div>
         </div>
-        <section className="mt-5 columns-3 gap-1">
-            {visiblePhotos.map((photo) => (
+    
+        <section
+            className={`mt-5 ${
+                ALBUM_VIEW_GRID_CLASS[viewOption]
+            }`}
+        >
+            {visiblePhotos.map((photo) => {
+                const isSelected =
+                isPhotoSelected(photo.id);
+
+                return (
                 <button
                     key={photo.id}
                     type="button"
                     onClick={() =>
-                        navigate(`/album/photo/${photo.id}`, {
-                        state: {
-                            photo,
-                        },
-                        })
+                    handlePhotoClick(photo)
                     }
-                    className="relative mb-1 block w-full break-inside-avoid overflow-hidden rounded-xl"
-                    >
+                    aria-pressed={
+                    isSelectionMode
+                        ? isSelected
+                        : undefined
+                    }
+                    className={`relative block w-full break-inside-avoid overflow-hidden ${
+                        isSmallView
+                            ? 'mb-0.5 aspect-square rounded-lg'
+                            : 'mb-1 rounded-xl'
+                    }`}
+                >
                     <img
-                        src={photo.imageUrl}
-                        alt={`${photo.categoryName} 베스트픽`}
-                        className="block h-auto w-full object-cover"
+                    src={photo.imageUrl}
+                    crossOrigin="anonymous"
+                    alt={`${photo.categoryName} 베스트픽`}
+                    className={
+                        isSmallView
+                            ? 'absolute inset-0 h-full w-full object-cover'
+                            : 'block h-auto w-full object-cover'
+                    }
                     />
 
-                    {photo.isLiked && (
-                        <span className="pointer-events-none absolute bottom-3 left-3 text-white/90">
-                        <Heart
-                            size={17}
-                            fill="currentColor"
+                    {/* 선택된 사진에 흰색 배경 표시 */}
+                    {isSelected && (
+                    <span className="pointer-events-none absolute inset-0 bg-background/50" />
+                    )}
+
+                    {/* 선택된 사진에 체크 표시 */}
+                    {isSelected && (
+                    <span className="pointer-events-none absolute right-2 top-2 flex size-5 items-center justify-center rounded-full bg-primary text-white">
+                        <Check
+                        size={12}
+                        strokeWidth={4}
                         />
-                        </span>
+                    </span>
+                    )}
+
+                    {/* 좋아요 표시 */}
+                    {photo.isLiked && (
+                    <span className={`pointer-events-none absolute text-white/90 ${
+                        isSmallView
+                            ? 'bottom-1.5 left-1.5'
+                            : 'bottom-3 left-3'
+                    }`}>
+                        <Heart
+                        size={17}
+                        fill="currentColor"
+                        />
+                    </span>
                     )}
                 </button>
-            ))}
+                );
+            })}
         </section>
       </div>
 
-      <BottomNav activeTab="album" />
+      {isSelectionMode ? (
+        <AlbumSelectionActionBar
+            selectedCount={
+            selectedPhotoIds.length
+            }
+            isProcessing={isProcessing}
+            onShare={handleShareSelected}
+            onMove={handleMoveSelected}
+            onDelete={handleDeleteOpen}
+        />
+      ) : (
+        <BottomNav activeTab="album" />
+      )}
+
+      <ConfirmModal
+        isOpen={isDeleteConfirmOpen}
+        title={`${selectedPhotoIds.length}장을 삭제할까요?`}
+        description={`삭제한 사진은 휴지통에서 ${TRASH_RETENTION_DAYS.bestPick}일 동안 보관돼요.`}
+        error={actionError}
+        confirmLabel="삭제하기"
+        confirmingLabel="삭제 중..."
+        isConfirming={isProcessing}
+        onClose={closeDeleteConfirm}
+        onConfirm={handleDeleteConfirm}
+      />
+
+      {actionError &&
+        !isDeleteConfirmOpen && (
+            <p
+            role="alert"
+            className="mt-3 text-center text-xs text-error"
+            >
+            {actionError}
+            </p>
+      )}
     </main>
   );
 };

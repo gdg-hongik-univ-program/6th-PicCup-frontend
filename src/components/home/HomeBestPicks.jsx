@@ -59,23 +59,26 @@ const HomeBestPicks = ({
           ))}
         </div>
       ) : (
-        <div className="mt-3 flex h-28 items-center justify-center p-5 gap-3 rounded-2xl bg-surface">
-          <p className="text-sm text-text-secondary">
-            {isToday
-              ? '오늘 촬영된 베스트픽이 아직 없어요.'
-              : '이 날짜에 기록된 베스트픽이 없어요.'}
-          </p>
-          <p className="text-sm text-text-secondary">
-            {isToday
-              ? '오늘 촬영된 베스트픽이 아직 없어요.'
-              : '이 날짜에 기록된 베스트픽이 없어요.'}
-          </p>
+        <div className="mt-3 flex p-5 items-center justify-between gap-4 rounded-2xl bg-surface px-5">
+          <div className={isToday ? 'text-left' : 'w-full text-center'}>
+            <p className="text-sm font-semibold text-text-primary">
+              {isToday
+                ? '오늘의 Best Pick이 아직 없어요.'
+                : '이 날짜에 기록된 Best Pick이 없어요.'}
+            </p>
+
+            {isToday && (
+              <p className="mt-2 text-xs text-text-secondary">
+                오늘을 기록해보세요!
+              </p>
+            )}
+          </div>
 
           {isToday && (
             <button
               type="button"
               onClick={() => navigate('/category')}
-              className="rounded-2xl bg-primary px-4 py-4 text-sm font-semibold text-white"
+              className="shrink-0 whitespace-nowrap rounded-2xl bg-primary px-3 py-3 text-sm font-semibold text-white"
             >
               사진 촬영하기
             </button>

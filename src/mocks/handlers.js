@@ -10,6 +10,16 @@ const user = {
   profileImageUrl: null,
 };
 
+const MOCK_IMAGES = [
+  '/images/cat.jpg',
+  '/images/dokyo.webp',
+  '/images/friend.webp',
+  '/images/friends.jpg',
+  '/images/landscape.jpg',
+];
+
+let nextBestPickId = 200;
+
 let categories = [
   {
     id: 1,
@@ -21,7 +31,14 @@ let categories = [
     name: '여행',
     isDefault: false,
   },
+  {
+    id: 3,
+    name: '친구',
+    isDefault: false,
+  },
 ];
+
+let deletedCategories = [];
 
 let bestPicks = [
   {
@@ -29,9 +46,9 @@ let bestPicks = [
     categoryId: 1,
     categoryName: '일상',
     capturedDate: '2026-08-15',
-    candidateCount: 1,
+    candidateCount: 4,
     createdAt: '2026-08-15T10:00:00',
-    imageUrl: '/apple-touch-icon.png',
+    imageUrl: '/images/cat.jpg',
     isLiked: true,
   },
   {
@@ -39,10 +56,67 @@ let bestPicks = [
     categoryId: 2,
     categoryName: '여행',
     capturedDate: '2026-08-14',
-    candidateCount: 1,
-    createdAt: '2026-08-14T10:00:00',
-    imageUrl: '/favicon.png',
+    candidateCount: 8,
+    createdAt: '2026-08-14T14:00:00',
+    imageUrl: '/images/dokyo.webp',
     isLiked: false,
+  },
+  {
+    id: 103,
+    categoryId: 3,
+    categoryName: '친구',
+    capturedDate: '2026-08-13',
+    candidateCount: 6,
+    createdAt: '2026-08-13T18:00:00',
+    imageUrl: '/images/friend.webp',
+    isLiked: true,
+  },
+  {
+    id: 104,
+    categoryId: 3,
+    categoryName: '친구',
+    capturedDate: '2026-08-13',
+    candidateCount: 5,
+    createdAt: '2026-08-13T20:00:00',
+    imageUrl: '/images/friends.jpg',
+    isLiked: false,
+  },
+  {
+    id: 105,
+    categoryId: 2,
+    categoryName: '여행',
+    capturedDate: '2026-08-12',
+    candidateCount: 7,
+    createdAt: '2026-08-12T16:00:00',
+    imageUrl: '/images/landscape.jpg',
+    isLiked: true,
+  },
+];
+
+let deletedBestPicks = [
+  {
+    id: 90,
+    categoryId: 1,
+    categoryName: '일상',
+    capturedDate: '2026-08-10',
+    candidateCount: 4,
+    createdAt: '2026-08-10T10:00:00',
+    imageUrl: '/images/landscape.jpg',
+    isLiked: false,
+    deletedAt: '2026-08-14T10:00:00',
+    daysLeft: 29,
+  },
+  {
+    id: 91,
+    categoryId: 3,
+    categoryName: '친구',
+    capturedDate: '2026-08-09',
+    candidateCount: 6,
+    createdAt: '2026-08-09T10:00:00',
+    imageUrl: '/images/friends.jpg',
+    isLiked: true,
+    deletedAt: '2026-08-13T10:00:00',
+    daysLeft: 28,
   },
 ];
 
@@ -128,6 +202,225 @@ export const handlers = [
       );
     },
   ),
+  //카테고리 수정
+  http.put(
+    '/api/categories/:categoryId',
+    async ({
+        params,
+        request,
+    }) => {
+        const { name } =
+        await request.json();
+
+        const categoryId =
+        params.categoryId;
+
+        const targetCategory =
+        categories.find(
+            (category) =>
+            String(category.id) ===
+            String(categoryId),
+        );
+
+        if (!targetCategory) {
+        return HttpResponse.json(
+            {
+            code:
+                'CATEGORY_NOT_FOUND',
+            },
+            { status: 404 },
+        );
+        }
+
+        categories = categories.map(
+        (category) =>
+            String(category.id) ===
+            String(categoryId)
+            ? {
+                ...category,
+                name,
+                }
+            : category,
+        );
+
+        bestPicks = bestPicks.map(
+        (photo) =>
+            String(photo.categoryId) ===
+            String(categoryId)
+            ? {
+                ...photo,
+                categoryName: name,
+                }
+            : photo,
+        );
+
+        return HttpResponse.json({
+        id: targetCategory.id,
+        name,
+        });
+    },
+  ),
+  //카테고리 삭제
+  http.delete(
+    '/api/categories/:categoryId',
+    ({ params }) => {
+        const categoryId =
+        params.categoryId;
+
+        const targetCategory =
+        categories.find(
+            (category) =>
+            String(category.id) ===
+            String(categoryId),
+        );
+
+        if (!targetCategory) {
+        return HttpResponse.json(
+            {
+            code:
+                'CATEGORY_NOT_FOUND',
+            },
+            { status: 404 },
+        );
+        }
+
+        const deletedAt =
+        new Date().toISOString();
+
+        const categoryPhotos =
+        bestPicks.filter(
+            (photo) =>
+            String(photo.categoryId) ===
+            String(categoryId),
+        );
+
+        deletedCategories = [
+        ...deletedCategories,
+        {
+            ...targetCategory,
+            deletedAt,
+        },
+        ];
+
+        deletedBestPicks = [
+        ...deletedBestPicks,
+        ...categoryPhotos.map(
+            (photo) => ({
+            ...photo,
+            deletedAt,
+            daysLeft: 30,
+            deletedByCategory: true,
+            }),
+        ),
+        ];
+
+        categories = categories.filter(
+        (category) =>
+            String(category.id) !==
+            String(categoryId),
+        );
+
+        bestPicks = bestPicks.filter(
+        (photo) =>
+            String(photo.categoryId) !==
+            String(categoryId),
+        );
+
+        return HttpResponse.json({
+        id: targetCategory.id,
+        deletedBestPickCount:
+            categoryPhotos.length,
+        });
+    },
+  ),
+  
+  //카테고리 복구
+  http.post(
+    '/api/categories/:categoryId/restore',
+    ({ params }) => {
+        const categoryId =
+        params.categoryId;
+
+        const deletedCategory =
+        deletedCategories.find(
+            (category) =>
+            String(category.id) ===
+            String(categoryId),
+        );
+
+        if (!deletedCategory) {
+        return HttpResponse.json(
+            {
+            code:
+                'CATEGORY_NOT_FOUND',
+            },
+            { status: 404 },
+        );
+        }
+
+        const restoredCategory = {
+        ...deletedCategory,
+        };
+
+        delete restoredCategory.deletedAt;
+
+        const photosToRestore =
+        deletedBestPicks.filter(
+            (photo) =>
+            String(photo.categoryId) ===
+                String(categoryId) &&
+            photo.deletedByCategory,
+        );
+
+        const restoredPhotos =
+        photosToRestore.map(
+            (photo) => {
+            const restoredPhoto = {
+                ...photo,
+            };
+
+            delete restoredPhoto.deletedAt;
+            delete restoredPhoto.daysLeft;
+            delete restoredPhoto.deletedByCategory;
+
+            return restoredPhoto;
+            },
+        );
+
+        categories = [
+        ...categories,
+        restoredCategory,
+        ];
+
+        bestPicks = [
+        ...bestPicks,
+        ...restoredPhotos,
+        ];
+
+        deletedCategories =
+        deletedCategories.filter(
+            (category) =>
+            String(category.id) !==
+            String(categoryId),
+        );
+
+        deletedBestPicks =
+        deletedBestPicks.filter(
+            (photo) =>
+            !(
+                String(photo.categoryId) ===
+                String(categoryId) &&
+                photo.deletedByCategory
+            ),
+        );
+
+        return HttpResponse.json({
+        id: restoredCategory.id,
+        restoredBestPickCount:
+            restoredPhotos.length,
+        });
+    },
+  ),
 
   // 전체·카테고리별 사진 조회
   http.get(
@@ -151,6 +444,73 @@ export const handlers = [
     },
   ),
 
+  //탈락사진 앨범에 추가
+  http.post( 
+    '/api/best-picks',
+    async ({ request }) => {
+        const formData =
+        await request.formData();
+
+        const requestedCategoryId =
+        formData.get('categoryId');
+
+        const targetCategory =
+        categories.find(
+            (category) =>
+            String(category.id) ===
+            String(requestedCategoryId),
+        ) ?? categories[0];
+
+        if (!targetCategory) {
+        return HttpResponse.json(
+            {
+            code:
+                'CATEGORY_NOT_FOUND',
+            },
+            { status: 404 },
+        );
+        }
+
+        const newId =
+        nextBestPickId++;
+
+        const newBestPick = {
+        id: newId,
+        categoryId:
+            targetCategory.id,
+        categoryName:
+            targetCategory.name,
+        capturedDate:
+            formData.get(
+            'capturedDate',
+            ),
+        candidateCount: Number(
+            formData.get(
+            'candidateCount',
+            ),
+        ),
+        createdAt:
+            new Date().toISOString(),
+        imageUrl:
+            MOCK_IMAGES[
+            newId %
+                MOCK_IMAGES.length
+            ],
+        isLiked: false,
+        };
+
+        bestPicks = [
+        ...bestPicks,
+        newBestPick,
+        ];
+
+        return HttpResponse.json(
+        newBestPick,
+        { status: 201 },
+        );
+    },
+  ),
+
   // 캘린더 조회
   http.get(
     '/api/best-picks/calendar',
@@ -171,6 +531,97 @@ export const handlers = [
       return HttpResponse.json(result);
     },
   ),
+
+  // 삭제한 베스트픽 조회
+    http.get(
+    '/api/best-picks/trash',
+    () => {
+        return HttpResponse.json(
+        deletedBestPicks,
+        );
+    },
+    ),
+
+    // 삭제한 베스트픽 복구
+    http.post(
+    '/api/best-picks/trash/restore',
+    async ({ request }) => {
+        const { ids } =
+        await request.json();
+
+        const restoredPhotos =
+        deletedBestPicks.filter(
+            (photo) =>
+            ids.some(
+                (id) =>
+                String(id) ===
+                String(photo.id),
+            ),
+        );
+
+        bestPicks = [
+        ...bestPicks,
+        ...restoredPhotos.map(
+            (photo) => {
+                const restoredPhoto = {
+                ...photo,
+                };
+
+                delete restoredPhoto.deletedAt;
+                delete restoredPhoto.daysLeft;
+
+                return restoredPhoto;
+            },
+        ),
+        ];
+
+        deletedBestPicks =
+        deletedBestPicks.filter(
+            (photo) =>
+            !ids.some(
+                (id) =>
+                String(id) ===
+                String(photo.id),
+            ),
+        );
+
+        return HttpResponse.json({
+        restored: restoredPhotos.map(
+            (photo) => ({
+            id: photo.id,
+            categoryId:
+                photo.categoryId,
+            categoryName:
+                photo.categoryName,
+            }),
+        ),
+        skipped: [],
+        });
+    },
+    ),
+
+    // 영구삭제
+    http.post(
+    '/api/best-picks/trash/permanent',
+    async ({ request }) => {
+        const { ids } =
+        await request.json();
+
+        deletedBestPicks =
+        deletedBestPicks.filter(
+            (photo) =>
+            !ids.some(
+                (id) =>
+                String(id) ===
+                String(photo.id),
+            ),
+        );
+
+        return HttpResponse.json({
+        purged: ids,
+        });
+    },
+    ),
 
   // 개별 사진 조회
   http.get(
@@ -284,21 +735,43 @@ export const handlers = [
   http.post(
     '/api/best-picks/delete',
     async ({ request }) => {
-      const { ids } =
+        const { ids } =
         await request.json();
 
-      bestPicks = bestPicks.filter(
-        (photo) =>
-          !ids.some(
-            (id) =>
-              String(id) ===
-              String(photo.id),
-          ),
-      );
+        const photosToDelete =
+        bestPicks.filter(
+            (photo) =>
+            ids.some(
+                (id) =>
+                String(id) ===
+                String(photo.id),
+            ),
+        );
 
-      return HttpResponse.json({
+        deletedBestPicks = [
+        ...deletedBestPicks,
+        ...photosToDelete.map(
+            (photo) => ({
+            ...photo,
+            deletedAt:
+                new Date().toISOString(),
+            daysLeft: 30,
+            }),
+        ),
+        ];
+
+        bestPicks = bestPicks.filter(
+        (photo) =>
+            !ids.some(
+            (id) =>
+                String(id) ===
+                String(photo.id),
+            ),
+        );
+
+        return HttpResponse.json({
         deleted: ids,
-      });
+        });
     },
   ),
 
