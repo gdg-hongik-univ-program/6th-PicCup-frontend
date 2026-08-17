@@ -169,12 +169,6 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
                                 {uploadError}
                                 </p>
                         )}
-
-                        {uploadError && (
-                            <p role="alert" className="absolute bottom-6 left-1/2 flex items-center justify-center -translate-x-1/2 text-sm font-semibold text-error">
-                            {uploadError}
-                            </p>
-                        )}
                     </div>
                     
                     <div className="flex h-10 mt-1 items-center justify-between"> 
