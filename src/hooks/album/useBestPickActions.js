@@ -17,6 +17,8 @@ const useBestPickActions = ({
   const [isUpdatingLike, setIsUpdatingLike] = useState(false);
   const [likeError, setLikeError] = useState('');
   const [actionError, setActionError] = useState('');
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [
@@ -59,9 +61,10 @@ const useBestPickActions = ({
   };
 
   const handleDownload = async () => {
-    if (!photo) return;
+    if (!photo || isDownloading) return;
 
     try {
+      setIsDownloading(true);
       setActionError('');
 
       await downloadImage({
@@ -75,13 +78,16 @@ const useBestPickActions = ({
       setActionError(
         '사진을 다운로드하지 못했습니다.',
       );
+    } finally {
+      setIsDownloading(false);
     }
   };
 
   const handleShare = async () => {
-    if (!photo) return;
+    if (!photo || isSharing) return;
 
     try {
+      setIsSharing(true);
       setActionError('');
 
       await shareImage({
@@ -97,6 +103,8 @@ const useBestPickActions = ({
       setActionError(
         '사진을 공유하지 못했습니다.',
       );
+    } finally {
+      setIsSharing(false);
     }
   };
 
@@ -157,6 +165,8 @@ const useBestPickActions = ({
 
   return {
     isUpdatingLike,
+    isDownloading,
+    isSharing,
     likeError,
     actionError,
     isMenuOpen,

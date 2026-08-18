@@ -180,11 +180,6 @@ const TrashPhotoDetailPage = () => {
             ? '추가'
             : '복구'
         }
-        confirmingLabel={
-            activeTab === 'rejected'
-            ? '추가 중...'
-            : '복구 중...'
-        }
         isConfirming={isProcessing}
         onClose={closeRestoreConfirm}
         onConfirm={handleRestoreConfirm}
@@ -196,7 +191,6 @@ const TrashPhotoDetailPage = () => {
         description="영구 삭제한 사진은 다시 복구할 수 없어요."
         error={actionError}
         confirmLabel="영구 삭제"
-        confirmingLabel="삭제 중..."
         isConfirming={isProcessing}
         onClose={closePermanentDelete}
         onConfirm={handlePermanentDeleteConfirm}

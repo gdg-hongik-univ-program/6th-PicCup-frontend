@@ -32,7 +32,7 @@ const CameraViewport = ({
       </header>
 
       <section
-        className={`absolute left-0 z-0 ${cameraPositionClass} w-full overflow-hidden bg-black ${aspectRatioClass}`}
+        className={`absolute left-0 z-0 ${cameraPositionClass} w-full overflow-hidden bg-text-primary ${aspectRatioClass}`}
       >
         <video
           ref={videoRef} //videoRef 연결

@@ -144,7 +144,6 @@ const MyPage = () => {
         description="로그아웃하면 로그인 화면으로 이동합니다."
         error={logoutError}
         confirmLabel="로그아웃"
-        confirmingLabel="로그아웃 중..."
         isConfirming={isLoggingOut}
         variant="primary"
         onClose={closeLogout}

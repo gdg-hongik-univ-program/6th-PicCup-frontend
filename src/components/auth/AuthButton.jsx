@@ -2,14 +2,16 @@ const AuthButton = ({
   children,
   type = 'button',
   disabled = false,
+  isProcessing = false,
   onClick,
 }) => {
   return (
     <button
       type={type}
-      disabled={disabled}
+      disabled={disabled || isProcessing}
+      aria-busy={isProcessing}
       onClick={onClick}
-      className="h-12 w-full rounded-xl bg-primary font-semibold text-white active:bg-primary-pressed disabled:cursor-not-allowed disabled:bg-primary-muted"
+      className="h-12 w-full rounded-xl bg-primary font-semibold text-background shadow-sm"
     >
       {children}
     </button>

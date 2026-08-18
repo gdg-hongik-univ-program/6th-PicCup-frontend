@@ -48,11 +48,13 @@ const CategoryPage = () => {
   } = useCategorySearch(categories);
   
   return (
-    <main className="flex min-h-dvh flex-col pb-28">
-        <div className="flex-1 px-4 pt-4">
-          <AppHeader />
+    <main className="flex h-dvh min-h-0 flex-col overflow-hidden">
+        <div className="flex min-h-0 flex-1 flex-col px-4 pt-4">
+          <div className="shrink-0">
+            <AppHeader />
+          </div>
       
-          <section className="mt-8">
+          <section className="mt-8 shrink-0">
             <h2 className="text-3xl font-semibold">
               카테고리 선택
             </h2>
@@ -61,25 +63,30 @@ const CategoryPage = () => {
               선택하면 바로 촬영이 시작됩니다.
             </p>
           </section>
-          <CollectionToolbar
-            searchQuery={searchQuery}
-            isSearchOpen={isSearchOpen}
-            searchPlaceholder="카테고리를 검색해 보세요!"
-            sortOption={sortOption}
-            onSortChange={setSortOption}
-            onSearchClick={openSearch}
-            onSearchChange={setSearchQuery}
-            onSearchClose={closeSearch}
-          />
+          <div className="shrink-0">
+            <CollectionToolbar
+              searchQuery={searchQuery}
+              isSearchOpen={isSearchOpen}
+              searchPlaceholder="카테고리를 검색해 보세요!"
+              sortOption={sortOption}
+              onSortChange={setSortOption}
+              onSearchClick={openSearch}
+              onSearchChange={setSearchQuery}
+              onSearchClose={closeSearch}
+            />
+          </div>
 
-          <CategoryGrid
-            categories={filteredCategories}
-            leadingType="add"
-            showBestPickCount={false}
-            onLeadingClick={openCreateSheet}
-            onCategoryClick={handleCategorySelect}
-            onCategoryMenuClick={openEditSheet}
-          />
+          {/* 카테고리 카드 영역만 스크롤 */}
+          <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain pb-28 touch-pan-y">
+            <CategoryGrid
+              categories={filteredCategories}
+              leadingType="add"
+              showBestPickCount={false}
+              onLeadingClick={openCreateSheet}
+              onCategoryClick={handleCategorySelect}
+              onCategoryMenuClick={openEditSheet}
+            />
+          </div>
           
         </div>
 

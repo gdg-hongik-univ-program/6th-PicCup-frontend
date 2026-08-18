@@ -20,7 +20,7 @@ const AlbumViewOptionsMenu = ({
 
       <div
         role="menu"
-        className="absolute right-0 top-0 z-30 w-24 overflow-hidden rounded-xl border border-border bg-white py-2 shadow-lg"
+        className="absolute right-0 top-0 z-30 w-24 overflow-hidden rounded-xl border border-border bg-background py-2 shadow-lg"
       >
         <p className="px-3 pb-1 text-xs font-semibold">
           뷰 옵션

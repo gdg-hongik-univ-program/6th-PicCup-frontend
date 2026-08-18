@@ -99,7 +99,7 @@ const PasswordResetPage = () => {
 
           <AuthButton
             type="submit"
-            disabled={isSubmitting}
+            isProcessing={isSubmitting}
           >
             재설정
           </AuthButton>

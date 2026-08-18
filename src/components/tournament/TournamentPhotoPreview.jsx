@@ -28,7 +28,7 @@ const TournamentPhotoPreview = ({
         <button
           type="button"
           onClick={onClose}
-          className="flex size-12 items-center justify-center rounded-full bg-white shadow-lg ring-1 ring-black/5"
+          className="flex size-12 items-center justify-center rounded-full bg-background shadow-lg ring-1 ring-text-primary/5"
           aria-label="전체 사진 닫기"
         >
           <X size={25} />

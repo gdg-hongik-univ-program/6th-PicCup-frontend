@@ -35,7 +35,7 @@ const AppHeader = ({
           <button
             type="button"
             onClick={onTrashClick}
-            className="flex size-10 items-center justify-center"
+            className="flex size-10 rounded-xl items-center justify-center"
             aria-label="휴지통"
           >
             <Trash2 size={21} />
@@ -45,7 +45,7 @@ const AppHeader = ({
         <button
           type="button"
           onClick={handleMenuClick}
-          className="flex size-10 items-center justify-center"
+          className="flex size-10 rounded-xl items-center justify-center"
           aria-label="메뉴 열기"
         >
           <Menu size={24} />

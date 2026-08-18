@@ -38,6 +38,7 @@ const HomeBestPicks = ({
             <button
               key={photo.id}
               type="button"
+              data-thumbnail="true"
               onClick={() =>
                 navigate(
                   `/album/photo/${photo.id}`,
@@ -78,7 +79,7 @@ const HomeBestPicks = ({
             <button
               type="button"
               onClick={() => navigate('/category')}
-              className="shrink-0 whitespace-nowrap rounded-2xl bg-primary px-3 py-3 text-sm font-semibold text-white"
+              className="shrink-0 whitespace-nowrap rounded-2xl bg-primary px-3 py-3 text-sm font-semibold text-background"
             >
               사진 촬영하기
             </button>

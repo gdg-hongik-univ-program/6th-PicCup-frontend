@@ -72,7 +72,8 @@ const BottomSheet = ({
             type="button"
             aria-label={`${title} 닫기`}
             onClick={onClose}
-            className="absolute inset-0 touch-none bg-black/40"
+            data-press-feedback="none"
+            className="absolute inset-0 touch-none bg-text-primary/40"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -137,7 +138,8 @@ const BottomSheet = ({
                   isSubmitDisabled ||
                   !name.trim()
                 }
-                className="rounded-xl bg-primary py-3 text-background disabled:opacity-70"
+                aria-busy={isSubmitting}
+                className="rounded-xl bg-primary py-3 text-background"
               >
                 {submitLabel}
               </button>

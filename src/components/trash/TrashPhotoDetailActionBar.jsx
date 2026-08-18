@@ -20,6 +20,7 @@ const TrashPhotoDetailActionBar = ({
         type="button"
         onClick={onDelete}
         disabled={isProcessing}
+        aria-busy={isProcessing}
         className="flex size-12 items-center justify-center rounded-full bg-background text-text-primary shadow-md disabled:opacity-40"
         aria-label="영구 삭제"
       >
@@ -30,6 +31,7 @@ const TrashPhotoDetailActionBar = ({
         type="button"
         onClick={onRestore}
         disabled={isProcessing}
+        aria-busy={isProcessing}
         className="flex size-12 items-center justify-center rounded-full bg-background text-text-primary shadow-md disabled:opacity-40"
         aria-label={restoreLabel}
       >

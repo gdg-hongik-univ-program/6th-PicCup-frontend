@@ -17,9 +17,11 @@ const BottomNav = ({ activeTab = 'default' }) => {
           to={to}
           aria-label={label}
           className={clsx(
-            'pointer-events-auto flex items-center justify-center rounded-full shadow-lg ring-1 ring-black/5',
+            'pointer-events-auto flex items-center justify-center rounded-full shadow-lg ring-1 ring-text-primary/5 transition active:scale-95',
             wide ? 'h-14 w-28' : 'size-14',
-            activeTab === key ? 'bg-primary/95 text-white' : 'bg-white/95'
+            activeTab === key
+              ? 'bg-primary/95 text-background active:bg-primary-pressed'
+              : 'bg-background/95 active:bg-gray-100'
           )}
         >
           <Icon size={24} />

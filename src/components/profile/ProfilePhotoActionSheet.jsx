@@ -21,7 +21,8 @@ const ProfilePhotoActionSheet = ({
           <motion.button
             type="button"
             onClick={onClose}
-            className="absolute inset-0 bg-black/40"
+            data-press-feedback="none"
+            className="absolute inset-0 bg-text-primary/40"
             aria-label="프로필 사진 설정 닫기"
           />
 
@@ -64,7 +65,7 @@ const ProfilePhotoActionSheet = ({
             <button
               type="button"
               onClick={onClose}
-              className="mt-4 h-13 w-full rounded-xl bg-primary text-base font-semibold text-white active:bg-primary-pressed"
+              className="mt-4 h-13 w-full rounded-xl bg-primary text-base font-semibold text-background"
             >
               돌아가기
             </button>

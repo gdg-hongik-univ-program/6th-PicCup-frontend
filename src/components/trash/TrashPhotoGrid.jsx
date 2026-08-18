@@ -44,6 +44,7 @@ const TrashPhotoGrid = ({
           <button
             key={photoKey}
             type="button"
+            data-thumbnail="true"
             onPointerDown={() => startLongPress(photo)}
             onPointerUp={cancelLongPress}
             onPointerLeave={cancelLongPress}
@@ -76,7 +77,7 @@ const TrashPhotoGrid = ({
               <>
                 <div className="absolute inset-0 bg-background/50" />
 
-                <span className="absolute right-2 top-2 flex size-5 items-center justify-center rounded-full bg-primary text-white">
+                <span className="absolute right-2 top-2 flex size-5 items-center justify-center rounded-full bg-primary text-background">
                   <Check
                     size={12}
                     strokeWidth={4}

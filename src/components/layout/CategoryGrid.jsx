@@ -38,6 +38,7 @@ const CategoryGrid = ({
       ) : (
         <button
           type="button"
+          data-thumbnail="true"
           onClick={onLeadingClick}
           className="relative aspect-square overflow-hidden rounded-2xl bg-gray-200 text-left"
         >
@@ -49,9 +50,9 @@ const CategoryGrid = ({
             />
           )}
 
-          <div className="absolute inset-0 bg-black/30" />
+          <div className="absolute inset-0 bg-text-primary/30" />
 
-          <div className="absolute inset-x-0 bottom-0 p-3 text-white">
+          <div className="absolute inset-x-0 bottom-0 p-3 text-background">
             {showBestPickCount && (
                 <p className="text-xs opacity-80">
                     {totalBestPickCount}장
@@ -72,10 +73,11 @@ const CategoryGrid = ({
         return (
           <div
             key={category.id}
-            className="relative aspect-square overflow-hidden rounded-2xl bg-white"
+            className="relative aspect-square overflow-hidden rounded-2xl bg-background"
           >
             <button
               type="button"
+              data-thumbnail="true"
               onClick={() => onCategoryClick(category)}
               className="h-full w-full text-left"
               aria-pressed={isSelected}
@@ -88,7 +90,7 @@ const CategoryGrid = ({
                 />
               )}
 
-              <div className="absolute inset-0 bg-black/30" />
+              <div className="absolute inset-0 bg-text-primary/30" />
 
               {isSelected && (
                 <div className="absolute inset-0 bg-background/40" />
@@ -108,7 +110,7 @@ const CategoryGrid = ({
               </div>
 
               {isSelected && (
-                <span className="absolute right-2.5 top-2.5 z-20 flex size-5 items-center justify-center rounded-full bg-primary text-white">
+                <span className="absolute right-2.5 top-2.5 z-20 flex size-5 items-center justify-center rounded-full bg-primary text-background">
                   <Check
                     size={12}
                     strokeWidth={4}
@@ -120,10 +122,11 @@ const CategoryGrid = ({
             {!category.isDefault && onCategoryMenuClick && (
               <button
                 type="button"
+                data-press-feedback="none"
                 onClick={() =>
                   onCategoryMenuClick(category)
                 }
-                className="absolute right-1.5 top-3 z-10 flex size-8 items-center justify-center rounded-full text-white active:bg-gray-500/50"
+                className="absolute right-1.5 top-3 z-10 flex size-8 items-center justify-center rounded-full text-background active:bg-gray-500/50"
                 aria-label={`${category.name} 메뉴`}
               >
                 <EllipsisVertical size={20} />

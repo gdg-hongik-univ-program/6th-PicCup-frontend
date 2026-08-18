@@ -20,7 +20,7 @@ const HomePage = () => {
 
   return (
     <main className="flex min-h-dvh flex-col">
-      <div className="flex-1 px-4 pt-4">
+      <div className="flex-1 px-4 pt-2">
         <AppHeader />
 
         <HomeCalendar

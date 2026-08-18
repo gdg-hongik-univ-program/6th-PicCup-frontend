@@ -139,6 +139,8 @@ const useGalleryImport = () => {
   };
 
   const handleUpload = async () => {
+    if (isUploading) return;
+
     if (selectedImages.length === 0) {
       setUploadError(
         '불러올 이미지를 선택해주세요.',

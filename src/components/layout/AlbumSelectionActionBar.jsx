@@ -15,13 +15,14 @@ const AlbumSelectionActionBar = ({
     isProcessing;
 
   return (
-    <footer className="fixed inset-x-0 bottom-4 z-40 mx-auto w-full max-w-md bg-background px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2">
+    <footer className="pointer-events-none fixed inset-x-0 bottom-4 z-40 mx-auto w-full max-w-md bg-transparent px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2">
 
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between [&>button]:pointer-events-auto">
         <button
           type="button"
           onClick={onShare}
           disabled={isDisabled}
+          aria-busy={isProcessing}
           className="flex size-14 items-center justify-center rounded-full bg-background/90 shadow-md disabled:opacity-40"
           aria-label="선택한 사진 공유"
         >
@@ -32,6 +33,7 @@ const AlbumSelectionActionBar = ({
             type="button"
             onClick={onMove}
             disabled={isDisabled}
+            aria-busy={isProcessing}
             className="flex min-h-14 flex-col items-center justify-center gap-0.5 rounded-full bg-background/90 px-7 py-2 shadow-md disabled:opacity-40"
         >
             {/* 선택된 사진 장수 */}
@@ -48,6 +50,7 @@ const AlbumSelectionActionBar = ({
           type="button"
           onClick={onDelete}
           disabled={isDisabled}
+          aria-busy={isProcessing}
           className="flex size-14 items-center justify-center rounded-full bg-background/90 shadow-md disabled:opacity-40"
           aria-label="선택한 사진 삭제"
         >

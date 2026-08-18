@@ -19,7 +19,7 @@ const FilledCameraIcon = ({
         cx="12"
         cy="13"
         r="3.6"
-        fill="white"
+        fill="var(--color-background)"
       />
     </svg>
   );

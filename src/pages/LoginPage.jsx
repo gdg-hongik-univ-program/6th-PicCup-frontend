@@ -58,7 +58,7 @@ const LoginPage = () => {
 
             <AuthButton
               type="submit"
-              disabled={isSubmitting}
+              isProcessing={isSubmitting}
             >
               로그인
             </AuthButton>

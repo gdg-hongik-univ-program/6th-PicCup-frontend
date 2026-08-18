@@ -88,18 +88,18 @@ const AlbumDetailPage = () => {
   };
 
   return (
-    <main className="flex min-h-dvh flex-col pb-28">
-      <div className="flex-1 px-4 pt-4">
+    <main className="flex h-dvh min-h-0 flex-col overflow-hidden">
+      <div className="flex min-h-0 flex-1 flex-col px-4 pt-2">
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="flex size-10 items-center justify-center"
+          className="flex size-10 shrink-0 items-center justify-center"
           aria-label="앨범 목록으로 돌아가기"
         >
           <ChevronLeft size={24} />
         </button>
 
-        <section className="mt-4">
+        <section className="mt-4 shrink-0">
             <div className="flex items-baseline gap-2">
                 <h1 className=" px-2 text-3xl font-semibold">
                 {albumName}
@@ -111,7 +111,7 @@ const AlbumDetailPage = () => {
             </div>
         </section>
 
-        <div className="mt-4 flex items-center justify-between">
+        <div className="mt-4 flex shrink-0 items-center justify-between">
             <button
                 type="button"
                 onClick={() =>
@@ -120,8 +120,8 @@ const AlbumDetailPage = () => {
                 aria-pressed={showLikedOnly}
                 className={`flex px-4 py-2 items-center justify-center rounded-full border border-border ${
                 showLikedOnly
-                    ? 'bg-primary text-white'
-                    : 'bg-white text-text-primary'
+                    ? 'bg-primary text-background'
+                    : 'bg-background text-text-primary'
                 }`}
             >
                 <Heart
@@ -165,9 +165,9 @@ const AlbumDetailPage = () => {
                     onClick={toggleSelectionMode}
                     aria-pressed={isSelectionMode}
                     className={`rounded-full border border-border px-3.5 py-1.5 text-sm ${
-                        isSelectionMode
-                        ? 'bg-primary text-white'
-                        : 'bg-white'
+                    isSelectionMode
+                        ? 'bg-primary text-background'
+                        : 'bg-background'
                     }`}
                 >
                     {isSelectionMode
@@ -177,11 +177,11 @@ const AlbumDetailPage = () => {
             </div>
         </div>
     
-        <section
-            className={`mt-5 ${
-                ALBUM_VIEW_GRID_CLASS[viewOption]
-            }`}
-        >
+        {/* 사진 카드 영역만 스크롤 */}
+        <div className="mt-5 min-h-0 flex-1 touch-pan-y overflow-y-auto overscroll-contain pb-28">
+          <section
+            className={ALBUM_VIEW_GRID_CLASS[viewOption]}
+          >
             {visiblePhotos.map((photo) => {
                 const isSelected =
                 isPhotoSelected(photo.id);
@@ -190,6 +190,7 @@ const AlbumDetailPage = () => {
                 <button
                     key={photo.id}
                     type="button"
+                    data-thumbnail="true"
                     onClick={() =>
                     handlePhotoClick(photo)
                     }
@@ -222,7 +223,7 @@ const AlbumDetailPage = () => {
 
                     {/* 선택된 사진에 체크 표시 */}
                     {isSelected && (
-                    <span className="pointer-events-none absolute right-2 top-2 flex size-5 items-center justify-center rounded-full bg-primary text-white">
+                    <span className="pointer-events-none absolute right-2 top-2 flex size-5 items-center justify-center rounded-full bg-primary text-background">
                         <Check
                         size={12}
                         strokeWidth={4}
@@ -232,7 +233,7 @@ const AlbumDetailPage = () => {
 
                     {/* 좋아요 표시 */}
                     {photo.isLiked && (
-                    <span className={`pointer-events-none absolute text-white/90 ${
+                    <span className={`pointer-events-none absolute text-background/90 ${
                         isSmallView
                             ? 'bottom-1.5 left-1.5'
                             : 'bottom-3 left-3'
@@ -246,7 +247,8 @@ const AlbumDetailPage = () => {
                 </button>
                 );
             })}
-        </section>
+          </section>
+        </div>
       </div>
 
       {isSelectionMode ? (
@@ -269,7 +271,6 @@ const AlbumDetailPage = () => {
         description={`삭제한 사진은 휴지통에서 ${TRASH_RETENTION_DAYS.bestPick}일 동안 보관돼요.`}
         error={actionError}
         confirmLabel="삭제하기"
-        confirmingLabel="삭제 중..."
         isConfirming={isProcessing}
         onClose={closeDeleteConfirm}
         onConfirm={handleDeleteConfirm}
