@@ -28,6 +28,7 @@ import TrashPage from './pages/TrashPage';
 import GalleryImportPage from './pages/mypage/GalleryImportPage';
 import MoveAlbumPage from './pages/MoveAlbumPage';
 import TrashPhotoDetailPage from './pages/TrashPhotoDetailPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 const App = () => {
   useAuthBootstrap(); ///users/me 결과를 Zustand의 useAuthStore에 저장
@@ -134,6 +135,11 @@ const App = () => {
               <Route
                 path="/password-reset"
                 element={<PasswordResetPage />}
+              />
+              {/* 등록되지 않은 모든 주소 처리 */}
+              <Route
+                path="*"
+                element={<NotFoundPage />}
               />
             </Routes>
           )}
