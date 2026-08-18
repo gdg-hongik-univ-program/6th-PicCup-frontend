@@ -1,4 +1,7 @@
 import { useParams } from 'react-router';
+import { useEffect, useRef } from 'react';
+
+import { trackEvent } from '../libs/analytics';
 
 import useCategoryStore from '../store/useCategoryStore';
 import useBestPickUpload from '../hooks/tournament/useBestPickUpload';
@@ -10,6 +13,7 @@ import TournamentMatch from '../components/tournament/TournamentMatch';
 
 const TournamentPage = () => {
   const { sessionId } = useParams(); //라우터에서 주소 뒷부분(변수)를 객체로 반환해서 sessionId에 저장
+  const trackedWinnerIdRef = useRef(null);
 
   const selectedCategory = useCategoryStore(
     (state) => state.selectedCategory,
@@ -42,6 +46,25 @@ const TournamentPage = () => {
     selectedCategory,
     candidateCount: photos.length, //커스텀 훅으로 전달함
   })
+
+  useEffect(() => { //ga4 이벤트: 토너먼트 완료 측정
+    if (
+      !winner ||
+      trackedWinnerIdRef.current === winner.id
+    ) {
+      return;
+    }
+
+    trackedWinnerIdRef.current = winner.id;
+
+    // 최종 우승자가 결정된 시점
+    trackEvent('tournament_complete', {
+      candidate_count: photos.length,
+    });
+  }, [
+    winner,
+    photos.length,
+  ]);
 
   if (isLoading) {
     return (

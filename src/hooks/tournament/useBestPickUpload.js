@@ -5,6 +5,8 @@ import {
   useState,
 } from 'react';
 
+import { trackEvent } from '../../libs/analytics';
+
 import { uploadBestPick } from '../../api/bestPickApi';
 import { getLocalDateString } from '../../utils/date';
 
@@ -57,6 +59,11 @@ const useBestPickUpload = ({
 
         candidateCount,
       });
+      // 서버 저장에 성공한 사진만 집계(ga4 이벤트: 베스트픽 저장 성공 측정)
+      trackEvent('best_pick_saved', {
+        feature_source: 'tournament',
+        candidate_count: candidateCount,
+      });
 
       setUploadedBestPick(result);
 
@@ -64,6 +71,7 @@ const useBestPickUpload = ({
         '베스트픽 업로드 성공:',
         result,
       );
+      
     } catch (error) {
       console.error(
         '베스트픽 업로드 실패:',

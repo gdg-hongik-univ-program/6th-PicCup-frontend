@@ -9,8 +9,11 @@ import usePhotoCapture from '../hooks/camera/usePhotoCapture';
 
 import useCategoryStore from '../store/useCategoryStore';
 
+import { trackEvent } from '../libs/analytics';
+
 const CameraPage = () => {
   const sessionIdRef = useRef(null); //세션 ID를 보관
+  const cameraStartTrackedRef = useRef(false); //ga4 측정 중복방지 ref
 
   const [aspectRatio, setAspectRatio] = useState('3/4');
 
@@ -52,6 +55,12 @@ const CameraPage = () => {
 
       if (!didStart) {
         return;
+      }
+      // 한 번의 카메라 진입에서 한 번만 전송(ga4 이벤트)
+      if (!cameraStartTrackedRef.current) {
+        cameraStartTrackedRef.current = true;
+
+        trackEvent('camera_start');
       }
 
       sessionIdRef.current = crypto.randomUUID();

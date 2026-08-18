@@ -6,7 +6,10 @@ import {
 } from 'react';
 import { useNavigate } from 'react-router';
 
+
+
 import { uploadBestPick } from '../../api/bestPickApi';
+import { trackEvent } from '../../libs/analytics';
 import { getLocalDateString } from '../../utils/date';
 
 import {
@@ -197,6 +200,11 @@ const useGalleryImport = () => {
         );
 
       successImages.forEach((image) => {
+        // ga4 이벤트: 서버 업로드에 성공한 사진마다 이벤트 전송
+        trackEvent('best_pick_saved', {
+          feature_source: 'gallery_import',
+          candidate_count: 1,
+        });
         URL.revokeObjectURL(
           image.previewUrl,
         );

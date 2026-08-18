@@ -6,6 +6,7 @@ import {
   uploadBestPick,
 } from '../../api/bestPickApi';
 import { deletePhotosByIds } from '../../libs/photoDB';
+import { trackEvent } from '../../libs/analytics';
 
 const useTrashActions = ({
   activeTab,
@@ -89,6 +90,12 @@ const useTrashActions = ({
         uploadedPhotoIds.length;
 
       if (uploadedPhotoIds.length > 0) {
+        //ga4 이벤트: 서버 업로드에 성공한 사진마다 이벤트 전송
+        uploadedPhotoIds.forEach(() => {
+          trackEvent('best_pick_saved', {
+            feature_source: 'trash_recovery',
+          });
+        });
         // 업로드에 성공한 사진만 구하기
         const uploadedPhotos = selectedPhotos.filter(
           (photo) => uploadedPhotoIds.includes(photo.id),

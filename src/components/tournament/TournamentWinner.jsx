@@ -1,6 +1,7 @@
 import { Crown, Share2, Download, Check } from "lucide-react"
 import AppHeader from "../layout/AppHeader"
 import BottomNav from "../layout/BottomNav"
+import { trackEvent } from '../../libs/analytics';
 
 import {
   useEffect,
@@ -42,6 +43,11 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
         imageBlob: winner.blob,
         fileName,
         });
+        //ga4 이벤트: 다운로드 성공 측정
+        trackEvent('file_download', {
+            feature_source: 'tournament_winner',
+            photo_count: 1,
+        });
 
         // 다운로드 요청 성공 후 완료 메시지 표시
         setIsDownloadComplete(true);
@@ -79,6 +85,15 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
         fileName,
         title: 'PicCup Best Pick',
         });
+
+        //ga4 이벤트: 공유 성공 측정
+        trackEvent('share', {
+            method: 'web_share',
+            content_type: 'image',
+            feature_source: 'tournament_winner',
+            photo_count: 1,
+        });
+
     } catch (error) {
         if (error.name === 'AbortError') return;
 
