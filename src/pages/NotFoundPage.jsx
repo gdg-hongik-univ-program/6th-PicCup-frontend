@@ -29,7 +29,7 @@ const NotFoundPage = () => {
       <Link
         to="/"
         replace
-        className="mt-8 flex h-12 w-full max-w-64 items-center justify-center rounded-xl bg-primary font-semibold text-white active:bg-primary-pressed"
+        className="mt-8 flex h-12 w-full max-w-64 items-center justify-center rounded-xl bg-primary font-semibold text-background transition active:scale-[0.97] active:bg-primary-pressed"
       >
         홈으로 돌아가기
       </Link>

@@ -18,7 +18,7 @@ const CameraActions = ({
         <button
           type="button"
           onClick={onChangeAspectRatio}
-          className="relative flex size-12 items-center justify-center rounded-full bg-gray-100/90 ring-1 ring-black/5"
+          className="relative flex size-12 items-center justify-center rounded-full bg-gray-100/90 ring-1 ring-text-primary/5"
         >
           <Scan
             size={28}
@@ -34,7 +34,7 @@ const CameraActions = ({
           type="button"
           onClick={onCapture}
           disabled={!isCameraOn || photoCount >= 16}
-          className="flex size-20 border-4 border-primary-muted bg-white items-center justify-center justify-self-center rounded-full shadow-lg"
+          className="flex size-20 border-4 border-primary-muted bg-background items-center justify-center justify-self-center rounded-full shadow-lg"
           aria-label="사진 촬영 버튼"
         >
         </button>
@@ -42,7 +42,7 @@ const CameraActions = ({
         <button
           type="button"
           onClick={onSwitchCamera}
-          className="flex size-12 items-center justify-center justify-self-end rounded-full bg-gray-100/90 ring-1 ring-black/5"
+          className="flex size-12 items-center justify-center justify-self-end rounded-full bg-gray-100/90 ring-1 ring-text-primary/5"
           aria-label="카메라 방향 전환"
         >
           <RefreshCw
@@ -66,7 +66,7 @@ const CameraActions = ({
               className="h-full w-full object-cover"
             />
           )}
-          <div className="absolute inset-x-0 bottom-0 p-1 text-white/90 font-medium">
+          <div className="absolute inset-x-0 bottom-0 p-1 text-background/90 font-medium">
             <p>{photoCount}/16</p>
           </div>
         </div>
@@ -78,7 +78,7 @@ const CameraActions = ({
         <button
           type="button"
           onClick={onComplete}
-          className="flex size-12 items-center justify-center justify-self-end rounded-xl bg-white/90 ring-2 ring-primary-muted"
+          className="flex size-12 items-center justify-center justify-self-end rounded-xl bg-background/90 ring-2 ring-primary-muted"
           aria-label="촬영 완료"
         >
           <ArrowRight

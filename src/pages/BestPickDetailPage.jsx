@@ -31,6 +31,8 @@ const BestPickDetailPage = () => {
 
   const {
     isUpdatingLike,
+    isDownloading,
+    isSharing,
     likeError,
     actionError,
     isMenuOpen,
@@ -111,6 +113,8 @@ const BestPickDetailPage = () => {
       <BestPickDetailFooter
         isLiked={photo.isLiked}
         isUpdatingLike={isUpdatingLike}
+        isDownloading={isDownloading}
+        isSharing={isSharing}
         onDownload={handleDownload}
         onToggleLike={handleToggleLike}
         onShare={handleShare}
@@ -124,7 +128,6 @@ const BestPickDetailPage = () => {
           description={`삭제한 사진은 휴지통에서 ${TRASH_RETENTION_DAYS.bestPick}일간 보관됩니다.`}
           error={deleteError}
           confirmLabel="삭제하기"
-          confirmingLabel="삭제 중..."
           isConfirming={isDeleting}
           onClose={closeDeleteConfirm}
           onConfirm={handleDeleteConfirm}

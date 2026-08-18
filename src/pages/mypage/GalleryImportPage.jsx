@@ -60,7 +60,7 @@ const GalleryImportPage = () => {
             <button
               type="button"
               onClick={openGallery}
-              className="text-sm font-medium text-primary"
+              className="text-sm font-medium rounded-full px-1 py-2 text-primary"
             >
               다시 선택
             </button>
@@ -101,7 +101,7 @@ const GalleryImportPage = () => {
                         onClick={() =>
                         removeImage(image.id)
                         }
-                        className="absolute right-1 top-1 flex size-7 items-center justify-center rounded-full bg-black/55 text-white"
+                        className="absolute right-1 top-1 flex size-7 items-center justify-center rounded-full bg-text-primary/55 text-background"
                         aria-label="선택한 이미지 제거"
                     >
                         <X size={16} />
@@ -181,16 +181,14 @@ const GalleryImportPage = () => {
 
         <AuthButton
             onClick={handleUpload}
+            isProcessing={isUploading}
             disabled={
-            isUploading ||
             selectedImages.length === 0 ||
             !selectedCategory ||
             !capturedDate
             }
         >
-            {isUploading
-            ? '이미지 추가 중...'
-            : `${selectedImages.length}장 추가하기`}
+            {selectedImages.length}장 추가하기
         </AuthButton>
         </div>
 

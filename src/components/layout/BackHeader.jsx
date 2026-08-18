@@ -21,7 +21,7 @@ const BackHeader = ({
       <button
         type="button"
         onClick={handleBack}
-        className="flex size-10 items-center justify-center"
+        className="flex size-10 rounded-2xl items-center justify-center"
         aria-label="뒤로가기"
       >
         <ChevronLeft size={24} />

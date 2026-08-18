@@ -48,7 +48,7 @@ const ProfileEditPage = () => {
               <button
                 type="button"
                 onClick={openPhotoSheet}
-                className="absolute bottom-0 right-0 flex size-8 items-center justify-center rounded-full bg-white shadow-md ring-1 ring-black/5"
+                className="absolute bottom-0 right-0 flex size-8 items-center justify-center rounded-full bg-background shadow-md ring-1 ring-text-primary/5"
                 aria-label="프로필 사진 설정"
               >
                 <FilledCameraIcon size={22} />
@@ -90,8 +90,8 @@ const ProfileEditPage = () => {
           <div className="mt-4">
             <AuthButton
               type="submit"
+              isProcessing={isSubmitting}
               disabled={
-                isSubmitting ||
                 !nickname.trim()
               }
             >

@@ -8,7 +8,7 @@
 
   --color-secondary: #F27289;
 
-  --color-background: #ffffff;
+  --color-background: #FDFFFF;
   --color-page-background: #f3f4f6; gray100
   --color-surface: #D9D8D2;
 
@@ -35,6 +35,9 @@
   --color-border-strong: #C8D5D0;
   
   --color-error: #DE5555;
+  --color-error-pressed: #B83F3F;
+  --color-error-muted: #F1B9B9;
+  --color-neutral-muted: #EDF2EF;
 
   --font-sans:
     "Pretendard Variable", 
@@ -53,12 +56,97 @@
   box-sizing: border-box;
 }
 
+button {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease,
+    opacity 120ms ease,
+    filter 120ms ease,
+    transform 120ms ease;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* 모든 버튼에 공통으로 적용되는 기본 눌림 피드백 */
+button:not(:disabled):not([data-press-feedback="none"]):active {
+  background-color: var(--color-page-background);
+  transform: scale(0.9);
+}
+
+/* 버튼 성격에 따른 눌림 색상 */
+button[class~="bg-primary"]:not(:disabled):active,
+button[class~="bg-primary/95"]:not(:disabled):active {
+  background-color: var(--color-primary-pressed);
+}
+
+button[class~="bg-error"]:not(:disabled):active {
+  background-color: var(--color-error-pressed);
+}
+
+/* 사진 카드와 토너먼트 사진은 색을 덮지 않고 밝기와 크기로 반응 */
+button[data-thumbnail="true"]:not(:disabled):active {
+  background-color: transparent;
+  filter: brightness(0.86);
+  transform: scale(0.965);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* 처리 중에도 버튼 문구는 유지하고 색으로만 상태를 표시 */
+button[aria-busy="true"] {
+  pointer-events: none;
+  opacity: 1 !important;
+}
+
+button[aria-busy="true"][class~="bg-primary"] {
+  background-color: var(--color-primary-muted);
+  color: var(--color-background);
+}
+
+button[aria-busy="true"][class~="bg-error"] {
+  background-color: var(--color-error-muted);
+  color: var(--color-background);
+}
+
+button[aria-busy="true"]:not([class~="bg-primary"]):not([class~="bg-error"]) {
+  background-color: var(--color-neutral-muted);
+  color: var(--color-text-disabled);
+}
+
+button[data-press-feedback="none"]:disabled {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button {
+    transition: none;
+  }
+
+  button:not(:disabled):active {
+    transform: none;
+  }
+}
+
 html,
 body,
 #root {
   margin: 0;
   min-height: 100%;
   background-color: var(--color-background);
+  color: var(--color-text-primary);
+}
+
+body {
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
 }
 
 @media (min-width: 449px) {

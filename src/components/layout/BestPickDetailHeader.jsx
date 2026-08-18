@@ -15,17 +15,17 @@ const BestPickDetailHeader = ({
 }) => {
   return (
     <>
-      <header className="flex items-center justify-between px-4 py-5">
+      <header className="flex items-center justify-between px-4 py-2">
         <button
           type="button"
           onClick={onBack}
-          className="flex size-11 items-center justify-center rounded-full bg-white shadow-md"
+          className="flex size-11 items-center justify-center rounded-full bg-background shadow-md"
           aria-label="앨범으로 돌아가기"
         >
           <ChevronLeft size={24} />
         </button>
 
-        <div className="rounded-full bg-white px-6 py-3 text-sm font-semibold shadow-md">
+        <div className="rounded-full bg-background px-6 py-3 text-sm font-semibold shadow-md">
           {formatCapturedDate(capturedDate)}
         </div>
 
@@ -33,7 +33,7 @@ const BestPickDetailHeader = ({
           <button
             type="button"
             onClick={onToggleMenu}
-            className="flex size-11 items-center justify-center rounded-full bg-white shadow-md"
+            className="flex size-11 items-center justify-center rounded-full bg-background shadow-md"
             aria-label="사진 메뉴"
             aria-expanded={isMenuOpen}
           >
@@ -41,7 +41,7 @@ const BestPickDetailHeader = ({
           </button>
 
           {isMenuOpen && (
-            <div className="absolute right-0 top-14 w-36 overflow-hidden rounded-2xl border border-border bg-white shadow-lg">
+            <div className="absolute right-0 top-14 w-36 overflow-hidden rounded-2xl border border-border bg-background shadow-lg">
               <button
                 type="button"
                 onClick={onMove}

@@ -106,7 +106,7 @@ const SignupPage = () => {
 
             <AuthButton
                 type="submit"
-                disabled={isSubmitting}
+                isProcessing={isSubmitting}
             >
                 가입하기
             </AuthButton>

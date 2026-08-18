@@ -70,7 +70,6 @@ const CategoryManagementOverlays = ({
         description="이 카테고리에 저장된 사진도 함께 삭제됩니다."
         error={categoryError}
         confirmLabel="삭제하기"
-        confirmingLabel="삭제 중..."
         isConfirming={isDeleting}
         variant="danger"
         onClose={closeDeleteModal}
@@ -90,9 +89,10 @@ const CategoryManagementOverlays = ({
               type="button"
               onClick={restoreDeletedCategory}
               disabled={isRestoring}
+              aria-busy={isRestoring}
               className="ml-3 shrink-0 font-semibold text-primary disabled:opacity-50"
             >
-              {isRestoring ? '복구 중...' : '되돌리기'}
+              되돌리기
             </button>
           </div>
         </div>

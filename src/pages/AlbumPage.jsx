@@ -33,55 +33,61 @@ const AlbumPage = () => {
   } = useCategorySearch(categories);
 
   return (
-    <main className="flex min-h-dvh flex-col pb-28">
-      <div className="flex-1 px-4 pt-4">
-        <AppHeader
-            showTrash
-            onTrashClick={()=>{
-                navigate('/album/trash');
-            }}
-        />
+    <main className="flex h-dvh min-h-0 flex-col overflow-hidden">
+        <div className="flex min-h-0 flex-1 flex-col px-4 pt-2">
+          <div className="shrink-0">
+            <AppHeader
+                showTrash
+                onTrashClick={()=>{
+                    navigate('/album/trash');
+                }}
+            />
+          </div>
 
-        <section className="mt-8">
-            <h2 className="px-1 text-3xl font-semibold">
-                앨범
-            </h2>
+          <section className="mt-8 shrink-0">
+              <h2 className="px-1 text-3xl font-semibold">
+                  앨범
+              </h2>
+          </section>
 
-            
-        </section>
+          <div className="shrink-0">
+            <CollectionToolbar
+              selectLabel="+"
+              searchQuery={searchQuery}
+              isSearchOpen={isSearchOpen}
+              searchPlaceholder="카테고리를 검색해 보세요!"
+              sortOption={sortOption}
+              onSortChange={setSortOption}
+              onSelectClick={openCreateSheet}
+              onSearchClick={openSearch}
+              onSearchChange={setSearchQuery}
+              onSearchClose={closeSearch}
+            />
+          </div>
 
-        <CollectionToolbar
-          selectLabel="+"
-          searchQuery={searchQuery}
-          isSearchOpen={isSearchOpen}
-          searchPlaceholder="카테고리를 검색해 보세요!"
-          sortOption={sortOption}
-          onSortChange={setSortOption}
-          onSelectClick={openCreateSheet}
-          onSearchClick={openSearch}
-          onSearchChange={setSearchQuery}
-          onSearchClose={closeSearch}
-        />
-        <CategoryGrid
-            categories={filteredCategories}
-            leadingType="all"
-            showBestPickCount
-            onLeadingClick={() => { //전체 앨범으로 이동
-                navigate('/album/all', {
-                state: {
-                    albumName: '전체',
-                },
-                });
-            }}
-            onCategoryClick={(category) => { //선택한 카테고리 앨범으로 이동
-                navigate(`/album/${category.id}`, {
-                state: {
-                    albumName: category.name,
-                },
-                });
-            }}
-            onCategoryMenuClick={openEditSheet}
-        />
+        {/* 카테고리 카드 영역만 스크롤 */}
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain pb-28 touch-pan-y">
+          <CategoryGrid
+              categories={filteredCategories}
+              leadingType="all"
+              showBestPickCount
+              onLeadingClick={() => { //전체 앨범으로 이동
+                  navigate('/album/all', {
+                  state: {
+                      albumName: '전체',
+                  },
+                  });
+              }}
+              onCategoryClick={(category) => { //선택한 카테고리 앨범으로 이동
+                  navigate(`/album/${category.id}`, {
+                  state: {
+                      albumName: category.name,
+                  },
+                  });
+              }}
+              onCategoryMenuClick={openEditSheet}
+          />
+        </div>
       </div>
 
       <CategoryManagementOverlays

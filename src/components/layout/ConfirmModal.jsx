@@ -4,7 +4,6 @@ const ConfirmModal = ({
   description,
   error = '',
   confirmLabel = '확인',
-  confirmingLabel = '처리 중...',
   cancelLabel = '취소',
   isConfirming = false,
   variant = 'danger',
@@ -15,8 +14,8 @@ const ConfirmModal = ({
 
   const confirmColor =
     variant === 'danger'
-      ? 'bg-error text-white'
-      : 'bg-primary text-white';
+      ? 'bg-error text-background'
+      : 'bg-primary text-background';
 
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center px-10">
@@ -30,7 +29,8 @@ const ConfirmModal = ({
         type="button"
         onClick={onClose}
         disabled={isConfirming}
-        className="absolute inset-0 bg-black/40"
+        data-press-feedback="none"
+        className="absolute inset-0 bg-text-primary/40"
         aria-label="확인창 닫기"
       />
 
@@ -64,11 +64,10 @@ const ConfirmModal = ({
             type="button"
             onClick={onConfirm}
             disabled={isConfirming}
-            className={`rounded-xl py-2 disabled:opacity-50 ${confirmColor}`}
+            aria-busy={isConfirming}
+            className={`rounded-xl py-2 ${confirmColor}`}
           >
-            {isConfirming
-              ? confirmingLabel
-              : confirmLabel}
+            {confirmLabel}
           </button>
         </div>
       </section>

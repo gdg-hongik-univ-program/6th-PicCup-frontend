@@ -21,6 +21,8 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
     uploadError,
 }) => {
   const [imageActionError, setImageActionError] = useState('');
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
 
   const [
     isDownloadComplete,
@@ -35,7 +37,10 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
 
     // 로컬 우승 사진 다운로드
   const handleDownload = async () => {
+    if (isDownloading) return;
+
     try {
+        setIsDownloading(true);
         setImageActionError('');
         setIsDownloadComplete(false);
 
@@ -72,12 +77,17 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
         setImageActionError(
         '사진을 다운로드하지 못했습니다.',
         );
+    } finally {
+        setIsDownloading(false);
     }
   };
 
     // 로컬 우승 사진 공유
   const handleShare = async () => {
+    if (isSharing) return;
+
     try {
+        setIsSharing(true);
         setImageActionError('');
 
         await shareImage({
@@ -105,6 +115,8 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
         setImageActionError(
         '사진을 공유하지 못했습니다.',
         );
+    } finally {
+        setIsSharing(false);
     }
   };
   
@@ -146,7 +158,7 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
                     aria-label="베스트픽 왕관"
                 />
                 
-                <article className="rounded-3xl bg-white p-2 shadow-lg ring-1 ring-border">
+                <article className="rounded-3xl bg-background p-2 shadow-lg ring-1 ring-border">
                     <div className="relative overflow-hidden rounded-3xl">
                         <img
                             src={winner.previewUrl}
@@ -157,7 +169,7 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
                             <div
                                 role="status"
                                 aria-live="polite"
-                                className="absolute bottom-6 left-1/2 flex h-11 w-[82%] -translate-x-1/2 items-center justify-center rounded-2xl bg-primary px-4 text-sm font-semibold text-white shadow-lg"
+                                className="absolute bottom-6 left-1/2 flex h-11 w-[82%] -translate-x-1/2 items-center justify-center rounded-2xl bg-primary px-4 text-sm font-semibold text-background shadow-lg"
                             >
                                 <Check/>
                                 이미지 다운로드 완료
@@ -198,6 +210,8 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
                             <button
                                 type="button"
                                 onClick={handleDownload}
+                                disabled={isDownloading}
+                                aria-busy={isDownloading}
                                 className="flex size-8 items-center justify-center rounded-lg transition active:bg-gray-100 disabled:opacity-40"
                                 aria-label="베스트픽 다운로드"
                             >
@@ -207,6 +221,8 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
                             <button
                                 type="button"
                                 onClick={handleShare}
+                                disabled={isSharing}
+                                aria-busy={isSharing}
                                 className="flex size-8 items-center justify-center rounded-lg transition active:bg-gray-100 disabled:opacity-40"
                                 aria-label="베스트픽 공유"
                             >

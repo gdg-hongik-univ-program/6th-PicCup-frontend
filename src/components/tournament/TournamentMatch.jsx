@@ -45,7 +45,7 @@ const TournamentMatch = ({
       <header className="relative h-20 shrink-0 px-4 pt-8">
           <Link
             to='/camera'
-            className="absolute flex size-12 items-center justify-center rounded-full bg-white/95 shadow-lg ring-1 ring-black/5"
+            className="absolute flex size-12 items-center justify-center rounded-full bg-background/95 shadow-lg ring-1 ring-text-primary/5 transition active:scale-95 active:bg-gray-100"
             aria-label="뒤로가기"
           >
             <ArrowLeft size={24} />
@@ -80,11 +80,12 @@ const TournamentMatch = ({
         {firstPhoto && secondPhoto && (
           <>
             <div
-              className={`relative h-[34dvh] max-w-full shrink-0 overflow-hidden rounded-2xl shadow-2xl ring-4 ring-white ${firstRatio}`}
+              className={`relative h-[34dvh] max-w-full shrink-0 overflow-hidden rounded-2xl shadow-2xl ring-4 ring-background ${firstRatio}`}
             >
               {/* 사진을 선택하는 버튼 */}
               <button
                 type="button"
+                data-thumbnail="true"
                 onClick={() => onSelectPhoto(firstPhoto)}
                 className="block h-full w-full"
                 aria-label="첫 번째 후보 선택"
@@ -101,7 +102,7 @@ const TournamentMatch = ({
               <button
                 type="button"
                 onClick={() => setPreviewPhoto(firstPhoto)}
-                className="absolute bottom-4 left-4 z-10 flex size-10 items-center justify-center rounded-xl bg-white/35 text-text-primary backdrop-blur-sm"
+                className="absolute bottom-4 left-4 z-10 flex size-10 items-center justify-center rounded-xl bg-background/35 text-text-primary backdrop-blur-sm"
                 aria-label="첫 번째 후보 전체 보기"
               >
                 <Maximize size={22} />
@@ -113,11 +114,12 @@ const TournamentMatch = ({
             </span>
 
             <div
-              className={`relative h-[34dvh] max-w-full shrink-0 overflow-hidden rounded-2xl shadow-2xl ring-4 ring-white ${secondRatio}`}
+              className={`relative h-[34dvh] max-w-full shrink-0 overflow-hidden rounded-2xl shadow-2xl ring-4 ring-background ${secondRatio}`}
             >
               {/* 사진을 선택하는 버튼 */}
               <button
                 type="button"
+                data-thumbnail="true"
                 onClick={() => onSelectPhoto(secondPhoto)}
                 className="block h-full w-full"
                 aria-label="두 번째 후보 선택"
@@ -134,7 +136,7 @@ const TournamentMatch = ({
               <button
                 type="button"
                 onClick={() => setPreviewPhoto(secondPhoto)}
-                className="absolute bottom-4 left-4 z-10 flex size-10 items-center justify-center rounded-xl bg-white/35 text-text-primary backdrop-blur-sm"
+                className="absolute bottom-4 left-4 z-10 flex size-10 items-center justify-center rounded-xl bg-background/35 text-text-primary backdrop-blur-sm"
                 aria-label="두 번째 후보 전체 보기"
               >
                 <Maximize size={22} />

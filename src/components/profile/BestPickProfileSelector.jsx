@@ -58,6 +58,7 @@ const BestPickProfileSelector = ({
               <button
                 key={photo.id}
                 type="button"
+                data-thumbnail="true"
                 onClick={() =>
                   setSelectedPhoto(photo)
                 }
@@ -74,7 +75,7 @@ const BestPickProfileSelector = ({
                   <>
                     <div className="absolute inset-0 bg-background/40" />
 
-                    <span className="absolute right-3 top-3 flex size-5 items-center justify-center rounded-full bg-primary text-white">
+                    <span className="absolute right-3 top-3 flex size-5 items-center justify-center rounded-full bg-primary text-background">
                       <Check size={12} strokeWidth={4} />
                     </span>
                   </>
@@ -92,7 +93,7 @@ const BestPickProfileSelector = ({
             onSelect(selectedPhoto)
           }
           disabled={!selectedPhoto}
-          className="h-12 w-full rounded-xl bg-primary font-semibold text-white disabled:bg-primary-muted"
+          className="h-12 w-full rounded-xl bg-primary font-semibold text-background"
         >
           선택하기
         </button>

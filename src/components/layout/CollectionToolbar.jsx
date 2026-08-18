@@ -42,7 +42,7 @@ const CollectionToolbar = ({
             }
           }}
           placeholder={searchPlaceholder}
-          className="h-11 w-full rounded-2xl border border-border bg-white px-4 pr-20 text-sm outline-none placeholder:text-gray-300 focus:border-primary"
+          className="h-11 w-full rounded-2xl border border-border bg-background px-4 pr-20 text-sm outline-none placeholder:text-gray-300 focus:border-primary"
         />
 
         {/* 검색 종료 및 검색어 초기화 */}

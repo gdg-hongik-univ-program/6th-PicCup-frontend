@@ -22,8 +22,8 @@ const TrashToolbar = ({
         disabled={photoCount === 0}
         className={`rounded-full border border-border px-3.5 py-1.5 text-sm ${
                         isSelectionMode
-                        ? 'bg-primary text-white'
-                        : 'bg-white'
+                        ? 'bg-primary text-background'
+                        : 'bg-background'
                     }`}
       >
         {isSelectionMode

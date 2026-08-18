@@ -110,6 +110,7 @@ const HomeCalendar = ({
               <button
                 key={dateKey}
                 type="button"
+                data-thumbnail="true"
                 disabled={!photo}
                 onClick={() =>
                   onDateSelect(dateKey)
@@ -134,14 +135,14 @@ const HomeCalendar = ({
                       className="h-full w-full object-cover"
                     />
 
-                    <div className="absolute inset-0 bg-black/10" />
+                    <div className="absolute inset-0 bg-text-primary/10" />
                   </>
                 )}
 
                 <span
                   className={`absolute bottom-1 right-1.5 text-[14px] font-normal ${
                     photo
-                      ? 'text-white/90'
+                      ? 'text-background/90'
                       : 'text-text-disabled'
                   }`}
                 >
