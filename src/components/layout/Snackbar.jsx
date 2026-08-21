@@ -43,7 +43,7 @@ const Snackbar = ({
         <div
         role="status"
         aria-live="polite"
-        className="flex items-center justify-between gap-3 rounded-full bg-gray-100 px-4 py-3 shadow-lg"
+        className="flex items-center justify-between gap-3 rounded-full bg-gray-100 px-6 py-3 shadow-lg"
         >
         <p className="min-w-0 truncate text-sm">
             {message}

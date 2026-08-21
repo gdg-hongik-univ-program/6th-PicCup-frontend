@@ -26,7 +26,7 @@ const CollectionToolbar = ({
   // 검색 버튼을 누르면 툴바 대신 검색창 표시
   if (isSearchOpen) {
     return (
-      <div className="relative mt-4 -mb-1">
+      <div className="relative mt-4">
         <input
           autoFocus
           type="text"

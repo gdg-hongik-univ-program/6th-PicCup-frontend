@@ -1,25 +1,29 @@
 import { Check, ChevronLeft, Heart, SlidersHorizontal } from 'lucide-react';
-import {
-  useLocation,
-  useNavigate,
-  useParams,
-} from 'react-router';
+import { useLocation, useNavigate, useParams } from 'react-router';
+import { useMemo, useState } from 'react';
 
-import { useState } from 'react';
-
-import AlbumViewOptionsMenu from '../components/category/AlbumViewOptionsMenu';
-import {
-  ALBUM_VIEW,
-  ALBUM_VIEW_GRID_CLASS,
-} from '../constants/album';
-
-import BottomNav from '../components/layout/BottomNav';
+import { ALBUM_VIEW, ALBUM_VIEW_GRID_CLASS } from '../constants/album';
 import useAlbumPhotos from '../hooks/album/useAlbumPhotos';
 import useAlbumSelection from '../hooks/album/useAlbumSelection';
 
+import AlbumViewOptionsMenu from '../components/category/AlbumViewOptionsMenu';
+import BottomNav from '../components/layout/BottomNav';
 import AlbumSelectionActionBar from '../components/layout/AlbumSelectionActionBar';
 import ConfirmModal from '../components/layout/ConfirmModal';
 import { TRASH_RETENTION_DAYS } from '../constants/trash';
+import Snackbar from '../components/layout/Snackbar';
+
+const ALBUM_VIEW_STORAGE_KEY = 'piccup-album-view';
+
+const getInitialViewOption = () => {
+  const savedView = localStorage.getItem(
+    ALBUM_VIEW_STORAGE_KEY,
+  );
+
+  return Object.values(ALBUM_VIEW).includes(savedView)
+    ? savedView
+    : ALBUM_VIEW.DEFAULT;
+};
 
 const AlbumDetailPage = () => {
   const navigate = useNavigate();
@@ -27,7 +31,8 @@ const AlbumDetailPage = () => {
   const { categoryId } = useParams();
 
   // 현재 사진 뷰 크기
-  const [viewOption, setViewOption] = useState(ALBUM_VIEW.DEFAULT);
+  const [viewOption, setViewOption] =
+    useState(getInitialViewOption); //localStorage 이용해서 뷰 옵션 기억
   // 뷰 옵션 메뉴 표시 여부
   const [isViewMenuOpen, setIsViewMenuOpen] = useState(false);
   // 작게 뷰에서는 사진을 정사각형으로 표시
@@ -37,6 +42,8 @@ const AlbumDetailPage = () => {
     categoryId === 'all'
       ? '전체'
       : location.state?.albumName ?? '앨범';
+
+  const moveSuccessMessage = location.state?.snackbarMessage ?? '';
 
   const {
     albumPhotos,
@@ -84,6 +91,98 @@ const AlbumDetailPage = () => {
             photo,
         },
         },
+    );
+  };
+
+  // 크게·기본 보기에서 사용할 열 개수
+  const masonryColumnCount =
+    viewOption === ALBUM_VIEW.LARGE
+        ? 2
+        : 3;
+
+    // 사진을 왼쪽부터 각 열에 차례대로 분배
+  const masonryColumns = useMemo(() => {
+    const columns = Array.from(
+            {
+                length: masonryColumnCount,
+            },
+            () => [],
+    );
+
+    visiblePhotos.forEach(
+        (photo, index) => {
+        columns[
+            index % masonryColumnCount
+        ].push(photo);
+        },
+    );
+
+    return columns;
+  }, [
+    visiblePhotos,
+    masonryColumnCount,
+  ]);
+
+  const renderPhoto = (photo) => {
+    const isSelected = isPhotoSelected(photo.id);
+
+    return (
+      <button
+        key={photo.id}
+        type="button"
+        data-thumbnail="true"
+        onClick={() => handlePhotoClick(photo)}
+        aria-pressed={
+          isSelectionMode
+            ? isSelected
+            : undefined
+        }
+        className={`relative block w-full overflow-hidden ${
+          isSmallView
+            ? 'aspect-square rounded-lg'
+            : 'rounded-xl'
+        }`}
+      >
+        <img
+          src={photo.imageUrl}
+          crossOrigin="anonymous"
+          alt={`${photo.categoryName} 베스트픽`}
+          className={
+            isSmallView
+              ? 'absolute inset-0 h-full w-full object-cover'
+              : 'block h-auto w-full object-cover'
+          }
+        />
+
+        {/* 선택된 사진에 흰색 배경 표시 */}
+        {isSelected && (
+          <span className="pointer-events-none absolute inset-0 bg-background/50" />
+        )}
+
+        {/* 선택된 사진에 체크 표시 */}
+        {isSelected && (
+          <span className="pointer-events-none absolute right-2 top-2 flex size-5 items-center justify-center rounded-full bg-primary text-background">
+            <Check
+              size={12}
+              strokeWidth={4}
+            />
+          </span>
+        )}
+
+        {/* 좋아요 표시 */}
+        {photo.isLiked && (
+          <span className={`pointer-events-none absolute text-background/90 ${
+            isSmallView
+              ? 'bottom-1.5 left-1.5'
+              : 'bottom-3 left-3'
+          }`}>
+            <Heart
+              size={17}
+              fill="currentColor"
+            />
+          </span>
+        )}
+      </button>
     );
   };
 
@@ -149,8 +248,13 @@ const AlbumDetailPage = () => {
                         <AlbumViewOptionsMenu
                         selectedOption={viewOption}
                         onSelect={(option) => {
-                            // 사진 크기 변경 후 메뉴 닫기
                             setViewOption(option);
+
+                            localStorage.setItem(
+                                ALBUM_VIEW_STORAGE_KEY,
+                                option,
+                            );
+
                             setIsViewMenuOpen(false);
                         }}
                         onClose={() =>
@@ -180,73 +284,35 @@ const AlbumDetailPage = () => {
         {/* 사진 카드 영역만 스크롤 */}
         <div className="mt-5 min-h-0 flex-1 touch-pan-y overflow-y-auto overscroll-contain pb-28">
           <section
-            className={ALBUM_VIEW_GRID_CLASS[viewOption]}
-          >
-            {visiblePhotos.map((photo) => {
-                const isSelected =
-                isPhotoSelected(photo.id);
-
-                return (
-                <button
-                    key={photo.id}
-                    type="button"
-                    data-thumbnail="true"
-                    onClick={() =>
-                    handlePhotoClick(photo)
-                    }
-                    aria-pressed={
-                    isSelectionMode
-                        ? isSelected
-                        : undefined
-                    }
-                    className={`relative block w-full break-inside-avoid overflow-hidden ${
-                        isSmallView
-                            ? 'mb-0.5 aspect-square rounded-lg'
-                            : 'mb-1 rounded-xl'
-                    }`}
-                >
-                    <img
-                    src={photo.imageUrl}
-                    crossOrigin="anonymous"
-                    alt={`${photo.categoryName} 베스트픽`}
-                    className={
-                        isSmallView
-                            ? 'absolute inset-0 h-full w-full object-cover'
-                            : 'block h-auto w-full object-cover'
-                    }
-                    />
-
-                    {/* 선택된 사진에 흰색 배경 표시 */}
-                    {isSelected && (
-                    <span className="pointer-events-none absolute inset-0 bg-background/50" />
-                    )}
-
-                    {/* 선택된 사진에 체크 표시 */}
-                    {isSelected && (
-                    <span className="pointer-events-none absolute right-2 top-2 flex size-5 items-center justify-center rounded-full bg-primary text-background">
-                        <Check
-                        size={12}
-                        strokeWidth={4}
-                        />
-                    </span>
-                    )}
-
-                    {/* 좋아요 표시 */}
-                    {photo.isLiked && (
-                    <span className={`pointer-events-none absolute text-background/90 ${
-                        isSmallView
-                            ? 'bottom-1.5 left-1.5'
-                            : 'bottom-3 left-3'
-                    }`}>
-                        <Heart
-                        size={17}
-                        fill="currentColor"
-                        />
-                    </span>
-                    )}
-                </button>
-                );
-            })}
+            className={
+                ALBUM_VIEW_GRID_CLASS[
+                viewOption
+                ]
+            }
+            >
+            {isSmallView
+                ? (
+                // 작게 보기: 왼쪽에서 오른쪽으로 5열
+                visiblePhotos.map(renderPhoto)
+                )
+                : (
+                // 크게·기본 보기: 각 열을 독립적으로 쌓기
+                masonryColumns.map(
+                    (column, columnIndex) => (
+                    <div
+                        key={columnIndex}
+                        className={`flex min-w-0 flex-col ${
+                        viewOption ===
+                        ALBUM_VIEW.LARGE
+                            ? 'gap-1.5'
+                            : 'gap-1'
+                        }`}
+                    >
+                        {column.map(renderPhoto)}
+                    </div>
+                    ),
+                )
+            )}
           </section>
         </div>
       </div>
@@ -264,6 +330,25 @@ const AlbumDetailPage = () => {
       ) : (
         <BottomNav activeTab="album" />
       )}
+
+      <Snackbar
+        message={moveSuccessMessage}
+        positionClassName="bottom-28"
+        actionLabel="앨범 목록"
+        onAction={() =>
+            navigate('/album')
+        }
+        onClose={() => {
+            // 스낵바를 닫은 뒤 히스토리의 메시지도 제거
+            navigate(location.pathname, {
+            replace: true,
+            state: {
+                ...location.state,
+                snackbarMessage: '',
+            },
+            });
+        }}
+      />
 
       <ConfirmModal
         isOpen={isDeleteConfirmOpen}

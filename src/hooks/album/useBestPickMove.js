@@ -7,10 +7,8 @@ const useBestPickMove = ({
   sourceCategoryId,
   navigate,
 }) => {
-  const [isMoving, setIsMoving] =
-    useState(false);
-  const [moveError, setMoveError] =
-    useState('');
+  const [isMoving, setIsMoving] = useState(false);
+  const [moveError, setMoveError] = useState('');
 
   const moveToCategory = async (
     targetCategory,
@@ -47,6 +45,15 @@ const useBestPickMove = ({
           targetCategory.id,
       });
 
+      const destinationAlbumName =
+        result.categoryName ??
+        targetCategory.name;
+
+      const movedCount =
+        Array.isArray(result.movedIds)
+          ? result.movedIds.length
+          : ids.length;
+
       navigate(
         `/album/${result.categoryId}`,
         {
@@ -55,6 +62,10 @@ const useBestPickMove = ({
             albumName:
               result.categoryName ??
               targetCategory.name,
+
+            // 목적지 앨범에서 표시할 메시지
+            snackbarMessage:
+              `사진 ${movedCount}장을 '${destinationAlbumName}' 앨범으로 이동했어요.`,
           },
         },
       );
