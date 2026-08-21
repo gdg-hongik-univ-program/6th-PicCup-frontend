@@ -6,12 +6,38 @@ import {
   CATEGORY_SORT,
 } from '../../constants/category';
 
+const CATEGORY_SORT_STORAGE_KEY =
+  'piccup-category-sort';
+
+const getInitialSortOption = () => {
+  const savedSort =
+    localStorage.getItem(
+      CATEGORY_SORT_STORAGE_KEY,
+    );
+
+  return Object
+    .values(CATEGORY_SORT)
+    .includes(savedSort)
+      ? savedSort
+      : CATEGORY_SORT.LATEST;
+};
+
 const useCategorySearch = (categories = []) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  // 기본 정렬은 최신순
-  const [sortOption, setSortOption] = useState(CATEGORY_SORT.LATEST);
+  // 마지막으로 선택한 정렬 기준을 불러옴
+  const [sortOption, setSortOptionState] =
+    useState(getInitialSortOption);
+
+  const setSortOption = (option) => {
+    setSortOptionState(option);
+
+    localStorage.setItem(
+      CATEGORY_SORT_STORAGE_KEY,
+      option,
+    );
+  };
 
   // 입력한 이름이 포함된 카테고리만 표시
   const filteredCategories = useMemo(() => { 

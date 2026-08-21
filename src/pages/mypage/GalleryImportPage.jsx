@@ -159,7 +159,7 @@ const GalleryImportPage = () => {
           value={capturedDate}
           max={todayDate}
           onChange={handleDateChange}
-          className="mt-3 block h-12 w-56 max-w-full rounded-xl border border-border bg-surface px-4 outline-none focus:border-primary"
+          className="mt-3 block h-12 w-full rounded-xl border border-border bg-surface px-4 outline-none focus:border-primary"
         />
 
         <p className="mt-2 px-2 text-xs text-text-secondary">

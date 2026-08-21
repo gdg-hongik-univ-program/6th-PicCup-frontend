@@ -52,7 +52,7 @@ const MyPage = () => {
 
   return (
     <main className="flex min-h-dvh flex-col pb-28">
-      <div className="flex-1 px-4 pt-5">
+      <div className="flex-1 px-4 pt-3">
         <header className="px-2">
           <h1>
             <button

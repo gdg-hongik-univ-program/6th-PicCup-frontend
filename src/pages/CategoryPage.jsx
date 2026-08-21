@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router';
+import { useState } from 'react';
 
 import useCategoryStore from '../store/useCategoryStore';
 import useCategoryManagement from '../hooks/category/useCategoryManagement';
@@ -17,6 +18,9 @@ const CategoryPage = () => {
   const setSelectedCategory = useCategoryStore(
     (state) => state.setSelectedCategory,
   );
+
+  // 카테고리 편집 상태
+  const [ isEditMode, setIsEditMode ] = useState(false);
 
   // 기존 카테고리 선택과 생성 직후 이동에서 함께 사용
   const handleCategorySelect = (category) => {
@@ -49,7 +53,7 @@ const CategoryPage = () => {
   
   return (
     <main className="flex h-dvh min-h-0 flex-col overflow-hidden">
-        <div className="flex min-h-0 flex-1 flex-col px-4 pt-4">
+        <div className="flex min-h-0 flex-1 flex-col px-4 pt-2">
           <div className="shrink-0">
             <AppHeader />
           </div>
@@ -65,12 +69,24 @@ const CategoryPage = () => {
           </section>
           <div className="shrink-0">
             <CollectionToolbar
+              selectLabel={
+                isEditMode ? '완료' : '편집'
+              }
               searchQuery={searchQuery}
               isSearchOpen={isSearchOpen}
               searchPlaceholder="카테고리를 검색해 보세요!"
               sortOption={sortOption}
+              onSelectClick={() =>
+                setIsEditMode(
+                  (previous) => !previous,
+                )
+              }
               onSortChange={setSortOption}
-              onSearchClick={openSearch}
+              onSearchClick={() => {
+                // 검색을 열 때는 편집 상태 종료
+                setIsEditMode(false);
+                openSearch();
+              }}
               onSearchChange={setSearchQuery}
               onSearchClose={closeSearch}
             />
@@ -84,7 +100,11 @@ const CategoryPage = () => {
               showBestPickCount={false}
               onLeadingClick={openCreateSheet}
               onCategoryClick={handleCategorySelect}
-              onCategoryMenuClick={openEditSheet}
+              onCategoryMenuClick={
+                isEditMode
+                  ? openEditSheet
+                  : undefined
+              }
             />
           </div>
           

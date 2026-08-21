@@ -23,7 +23,12 @@ export const ALBUM_VIEW_OPTIONS = [
 
 // 뷰 크기별 그리드 클래스
 export const ALBUM_VIEW_GRID_CLASS = {
-  [ALBUM_VIEW.LARGE]: 'columns-2 gap-1.5',
-  [ALBUM_VIEW.DEFAULT]: 'columns-3 gap-1',
-  [ALBUM_VIEW.SMALL]: 'columns-5 gap-0.5',
+  [ALBUM_VIEW.LARGE]:
+    'grid grid-cols-2 items-start gap-1.5',
+
+  [ALBUM_VIEW.DEFAULT]:
+    'grid grid-cols-3 items-start gap-1',
+
+  [ALBUM_VIEW.SMALL]:
+    'grid grid-cols-5 items-start gap-0.5',
 };
