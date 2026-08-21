@@ -37,6 +37,8 @@ const AlbumDetailPage = () => {
   const [isViewMenuOpen, setIsViewMenuOpen] = useState(false);
   // 작게 뷰에서는 사진을 정사각형으로 표시
   const isSmallView = viewOption === ALBUM_VIEW.SMALL;
+  // 각 사진의 세로/가로 비율
+  const [photoRatios, setPhotoRatios] = useState({});
   
   const albumName =
     categoryId === 'all'
@@ -82,16 +84,51 @@ const AlbumDetailPage = () => {
         togglePhoto(photo.id);
         return;
     }
+    const detailSearchParams = new URLSearchParams({
+        categoryId: String(categoryId),
+        });
+
+    if (showLikedOnly) {
+        detailSearchParams.set('likedOnly', 'true');
+    }
 
     // 일반 모드에서는 사진 상세로 이동
     navigate(
-        `/album/photo/${photo.id}`,
+        `/album/photo/${photo.id}?${detailSearchParams.toString()}`,
         {
         state: {
             photo,
+
+            // 좌우 이동에 사용할 현재 앨범의 사진 목록
+            photoList: visiblePhotos,
+
+            // 상세 화면에서 앨범 정보 유지
+            albumName,
         },
         },
     );
+  };
+
+  const handlePhotoLoad = (photoId, event) => {
+    const {
+        naturalWidth,
+        naturalHeight,
+    } = event.currentTarget;
+
+    if (!naturalWidth) return;
+
+    const ratio = naturalHeight / naturalWidth;
+
+    setPhotoRatios((prev) => {
+        if (prev[photoId] === ratio) {
+        return prev;
+        }
+
+        return {
+        ...prev,
+        [photoId]: ratio,
+        };
+    });
   };
 
   // 크게·기본 보기에서 사용할 열 개수
@@ -109,22 +146,35 @@ const AlbumDetailPage = () => {
             () => [],
     );
 
-    visiblePhotos.forEach(
-        (photo, index) => {
-        columns[
-            index % masonryColumnCount
-        ].push(photo);
-        },
-    );
+    const columnHeights = Array( //현재 예상 높이를 따로 기억
+        masonryColumnCount,
+    ).fill(0); 
+
+    visiblePhotos.forEach((photo) => {
+        const shortestHeight = Math.min(
+            ...columnHeights,
+        );
+
+        const shortestColumnIndex =
+            columnHeights.indexOf(shortestHeight);
+
+        columns[shortestColumnIndex].push(photo);
+
+        // 아직 로드되지 않은 사진은 정사각형으로 임시 계산
+        columnHeights[shortestColumnIndex] +=
+            photoRatios[photo.id] ?? 1;
+    });
 
     return columns;
   }, [
     visiblePhotos,
     masonryColumnCount,
+    photoRatios,
   ]);
 
   const renderPhoto = (photo) => {
     const isSelected = isPhotoSelected(photo.id);
+   
 
     return (
       <button
@@ -147,6 +197,9 @@ const AlbumDetailPage = () => {
           src={photo.imageUrl}
           crossOrigin="anonymous"
           alt={`${photo.categoryName} 베스트픽`}
+          onLoad={(event) =>
+            handlePhotoLoad(photo.id, event)
+          }
           className={
             isSmallView
               ? 'absolute inset-0 h-full w-full object-cover'

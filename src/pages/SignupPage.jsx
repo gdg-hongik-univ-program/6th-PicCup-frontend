@@ -28,7 +28,7 @@ const SignupPage = () => {
         className="flex min-h-[calc(100dvh-4rem)] flex-col"
         onSubmit={handleSignup}
       >
-        <section className="flex flex-1 flex-col justify-center px-4">
+        <section className="flex flex-1 flex-col px-4 pt-16">
           <div className="flex flex-col items-center">
             <img
               src={logoImage}

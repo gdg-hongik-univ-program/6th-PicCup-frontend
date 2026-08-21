@@ -19,7 +19,7 @@ const LoginPage = () => {
 
   return (
     <main className="flex min-h-dvh flex-col px-6 py-8">
-      <section className="relative flex flex-1 flex-col justify-center">
+      <section className="relative flex flex-1 flex-col pt-16">
         <div className="flex flex-col items-center">
           <div className="flex size-16 items-center justify-center rounded-2xl">
             <img

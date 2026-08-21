@@ -152,15 +152,16 @@ const GalleryImportPage = () => {
         >
           촬영 날짜
         </label>
-
-        <input
-          id="gallery-captured-date"
-          type="date"
-          value={capturedDate}
-          max={todayDate}
-          onChange={handleDateChange}
-          className="mt-3 block h-12 w-full rounded-xl border border-border bg-surface px-4 outline-none focus:border-primary"
-        />
+        <div className="mt-3 w-full min-w-0 overflow-hidden rounded-xl">
+          <input
+            id="gallery-captured-date"
+            type="date"
+            value={capturedDate}
+            max={todayDate}
+            onChange={handleDateChange}
+            className="block h-12 w-full min-w-0 max-w-full box-border rounded-xl border border-border bg-surface px-4 text-base outline-none focus:border-primary"
+          />
+        </div>
 
         <p className="mt-2 px-2 text-xs text-text-secondary">
           선택한 모든 사진에 같은 날짜가 적용돼요.
