@@ -13,6 +13,7 @@ const BestPickDetailFooter = ({
   isSharing,
   onDownload,
   onToggleLike,
+  onInfo,
   onShare,
   onDelete,
 }) => {
@@ -53,6 +54,7 @@ const BestPickDetailFooter = ({
 
         <button
           type="button"
+          onClick={onInfo}
           aria-label="사진 정보"
           className="rounded-xl"
         >

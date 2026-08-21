@@ -2,21 +2,23 @@ import logoImage from '../assets/piccup-logo.png';
 
 const SplashPage = () => {
   return (
-    <section className="flex min-h-dvh flex-col items-center justify-center px-6">
-      <img
-        src={logoImage}
-        alt="PicCup 로고"
-        className="h-20 w-auto object-contain"
-      />
+    <main className="flex min-h-dvh items-center justify-center px-6">
+      <div className="-translate-y-10 flex flex-col items-center">
+        <img
+          src={logoImage}
+          alt="PicCup 로고"
+          className="h-20 w-auto object-contain"
+        />
 
-      <h1 className="mt-3 font-logo text-4xl">
-        PicCup
-      </h1>
+        <h1 className="mt-3 font-logo text-4xl">
+          PicCup
+        </h1>
 
-      <p className="mt-8 text-sm text-text-secondary">
-        당신의 사진을 Pick하세요.
-      </p>
-    </section>
+        <p className="mt-7 text-sm text-text-secondary">
+          당신의 순간을 Pick 하세요.
+        </p>
+      </div>
+    </main>
   );
 };
 

@@ -27,7 +27,7 @@ export default defineConfig({
         start_url: '/',
         scope: '/',
         display: 'standalone', //주소창 사라짐
-        orientation: 'portrait', //세로방향 선호
+        orientation: 'portrait-primary', //세로방향 선호
         background_color: '#FDFFFF',
         theme_color: '#00CAB1',
 
