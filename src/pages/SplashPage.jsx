@@ -2,8 +2,8 @@ import logoImage from '../assets/piccup-logo.png';
 
 const SplashPage = () => {
   return (
-    <main className="flex min-h-dvh items-center justify-center px-6">
-      <div className="-translate-y-10 flex flex-col items-center">
+    <main className="flex min-h-dvh items-center justify-center px-6 pb-20">
+      <div className="flex flex-col items-center">
         <img
           src={logoImage}
           alt="PicCup 로고"
