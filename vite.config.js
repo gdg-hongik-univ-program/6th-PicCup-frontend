@@ -9,8 +9,7 @@ export default defineConfig({
     react(),
     tailwindcss(),
 
-    VitePWA({
-      // 촬영·입력 중 강제 새로고침을 막기 위해
+    VitePWA({// 촬영·입력 중 강제 새로고침을 막기 위해
       registerType: 'prompt',
 
       includeAssets: [

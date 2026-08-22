@@ -148,7 +148,7 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
     
   return (
     <main className="flex min-h-dvh flex-col">
-        <div className="flex-1 px-4 pt-4">
+        <div className="flex-1 px-4 pt-2">
             <AppHeader />
             <section className="flex min-h-0 flex-1 flex-col items-center">
                 <Crown
@@ -158,12 +158,12 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
                     aria-label="베스트픽 왕관"
                 />
                 
-                <article className="rounded-3xl bg-background p-2 shadow-lg ring-1 ring-border">
-                    <div className="relative overflow-hidden rounded-3xl">
+                <article className="rounded-2xl bg-background p-2 shadow-lg ring-1 ring-border">
+                    <div className="relative overflow-hidden rounded-2xl">
                         <img
                             src={winner.previewUrl}
                             alt="최종 우승 사진"
-                            className="block max-h-[52dvh] w-full rounded-3xl object-contain"
+                            className="block max-h-[56dvh] w-full rounded-2xl object-contain"
                         />
                         {isDownloadComplete && (
                             <div
@@ -198,10 +198,10 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
                         )}
                     </div>
                     
-                    <div className="flex h-10 mt-1 items-center justify-between"> 
+                    <div className="flex mt-1 items-center justify-between"> 
                         <time
                             dateTime={winner.createdAt}
-                            className="px-3 text-lg text-text-primary font-medium"
+                            className="px-3 text-base text-text-primary font-medium"
                         >
                             {capturedDate}
                         </time>
@@ -215,7 +215,7 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
                                 className="flex size-8 items-center justify-center rounded-lg transition active:bg-gray-100 disabled:opacity-40"
                                 aria-label="베스트픽 다운로드"
                             >
-                                <Download size={24} />
+                                <Download size={20} />
                             </button>
 
                             <button
@@ -226,7 +226,7 @@ const TournamentWinner = ({ //부모 TournamentPage가 값 전달
                                 className="flex size-8 items-center justify-center rounded-lg transition active:bg-gray-100 disabled:opacity-40"
                                 aria-label="베스트픽 공유"
                             >
-                                <Share2 size={24} />
+                                <Share2 size={20} />
                             </button>
                         </div>
                     </div>
