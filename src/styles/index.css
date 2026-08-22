@@ -3,38 +3,24 @@
 @import "tailwindcss";
 
 @theme { /* theme으로 정의하면 CSS 변수, Tailwind CSS 둘 다 사용 가능 */
-  /*--color-primary: #2EC8D9;
-  --color-primary-light: #4d3a2e;
-
-  --color-secondary: #F27289;
-
-  --color-background: #FDFFFF;
-  --color-page-background: #f3f4f6; gray100
-  --color-surface: #D9D8D2;
-
-  --color-text-primary: #1a1a1a;
-  --color-text-secondary: #767676;
-
-  --color-border: #e5e5e5;
-  --color-error: #e5484d;*/
-
   --color-primary: #00CAB1;
-  --color-primary-pressed: #009C89;
   --color-primary-soft: #E5F9F5;
   --color-primary-muted: #B5EEE5;
+  --color-primary-pressed: #009C89;
 
   --color-background: #FDFFFF;
+  --color-text-primary: #171B19;
+  --color-error: #DE5555;
+
   --color-page-background: #f3f4f6; /*gray100*/
   --color-surface: #F8FAF8;
 
-  --color-text-primary: #171B19;
   --color-text-secondary: #707A76;
   --color-text-disabled: #A9B2AE;
 
   --color-border: #E0E8E4;
   --color-border-strong: #C8D5D0;
   
-  --color-error: #DE5555;
   --color-error-pressed: #B83F3F;
   --color-error-muted: #F1B9B9;
   --color-neutral-muted: #EDF2EF;
