@@ -38,8 +38,14 @@ export default defineConfig({
             type: 'image/png',
           },
           {
-            src: '/favicon.png',
+            src: '/pwa-512x512.png',
             sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any',
+          },
+          {
+            src: '/favicon.png',
+            sizes: '48x48',
             type: 'image/png',
           },
         ],
