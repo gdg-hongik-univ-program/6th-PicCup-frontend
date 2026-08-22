@@ -5,7 +5,6 @@ const CameraActions = ({
   isCameraOn,
   latestPhoto,
   photoCount,
-  cameraError,
   captureError,
   onChangeAspectRatio,
   onCapture,
@@ -53,8 +52,10 @@ const CameraActions = ({
         </button>
       </section>
 
-      {(cameraError || captureError) && (
-        <p>{cameraError || captureError}</p>
+      {captureError && (
+        <p className="absolute inset-x-6 bottom-48 z-20 text-center text-sm text-error">
+          {captureError}
+        </p>
       )}
 
       <footer className="absolute inset-x-0 bottom-0 z-20 grid h-[calc(6rem+env(safe-area-inset-bottom))] grid-cols-3 items-center px-6 pb-[env(safe-area-inset-bottom)]">
