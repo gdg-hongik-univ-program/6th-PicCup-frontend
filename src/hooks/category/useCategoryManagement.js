@@ -57,8 +57,6 @@ const useCategoryManagement = ({
   };
 
   const openEditSheet = (category) => {
-    if (category.isDefault) return;
-
     clearCategoryError();
     setEditingCategory(category);
     setEditingName(category.name);

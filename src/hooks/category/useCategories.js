@@ -122,8 +122,6 @@ const useCategories = () => {
 
       if (errorCode === 'CATEGORY_DUPLICATE') {
         setCategoryError('이미 존재하는 카테고리입니다.');
-      } else if (errorCode === 'CATEGORY_PROTECTED') {
-        setCategoryError('미분류 카테고리는 수정할 수 없습니다.');
       } else {
         setCategoryError(
           error.response?.data?.message ??
@@ -154,9 +152,7 @@ const useCategories = () => {
     } catch (error) {
       const errorCode = error.response?.data?.code;
 
-      if (errorCode === 'CATEGORY_PROTECTED') {
-        setCategoryError('미분류 카테고리는 삭제할 수 없습니다.');
-      } else if (errorCode === 'CATEGORY_NOT_FOUND') {
+      if (errorCode === 'CATEGORY_NOT_FOUND') {
         setCategoryError('존재하지 않는 카테고리입니다.');
       } else if (errorCode === 'FORBIDDEN_RESOURCE') {
         setCategoryError('삭제할 권한이 없습니다.');

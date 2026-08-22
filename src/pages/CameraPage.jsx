@@ -1,7 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useNavigate } from 'react-router';
 
 import CameraActions from '../components/camera/CameraActions';
+import CameraPermissionNotice from '../components/camera/CameraPermissionNotice';
 import CameraViewport from '../components/camera/CameraViewport';
 import { ASPECT_RATIO_CONFIG } from '../constants/ratio';
 import useCameraStream from '../hooks/camera/useCameraStream';
@@ -28,6 +34,8 @@ const CameraPage = () => {
     videoRef,
     isCameraOn,
     cameraError,
+    cameraErrorType,
+    isCameraRequesting,
     facingMode,
     startCamera: openCamera,//훅이 반환한 startCamera를 openCamera라는 이름으로 꺼냄
     stopCamera,
@@ -49,26 +57,28 @@ const CameraPage = () => {
   })
 
 
-  useEffect(() => { //카메라 자동 시작
-    const startCamera = async () => {
-      const didStart = await openCamera();
+  const startCameraSession = useCallback(async () => {
+    const didStart = await openCamera();
 
-      if (!didStart) {
-        return;
-      }
-      // 한 번의 카메라 진입에서 한 번만 전송(ga4 이벤트)
-      if (!cameraStartTrackedRef.current) {
-        cameraStartTrackedRef.current = true;
+    if (!didStart) {
+      return false;
+    }
+    // 한 번의 카메라 진입에서 한 번만 전송(ga4 이벤트)
+    if (!cameraStartTrackedRef.current) {
+      cameraStartTrackedRef.current = true;
 
-        trackEvent('camera_start');
-      }
+      trackEvent('camera_start');
+    }
 
-      sessionIdRef.current = crypto.randomUUID();
-      resetPhotos();
-    };
+    sessionIdRef.current = crypto.randomUUID();
+    resetPhotos();
 
-    startCamera();
+    return true;
   }, [openCamera, resetPhotos]);
+
+  useEffect(() => { //카메라 자동 시작
+    startCameraSession();
+  }, [startCameraSession]);
 
   const completeCapture = () => { //토너먼트로 넘어가는 함수
     const sessionId = sessionIdRef.current;
@@ -101,13 +111,22 @@ const CameraPage = () => {
         isCameraOn={isCameraOn}
         latestPhoto={latestPhoto}
         photoCount={photos.length}
-        cameraError={cameraError}
         captureError={captureError}
         onChangeAspectRatio={changeAspectRatio}
         onCapture={capturePhoto}
         onSwitchCamera={switchCamera}
         onComplete={completeCapture}
       />
+
+      {cameraError && !isCameraOn && (
+        <CameraPermissionNotice
+          errorType={cameraErrorType}
+          message={cameraError}
+          isRequesting={isCameraRequesting}
+          onRetry={startCameraSession}
+          onBack={() => navigate('/category')}
+        />
+      )}
     </main>
   );
 };

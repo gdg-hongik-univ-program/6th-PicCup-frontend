@@ -38,7 +38,7 @@ const GalleryImportPage = () => {
   } = useGalleryImport();
 
   return (
-    <main className="min-h-dvh px-4 pt-2 pb-32">
+    <main className="min-h-dvh px-4 pb-32">
       <BackHeader title="이미지 불러오기" />
 
       <input
@@ -84,7 +84,7 @@ const GalleryImportPage = () => {
             <p className="mt-1 text-sm text-text-secondary">
                 {selectedImages.length}장을 선택했어요.
             </p>
-            <div className="mt-3 flex gap-2 overflow-x-auto overscroll-x-contain pb-2">
+            <div className="mt-3 flex gap-1 overflow-x-auto overscroll-x-contain pb-2">
                 {selectedImages.map((image) => (
                     <div
                     key={image.id}
@@ -159,7 +159,7 @@ const GalleryImportPage = () => {
             value={capturedDate}
             max={todayDate}
             onChange={handleDateChange}
-            className="block h-12 w-full min-w-0 max-w-full box-border rounded-xl border border-border bg-surface px-4 text-base outline-none focus:border-primary"
+            className="gallery-date-input block h-12 w-full min-w-0 max-w-full rounded-xl border border-border bg-surface px-4 text-base outline-none focus:border-primary"
           />
         </div>
 

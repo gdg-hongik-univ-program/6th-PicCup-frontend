@@ -119,7 +119,7 @@ const CategoryGrid = ({
               )}
             </button>
 
-            {!category.isDefault && onCategoryMenuClick && (
+            {onCategoryMenuClick && (
               <button
                 type="button"
                 data-press-feedback="none"

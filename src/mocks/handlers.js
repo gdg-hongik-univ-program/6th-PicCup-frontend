@@ -24,17 +24,14 @@ let categories = [
   {
     id: 1,
     name: '일상',
-    isDefault: false,
   },
   {
     id: 2,
     name: '여행',
-    isDefault: false,
   },
   {
     id: 3,
     name: '친구',
-    isDefault: false,
   },
 ];
 
@@ -185,7 +182,6 @@ export const handlers = [
       const newCategory = {
         id: Date.now(),
         name,
-        isDefault: false,
         bestPickCount: 0,
         latestCapturedDate: null,
         coverImageUrl: null,

@@ -33,7 +33,7 @@ const HomeBestPicks = ({
       </div>
 
       {bestPicks.length > 0 ? (
-        <div className="mt-3 flex gap-2 overflow-x-auto pb-2">
+        <div className="mt-3 flex gap-1 overflow-x-auto pb-2">
           {bestPicks.map((photo) => (
             <button
               key={photo.id}

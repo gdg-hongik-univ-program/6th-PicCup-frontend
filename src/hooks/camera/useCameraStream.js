@@ -3,9 +3,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 const useCameraStream = () => {
     const videoRef = useRef(null); //실제 <video> DOM 요소를 참조
     const streamRef = useRef(null); // getUserMedia로 받은 MediaStream 객체를 보관
+    const isRequestingRef = useRef(false); //권한 요청 중 중복 호출 방지
 
     const [isCameraOn, setIsCameraOn] = useState(false);
     const [cameraError, setCameraError] = useState('');
+    const [cameraErrorType, setCameraErrorType] = useState('');
+    const [isCameraRequesting, setIsCameraRequesting] = useState(false);
     const [facingMode, setFacingMode] = useState('environment');
 
     const stopCamera = useCallback(() => {
@@ -24,9 +27,23 @@ const useCameraStream = () => {
     },[]);
 
     const startCamera = useCallback(async (facingMode = 'environment') => {
+        if (isRequestingRef.current) {
+          return false;
+        }
+
+        isRequestingRef.current = true;
+        setIsCameraRequesting(true);
+
         try { //try 성공하면 그대로 진행, 실패하면 catch로 이동
           setCameraError('');
-        
+          setCameraErrorType('');
+
+          if (!navigator.mediaDevices?.getUserMedia) {
+            setCameraErrorType('unsupported');
+            setCameraError('이 브라우저에서는 카메라를 사용할 수 없습니다.');
+            return false;
+          }
+
           const stream = await navigator.mediaDevices.getUserMedia({ //여기서 getUserMedia가 promise를 반환. await로 기다려서 stream에 MediaStream을 넣음
             video: { //getUserMedia()가 성공하면(권한허용) 결과값을 돌려주고 실패하면 error를 던져줌
               facingMode: {
@@ -48,8 +65,31 @@ const useCameraStream = () => {
 
         } catch (error) {
           console.error('카메라 실행 오류:', error);
-          setCameraError(`카메라 실행 실패: ${error.message}`);
+
+          if (
+            error.name === 'NotAllowedError' ||
+            error.name === 'PermissionDeniedError'
+          ) {
+            setCameraErrorType('permission-denied');
+            setCameraError('사진을 촬영하려면 카메라 접근 권한이 필요합니다.');
+          } else if (error.name === 'NotFoundError') {
+            setCameraErrorType('not-found');
+            setCameraError('사용 가능한 카메라를 찾을 수 없습니다.');
+          } else if (error.name === 'NotReadableError') {
+            setCameraErrorType('unavailable');
+            setCameraError('다른 앱에서 카메라를 사용하고 있는지 확인해주세요.');
+          } else if (error.name === 'SecurityError') {
+            setCameraErrorType('security');
+            setCameraError('안전한 연결에서만 카메라를 사용할 수 있습니다.');
+          } else {
+            setCameraErrorType('unknown');
+            setCameraError('카메라를 실행하지 못했습니다.');
+          }
+
           return false; //카메라 시작 실패
+        } finally {
+          isRequestingRef.current = false;
+          setIsCameraRequesting(false);
         }
       }, []);
 
@@ -73,6 +113,8 @@ const useCameraStream = () => {
     videoRef,
     isCameraOn,
     cameraError,
+    cameraErrorType,
+    isCameraRequesting,
     facingMode,
     startCamera,
     stopCamera,

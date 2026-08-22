@@ -161,3 +161,16 @@ body {
   color: var(--color-text-primary);
   font-family: var(--font-sans);
 }*/
+
+/* iOS Safari 날짜 입력 수직 정렬 보정 */
+.gallery-date-input {
+  padding-block: 0;
+  line-height: 3rem;
+}
+
+.gallery-date-input::-webkit-date-and-time-value {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  text-align: left;
+}
