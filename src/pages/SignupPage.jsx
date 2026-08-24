@@ -1,18 +1,22 @@
+import { useState } from 'react';
 import { Link } from 'react-router';
 
 import logoImage from '../assets/piccup-logo.png';
 import AuthButton from '../components/auth/AuthButton';
 import AuthTextField from '../components/auth/AuthTextField';
+import TermsAgreement from '../components/auth/TermsAgreement';
 import { AUTH_FIELD_LIMITS } from '../constants/auth';
 
 import useSignupForm from '../hooks/auth/useSignupForm';
 
 const SignupPage = () => {
+  const [isTermsExpanded, setIsTermsExpanded] = useState(false);
   const {
     nickname,
     email,
     password,
     passwordConfirm,
+    isTermsAgreed,
     signupError,
     isSubmitting,
     handleSignup,
@@ -20,6 +24,7 @@ const SignupPage = () => {
     handleEmailChange,
     handlePasswordChange,
     handlePasswordConfirmChange,
+    handleTermsAgreementChange,
   } = useSignupForm();
 
   return (
@@ -91,6 +96,13 @@ const SignupPage = () => {
           >
             로그인으로 돌아가기
           </Link>
+
+          <TermsAgreement
+            isAgreed={isTermsAgreed}
+            isExpanded={isTermsExpanded}
+            onAgreementChange={handleTermsAgreementChange}
+            onToggle={() => setIsTermsExpanded((current) => !current)}
+          />
         </section>
         <div className="px-4">
             <div className="mb-2 flex h-4 items-center justify-center">

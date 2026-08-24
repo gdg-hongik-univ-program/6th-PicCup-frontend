@@ -1,5 +1,6 @@
 import BottomSheet from '../layout/BottomSheet';
 import ConfirmModal from '../layout/ConfirmModal';
+import Snackbar from '../layout/Snackbar';
 
 const CategoryManagementOverlays = ({
   management,
@@ -29,6 +30,7 @@ const CategoryManagementOverlays = ({
 
     deletedNotice,
     isRestoring,
+    setDeletedNotice,
     restoreDeletedCategory,
   } = management;
 
@@ -76,27 +78,19 @@ const CategoryManagementOverlays = ({
         onConfirm={confirmDelete}
       />
 
-      {deletedNotice && (
-        <div className="fixed inset-x-0 bottom-28 z-[55] mx-auto w-full max-w-md px-4">
-          <div className="flex items-center justify-between rounded-full bg-gray-100 px-4 py-3 shadow-lg">
-            <p className="min-w-0 truncate text-sm">
-              ‘{deletedNotice.name}’과 사진{' '}
-              {deletedNotice.deletedBestPickCount}장을
-              삭제했어요.
-            </p>
-
-            <button
-              type="button"
-              onClick={restoreDeletedCategory}
-              disabled={isRestoring}
-              aria-busy={isRestoring}
-              className="ml-3 shrink-0 font-semibold text-primary disabled:opacity-50"
-            >
-              되돌리기
-            </button>
-          </div>
-        </div>
-      )}
+      <Snackbar
+        message={
+          deletedNotice
+            ? `‘${deletedNotice.name}’과 사진 ${deletedNotice.deletedBestPickCount}장을 삭제했어요.`
+            : ''
+        }
+        duration={5000}
+        positionClassName="bottom-28"
+        actionLabel="되돌리기"
+        isActionDisabled={isRestoring}
+        onAction={restoreDeletedCategory}
+        onClose={() => setDeletedNotice(null)}
+      />
     </>
   );
 };

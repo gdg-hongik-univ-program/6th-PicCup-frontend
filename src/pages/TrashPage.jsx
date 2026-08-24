@@ -47,6 +47,7 @@ const TrashPage = () => {
     } = useTrashSelection({
     rejectedPhotos,
     deletedBestPicks,
+    initialActiveTab: location.state?.activeTab,
   });
 
   const {
@@ -142,64 +143,72 @@ const TrashPage = () => {
 
   return (
     <main
-      className={`min-h-dvh px-4 py-4 ${
-        isSelectionMode ? 'pb-28' : ''
-      }`}
+      className="flex h-dvh min-h-0 flex-col overflow-hidden px-4"
     >
-      <BackHeader title="휴지통" />
+      {/* 상단 탐색·탭·선택 영역은 고정 */}
+      <div className="shrink-0">
+        <BackHeader title="휴지통" />
 
-      <TrashTabs
-        activeTab={activeTab}
-        onChange={handleTabChange}
-      />
-
-      <TrashToolbar
-        activeTab={activeTab}
-        isSelectionMode={isSelectionMode}
-        selectedCount={selectedPhotos.length}
-        photoCount={visiblePhotos.length}
-        onToggleSelectionMode={toggleSelectionMode}
-      />
-
-      {displayedError && (
-        <p
-          className="mt-4 text-center text-xs text-error"
-          role="alert"
-        >
-          {displayedError}
-        </p>
-      )}
-
-      {isLoading ? (
-        <p className="py-16 text-center text-sm text-text-secondary">
-          사진을 불러오는 중입니다.
-        </p>
-      ) : visiblePhotos.length === 0 ? (
-        <section className="flex min-h-[55dvh] flex-col items-center justify-center text-center">
-          <Trash2
-            size={28}
-            className="text-text-secondary"
-          />
-
-          <p className="mt-4 text-sm font-medium">
-            {emptyMessage}
-          </p>
-
-          <p className="mt-2 text-xs leading-5 text-text-secondary">
-            {emptyDescription}
-          </p>
-        </section>
-      ) : (
-        <TrashPhotoGrid
-          photos={visiblePhotos}
-          isSelectionMode={isSelectionMode}
-          getPhotoKey={getPhotoKey}
-          isPhotoSelected={isPhotoSelected}
-          onTogglePhoto={togglePhoto}
-          onOpenPhoto={handlePhotoOpen}
-          onLongPressPhoto={handlePhotoLongPress}
+        <TrashTabs
+          activeTab={activeTab}
+          onChange={handleTabChange}
         />
-      )}
+
+        <TrashToolbar
+          activeTab={activeTab}
+          isSelectionMode={isSelectionMode}
+          selectedCount={selectedPhotos.length}
+          photoCount={visiblePhotos.length}
+          onToggleSelectionMode={toggleSelectionMode}
+        />
+      </div>
+
+      {/* 사진 목록만 독립적으로 스크롤 */}
+      <div
+        className={`min-h-0 flex-1 touch-pan-y overflow-y-auto overscroll-contain ${
+          isSelectionMode ? 'pb-28' : 'pb-6'
+        }`}
+      >
+        {displayedError && (
+          <p
+            className="mt-4 text-center text-xs text-error"
+            role="alert"
+          >
+            {displayedError}
+          </p>
+        )}
+
+        {isLoading ? (
+          <p className="py-16 text-center text-sm text-text-secondary">
+            사진을 불러오는 중입니다.
+          </p>
+        ) : visiblePhotos.length === 0 ? (
+          <section className="flex min-h-full flex-col items-center justify-center text-center">
+            <Trash2
+              size={28}
+              className="text-text-secondary"
+            />
+
+            <p className="mt-4 text-sm font-medium">
+              {emptyMessage}
+            </p>
+
+            <p className="mt-2 text-xs leading-5 text-text-secondary">
+              {emptyDescription}
+            </p>
+          </section>
+        ) : (
+          <TrashPhotoGrid
+            photos={visiblePhotos}
+            isSelectionMode={isSelectionMode}
+            getPhotoKey={getPhotoKey}
+            isPhotoSelected={isPhotoSelected}
+            onTogglePhoto={togglePhoto}
+            onOpenPhoto={handlePhotoOpen}
+            onLongPressPhoto={handlePhotoLongPress}
+          />
+        )}
+      </div>
 
       {isSelectionMode && visiblePhotos.length > 0 && (
         <TrashActionBar
