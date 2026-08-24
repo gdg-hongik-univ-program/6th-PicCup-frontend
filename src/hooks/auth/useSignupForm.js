@@ -10,18 +10,21 @@ const useSignupForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [isTermsAgreed, setIsTermsAgreed] = useState(false);
   const [signupError, setSignupError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSignup = async (event) => {
     event.preventDefault();
 
-    const validationError = validateSignupForm({
+    const fieldValidationError = validateSignupForm({
       nickname,
       email,
       password,
       passwordConfirm,
     });
+    const validationError = fieldValidationError
+      || (!isTermsAgreed ? '서비스 이용약관에 동의해주세요.' : '');
 
     setSignupError(validationError);
 
@@ -80,11 +83,17 @@ const useSignupForm = () => {
     setSignupError('');
   };
 
+  const handleTermsAgreementChange = (event) => {
+    setIsTermsAgreed(event.target.checked);
+    setSignupError('');
+  };
+
   return {
     nickname,
     email,
     password,
     passwordConfirm,
+    isTermsAgreed,
     signupError,
     isSubmitting,
     handleSignup,
@@ -92,6 +101,7 @@ const useSignupForm = () => {
     handleEmailChange,
     handlePasswordChange,
     handlePasswordConfirmChange,
+    handleTermsAgreementChange,
   };
 };
 

@@ -4,9 +4,14 @@ import { getTrashPhotoKey } from '../../utils/trash';
 const useTrashSelection = ({
   rejectedPhotos,
   deletedBestPicks,
+  initialActiveTab = 'rejected',
 }) => {
   const [activeTab, setActiveTab] =
-    useState('rejected');
+    useState(
+      initialActiveTab === 'best-pick'
+        ? 'best-pick'
+        : 'rejected',
+    );
 
   const [
     isSelectionMode,
